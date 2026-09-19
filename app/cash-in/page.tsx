@@ -1,7 +1,7 @@
 // 👉 This is your Cash In tab — money coming IN. Safe to edit the columns/labels.
 // It reads the ONE `records` table, filtered to category='cash_in'. Copy this file's
 // shape when you add your own money tab.
-import { getRecords, rm, m, todayISO } from '@/lib/records'
+import { getRecords, rm, m, todayISO, isIssued } from '@/lib/records'
 import Empty from '@/app/_components/Empty'
 import Stat from '@/app/_components/Stat'
 
@@ -21,8 +21,13 @@ export default async function CashIn() {
   const isOverdue = (r: (typeof rows)[number]) =>
     isWaiting(r) && !!r.due_date && r.due_date < todayISO()
 
-  const paid = rows.filter(r => !isWaiting(r)).reduce((s, r) => s + Number(r.amount || 0), 0)
+  const paid = rows.filter(r => !isWaiting(r) && !isIssued(r)).reduce((s, r) => s + Number(r.amount || 0), 0)
   const waiting = rows.filter(isWaiting).reduce((s, r) => s + Number(r.amount || 0), 0)
+  // Issued = invoiced, payment not tracked yet — shown on its own, never in paid/waiting.
+  const issued = rows.filter(r => isIssued(r) && !r.meta?.currency).reduce((s, r) => s + Number(r.amount || 0), 0)
+  // Rows invoiced in another currency (e.g. USD) show their own currency, never as RM.
+  const money = (r: (typeof rows)[number]) =>
+    r.meta?.currency ? `${r.meta.currency} ${Number(r.amount || 0).toLocaleString('en-MY')}` : rm(r.amount)
 
   // Show the money still waiting first (that's what needs chasing), then the rest.
   const sorted = [...rows].sort((a, b) => Number(isWaiting(b)) - Number(isWaiting(a)))
@@ -36,6 +41,7 @@ export default async function CashIn() {
         <Stat label="Paid" value={rm(paid)} />
         <Stat label="Waiting" value={rm(waiting)} yes={waiting > 0} />
         <Stat label="Total tracked" value={rm(paid + waiting)} />
+        {issued > 0 && <Stat label="Issued (payment not tracked)" value={rm(issued)} />}
       </div>
 
       {all.length === 0 ? (
@@ -67,7 +73,7 @@ export default async function CashIn() {
                     <span className={`pill ${shownStatus}`}>{shownStatus}</span>
                   </td>
                   <td data-label="Due">{r.due_date || '—'}</td>
-                  <td data-label="Amount">{rm(r.amount)}</td>
+                  <td data-label="Amount">{money(r)}</td>
                 </tr>
               )
             })}

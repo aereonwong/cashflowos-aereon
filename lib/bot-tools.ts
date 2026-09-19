@@ -1,6 +1,6 @@
 import 'server-only'
 import type { Rec } from './records'
-import { rm, todayISO, getFunnel } from './records'
+import { rm, todayISO, getFunnel, isIssued } from './records'
 
 // 🔒 Don't edit — this keeps your robot safe.
 // The Jarvis bot's HANDS. Instead of dumping your whole table into the prompt,
@@ -169,6 +169,10 @@ export const BOT_TOOLS = [
 
 const sum = (rows: Rec[]) => rows.reduce((s, r) => s + Number(r.amount || 0), 0)
 const PAID = new Set(['paid', 'done', 'closed', 'reversed'])
+// Money still owed to the owner: cash_in not yet paid. Issued invoices (payment not
+// tracked yet) are documented only — never counted as owed.
+const isOwedIn = (r: Rec) =>
+  r.category === 'cash_in' && !PAID.has((r.status || '').toLowerCase()) && !isIssued(r)
 // A lead that has left the open pipeline (won or dropped) — excluded from pipeline value.
 const CLOSED_LOST = new Set(['closed', 'nurture', 'lost', 'reversed'])
 // Whole days a due date is past today (>=0).
@@ -194,21 +198,25 @@ export function runBotTool(name: string, input: any, rows: Rec[]): string {
       const inWindow = (r: Rec) =>
         !Number.isFinite(days) || new Date(r.created_at).getTime() >= since
 
-      const cashIn = sum(rows.filter(r => r.category === 'cash_in' && inWindow(r)))
+      const cashIn = sum(rows.filter(r => r.category === 'cash_in' && !isIssued(r) && inWindow(r)))
       const cashOut = sum(rows.filter(r => r.category === 'cash_out' && inWindow(r)))
       // "Who owes me" = cash_in still unpaid — outstanding regardless of the window.
-      const owed = sum(rows.filter(r => r.category === 'cash_in' && !PAID.has((r.status || '').toLowerCase())))
+      const owed = sum(rows.filter(r => isOwedIn(r)))
+      // RM only — invoices in another currency (meta.currency, e.g. USD) aren't added as RM.
+      const invoiced = sum(rows.filter(r => r.category === 'cash_in' && isIssued(r) && !r.meta?.currency && inWindow(r)))
       return JSON.stringify({
         period,
         cash_in: cashIn,
         cash_out: cashOut,
         net: cashIn - cashOut,
         owed_to_you: owed,
+        invoiced_payment_not_tracked: invoiced,
         display: {
           cash_in: rm(cashIn),
           cash_out: rm(cashOut),
           net: rm(cashIn - cashOut),
           owed_to_you: rm(owed),
+          invoiced_payment_not_tracked: rm(invoiced),
         },
       })
     }
@@ -290,7 +298,7 @@ export function runBotTool(name: string, input: any, rows: Rec[]): string {
       const today = todayISO()
       const onlyOverdue = name === 'list_overdue_invoices'
       const unpaid = rows.filter(
-        r => r.category === 'cash_in' && !PAID.has((r.status || '').toLowerCase()),
+        r => isOwedIn(r),
       )
       const picked = onlyOverdue ? unpaid.filter(r => r.due_date && r.due_date < today) : unpaid
       const out = picked
@@ -378,7 +386,7 @@ export function runBotTool(name: string, input: any, rows: Rec[]): string {
       const openPipe = sum(
         rows.filter(r => r.category === 'lead' && !CLOSED_LOST.has((r.status || '').toLowerCase())),
       )
-      const unpaidIn = sum(rows.filter(r => r.category === 'cash_in' && !PAID.has((r.status || '').toLowerCase())))
+      const unpaidIn = sum(rows.filter(r => isOwedIn(r)))
       const won = wonLeads + paidIn
       const pending = openPipe + unpaidIn
       return JSON.stringify({
@@ -394,7 +402,7 @@ export function runBotTool(name: string, input: any, rows: Rec[]): string {
     if (name === 'attention_today') {
       const today = todayISO()
       const overdueInv = rows
-        .filter(r => r.category === 'cash_in' && !PAID.has((r.status || '').toLowerCase()) && r.due_date && r.due_date < today)
+        .filter(r => isOwedIn(r) && r.due_date && r.due_date < today)
         .map(r => ({ what: r.title, who: r.meta?.customer || null, amount: rm(r.amount), days_late: daysLate(r.due_date!, today) }))
       const tasksToday = rows
         .filter(r => r.category === 'task' && !PAID.has((r.status || '').toLowerCase()) && r.due_date && r.due_date <= today)

@@ -64,11 +64,12 @@ export async function downloadFileBytes(filePath: string): Promise<Buffer | null
 export type InlineButton = { text: string; callback_data: string }
 export type InlineKeyboard = InlineButton[][]
 
-export async function sendMessage(chatId: string | number, text: string) {
+// Returns true if Telegram accepted the message (callers may ignore it).
+export async function sendMessage(chatId: string | number, text: string): Promise<boolean> {
   const url = api('sendMessage')
   if (!url) {
     console.warn('[CFO] TELEGRAM_BOT_TOKEN not set yet — skipping sendMessage.')
-    return
+    return false
   }
   const res = await fetch(url, {
     method: 'POST',
@@ -79,6 +80,7 @@ export async function sendMessage(chatId: string | number, text: string) {
     const body = await res.json().catch(() => ({}))
     console.error('[CFO] Telegram sendMessage failed:', body.description || res.status)
   }
+  return res.ok
 }
 
 // Send a message with Approve/Reject (or any) inline buttons. RETURNS the sent

@@ -51,6 +51,10 @@ export const rm = (n: number) => 'RM ' + Number(n || 0).toLocaleString('en-MY')
 // Today as YYYY-MM-DD (for due-date comparisons + seeds).
 export const todayISO = () => new Date().toISOString().slice(0, 10)
 
+// An "issued" cash_in row is an invoice that's documented but whose payment isn't
+// tracked yet — it counts as neither money received nor money owed.
+export const isIssued = (r: Pick<Rec, 'status'>) => (r.status || '').toLowerCase() === 'issued'
+
 // How many proposals are waiting for a YES right now (status 'proposed', unexpired).
 // Powers the 🙋 sidebar badge. Returns 0 before Supabase is wired (no hang).
 export async function getPendingCount(): Promise<number> {

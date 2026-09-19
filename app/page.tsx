@@ -1,4 +1,4 @@
-import { getRecords, getFunnel, rm } from '@/lib/records'
+import { getRecords, getFunnel, rm, isIssued } from '@/lib/records'
 import { supabase, supabaseConfigured } from '@/lib/supabase'
 import FunnelBar from '@/app/_components/FunnelBar'
 import Stat from '@/app/_components/Stat'
@@ -22,9 +22,10 @@ export default async function Dashboard() {
   const funnel = getFunnel(rows)
 
   // ── The Money row ───────────────────────────────────────────────
+  // Issued invoices (payment not tracked yet) stay out of every money total.
   const sum = (cat: string, statuses?: string[]) =>
     rows
-      .filter(r => r.category === cat && (!statuses || statuses.includes((r.status || '').toLowerCase())))
+      .filter(r => r.category === cat && !isIssued(r) && (!statuses || statuses.includes((r.status || '').toLowerCase())))
       .reduce((s, r) => s + Number(r.amount || 0), 0)
 
   const cashIn = sum('cash_in')
