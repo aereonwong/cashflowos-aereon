@@ -8,6 +8,7 @@ import {
   editMessageReplyMarkup,
   getFilePath,
   downloadFileBytes,
+  getBotIdentity,
 } from '@/lib/telegram'
 import { loadTurns, appendTurn, bumpDailyCounter } from '@/lib/bot-memory'
 import { getRecords, rm, todayISO } from '@/lib/records'
@@ -199,6 +200,20 @@ async function handleCallback(cb: any): Promise<Response> {
 async function handleMessage(msg: any): Promise<Response> {
   const chatId = msg.chat?.id
 
+  // GROUP CHATS — stay quiet unless spoken to. Outsiders are ignored silently (no
+  // "Not authorized" in front of everyone), and allowed members are only answered
+  // when they @mention the bot, reply to one of its messages, or send a /command
+  // (bare, or /command@thisbot). The mention/suffix is stripped so the rest of the
+  // handler sees the same text a private chat would. Private chats are unchanged.
+  const isGroup = msg.chat?.type === 'group' || msg.chat?.type === 'supergroup'
+  if (isGroup) {
+    if (!isAllowed(msg.from?.id)) return Response.json({ ok: true })
+    const addressed = await addressedToBot(msg)
+    if (!addressed) return Response.json({ ok: true })
+    if (msg.text != null) msg.text = addressed.text
+    if (msg.caption != null) msg.caption = addressed.caption
+  }
+
   // Allowlist on the sender — fail closed, echo the id.
   if (!isAllowed(msg.from?.id)) {
     await sendMessage(
@@ -273,6 +288,34 @@ async function handleMessage(msg: any): Promise<Response> {
   await appendTurn(chatId, text, answer)
   await sendMessage(chatId, answer)
   return Response.json({ ok: true })
+}
+
+// ============================================================
+// addressedToBot — in a group, is this message for us? Yes if it @mentions the bot,
+// replies to one of the bot's messages, or is a /command that's bare or aimed at
+// this bot (/help@thisbot — not /help@someotherbot). Returns the text/caption with
+// our @username stripped, or null to stay silent. Can't tell who we are ⇒ silent.
+// ============================================================
+async function addressedToBot(msg: any): Promise<{ text?: string; caption?: string } | null> {
+  const me = await getBotIdentity()
+  if (!me) return null
+  const handle = `@${me.username.toLowerCase()}`
+  const body: string = msg.text ?? msg.caption ?? ''
+  const entities: any[] = msg.entities ?? msg.caption_entities ?? []
+
+  const mentioned = entities.some(e =>
+    (e.type === 'mention' && body.slice(e.offset, e.offset + e.length).toLowerCase() === handle) ||
+    (e.type === 'text_mention' && e.user?.id === me.id),
+  )
+  const repliedToBot = msg.reply_to_message?.from?.id === me.id
+  const cmd = body.trim().match(/^\/[a-z0-9_-]+(?:@([a-z0-9_]+))?/i)
+  const commandForUs = !!cmd && (!cmd[1] || `@${cmd[1].toLowerCase()}` === handle)
+
+  if (!mentioned && !repliedToBot && !commandForUs) return null
+
+  const strip = (s?: string) =>
+    s == null ? s : s.replace(new RegExp(`${handle}\\b`, 'gi'), '').replace(/\s{2,}/g, ' ').trim()
+  return { text: strip(msg.text), caption: strip(msg.caption) }
 }
 
 // ============================================================

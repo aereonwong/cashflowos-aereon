@@ -145,3 +145,26 @@ export async function editMessageReplyMarkup(
     }),
   }).catch(e => console.error('[CFO] editMessageReplyMarkup failed:', e))
 }
+
+// Who am I? The bot's own numeric id + @username, from getMe. Cached per server
+// instance (it never changes for a token). Used to tell whether a group message is
+// addressed to the bot. Returns null (never throws) if the token isn't set.
+let botIdentity: { id: number; username: string } | null = null
+export async function getBotIdentity(): Promise<{ id: number; username: string } | null> {
+  if (botIdentity) return botIdentity
+  const url = api('getMe')
+  if (!url) return null
+  try {
+    const res = await fetch(url)
+    const body = await res.json().catch(() => ({}))
+    if (!res.ok || !body.ok || !body.result?.username) {
+      console.error('[CFO] getMe failed:', body.description || res.status)
+      return null
+    }
+    botIdentity = { id: body.result.id, username: body.result.username }
+    return botIdentity
+  } catch (e) {
+    console.error('[CFO] getMe threw:', e)
+    return null
+  }
+}
