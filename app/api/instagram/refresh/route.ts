@@ -27,7 +27,16 @@ export async function POST() {
     const exec: Exec = async (slug, args) =>
       composio.tools.execute(slug, { userId, arguments: args, dangerouslySkipVersionCheck: true })
 
-    const snap = await buildSnapshot(exec, 24)
+    const snap = await buildSnapshot(exec)
+    // Instagram sometimes answers with an empty page. Saving that would wipe the
+    // tab, so keep the previous snapshot and say what happened.
+    if (snap.posts.length === 0) {
+      await logRun('instagram', 'noop', { reason: 'Instagram returned no posts' })
+      return Response.json(
+        { ok: false, error: 'Instagram returned no posts — kept the previous snapshot. Try again in a minute.' },
+        { status: 502 },
+      )
+    }
     await saveSnapshot(snap)
     await logRun('instagram', 'ok', { posts: snap.posts.length, username: snap.username })
     return Response.json({ ok: true, posts: snap.posts.length, captured_at: snap.captured_at })

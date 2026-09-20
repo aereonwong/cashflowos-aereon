@@ -43,7 +43,11 @@ export type Exec = (slug: string, args: Record<string, unknown>) => Promise<any>
 const num = (v: unknown) => (typeof v === 'number' && Number.isFinite(v) ? v : undefined)
 
 // Pull profile + the most recent posts, then one insights call per post.
-export async function buildSnapshot(exec: Exec, limit = 24): Promise<IgSnapshot> {
+// Instagram quietly returns ZERO items when the page is too big for this field
+// set (50 gives nothing, 40 is fine), so the request is capped at 40.
+export const MAX_POSTS = 40
+export async function buildSnapshot(exec: Exec, limit = MAX_POSTS): Promise<IgSnapshot> {
+  limit = Math.min(Math.max(limit, 1), MAX_POSTS)
   const info = await exec('INSTAGRAM_GET_USER_INFO', {})
   const profile: IgProfile = info?.data ?? info ?? {}
   const igUserId = String((profile as any).id ?? '')

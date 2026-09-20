@@ -23,7 +23,9 @@ async function exec(slug, args) {
 }
 
 // Same shaping as lib/instagram.ts (kept small here so the script stays plain Node).
-async function buildSnapshot(limit = 24) {
+const MAX_POSTS = 40 // Instagram returns nothing above ~40 for this field set
+async function buildSnapshot(limit = MAX_POSTS) {
+  limit = Math.min(Math.max(limit, 1), MAX_POSTS)
   const info = await exec('INSTAGRAM_GET_USER_INFO', {})
   const profile = info.data ?? {}
   const media = await exec('INSTAGRAM_GET_IG_USER_MEDIA', {
@@ -69,7 +71,12 @@ if (!url || !key) {
   process.exit(1)
 }
 
-const snap = await buildSnapshot(Number(process.argv[2] ?? 24))
+const arg = process.argv.slice(2).map(Number).find(v => Number.isFinite(v) && v > 0)
+const snap = await buildSnapshot(arg ?? MAX_POSTS)
+if (snap.posts.length === 0) {
+  console.error('❌ Instagram returned no posts — nothing saved (the old snapshot stays).')
+  process.exit(1)
+}
 const supabase = createClient(url, key)
 const { error } = await supabase.from('ig_snapshots').insert({
   captured_at: snap.captured_at,
