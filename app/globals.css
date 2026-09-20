@@ -655,18 +655,18 @@ body { font-family: var(--font-body); }
 :root[data-bg="merdeka"] .bg-photo, :root[data-bg="photo"] .bg-photo, :root[data-bg="sunset"] .bg-photo {
   display: block; position: fixed; inset: 0; z-index: -2;
   background: var(--hero-img) var(--hero-pos) / cover no-repeat fixed;
-  opacity: 0.30; filter: saturate(115%);
+  opacity: 0.13; filter: saturate(112%);
 }
 :root[data-bg="merdeka"] .bg-veil, :root[data-bg="photo"] .bg-veil, :root[data-bg="sunset"] .bg-veil {
   display: block; position: fixed; inset: 0; z-index: -1; pointer-events: none;
   background:
     radial-gradient(70vw 70vh at 18% 0%, var(--glow-1), transparent 62%),
     radial-gradient(60vw 60vh at 92% 8%, var(--glow-2), transparent 66%),
-    linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.78));
+    linear-gradient(180deg, rgba(255,255,255,.80), rgba(255,255,255,.90));
 }
 :root[data-bg="merdeka"] body, :root[data-bg="photo"] body, :root[data-bg="sunset"] body { background-image: none; }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"])[data-bg="merdeka"] .bg-photo, :root:not([data-theme="light"])[data-bg="photo"] .bg-photo, :root:not([data-theme="light"])[data-bg="sunset"] .bg-photo { opacity: 0.42; }
+  :root:not([data-theme="light"])[data-bg="merdeka"] .bg-photo, :root:not([data-theme="light"])[data-bg="photo"] .bg-photo, :root:not([data-theme="light"])[data-bg="sunset"] .bg-photo { opacity: 0.30; }
   :root:not([data-theme="light"])[data-bg="merdeka"] .bg-veil, :root:not([data-theme="light"])[data-bg="photo"] .bg-veil, :root:not([data-theme="light"])[data-bg="sunset"] .bg-veil {
     background:
       radial-gradient(70vw 70vh at 18% 0%, var(--glow-1), transparent 62%),
@@ -674,7 +674,7 @@ body { font-family: var(--font-body); }
       linear-gradient(180deg, rgba(4,7,12,.62), rgba(4,7,12,.82));
   }
 }
-:root[data-theme="dark"][data-bg="merdeka"] .bg-photo, :root[data-theme="dark"][data-bg="photo"] .bg-photo, :root[data-theme="dark"][data-bg="sunset"] .bg-photo { opacity: 0.42; }
+:root[data-theme="dark"][data-bg="merdeka"] .bg-photo, :root[data-theme="dark"][data-bg="photo"] .bg-photo, :root[data-theme="dark"][data-bg="sunset"] .bg-photo { opacity: 0.30; }
 :root[data-theme="dark"][data-bg="merdeka"] .bg-veil, :root[data-theme="dark"][data-bg="photo"] .bg-veil, :root[data-theme="dark"][data-bg="sunset"] .bg-veil {
   background:
     radial-gradient(70vw 70vh at 18% 0%, var(--glow-1), transparent 62%),
@@ -799,3 +799,29 @@ body { font-family: var(--font-body); }
 .bgcard.on { border-color: var(--accent); box-shadow: 0 0 0 3px var(--clay-tint), var(--shadow); }
 .bgthumb { display: block; height: 86px; background: linear-gradient(140deg, var(--accent), var(--accent-2)); background-size: cover; background-position: center 40%; }
 .bglabel { display: block; padding: 10px 13px; font-size: 13px; font-weight: 500; }
+
+/* ---- Dashboard hero (portrait + intro) ---- */
+.hero-card {
+  display: flex; align-items: center; gap: 22px; flex-wrap: wrap;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--r-28);
+  padding: 20px 24px; margin-bottom: 26px;
+  -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+  box-shadow: var(--shadow), var(--edge);
+}
+.hero-face {
+  width: 104px; height: 104px; border-radius: 50%; object-fit: cover; flex-shrink: 0;
+  border: 2px solid var(--card); box-shadow: 0 10px 30px var(--clay-tint-2);
+}
+.hero-copy { min-width: 240px; flex: 1; }
+.hero-copy .ph { font-size: 30px; margin: 2px 0 2px; }
+.hero-copy .cap { margin-bottom: 12px; }
+.hero-role { display: flex; align-items: center; gap: 7px; margin: 0; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.hero-role .ico-svg { width: 15px; height: 15px; }
+.hero-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.hero-chips .land-tag { background: var(--paper-2); border-color: var(--line); color: var(--ink-soft); text-decoration: none; }
+.hero-chips .land-tag.hot { border-color: var(--accent); color: var(--accent-deep); background: var(--clay-tint); font-weight: 600; }
+.rowlabel { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+.rowlabel .ico-svg { width: 16px; height: 16px; color: var(--accent); }
+@media (max-width: 560px) { .hero-face { width: 76px; height: 76px; } .hero-copy .ph { font-size: 24px; } }
+.demo-ask { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; align-items: center; }
+.demo-ask .login-input { max-width: 220px; }

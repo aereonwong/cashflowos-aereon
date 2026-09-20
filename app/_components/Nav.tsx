@@ -12,16 +12,16 @@ export const NAV_GROUPS: { label: string; tabs: { href: string; label: string; i
   { label: 'Overview', tabs: [
     { href: '/dashboard', label: 'Dashboard', icon: 'dashboard' },
   ] },
-  { label: 'Money', tabs: [
-    { href: '/cash-in', label: 'Cash In', icon: 'cash-in' },
-    { href: '/cash-out', label: 'Cash Out', icon: 'cash-out' },
-  ] },
   { label: 'Invoice', tabs: [
     { href: '/invoices', label: 'Invoice Summary', icon: 'invoice' },
     { href: '/clients', label: 'Clients', icon: 'clients' },
   ] },
   { label: 'Social', tabs: [
     { href: '/instagram', label: 'Instagram', icon: 'instagram' },
+  ] },
+  { label: 'Money', tabs: [
+    { href: '/cash-in', label: 'Cash In', icon: 'cash-in' },
+    { href: '/cash-out', label: 'Cash Out', icon: 'cash-out' },
   ] },
   { label: 'Pipeline', tabs: [
     { href: '/leads', label: 'Leads', icon: 'leads' },
