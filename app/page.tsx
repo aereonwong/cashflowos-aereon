@@ -124,7 +124,7 @@ export default async function Landing() {
           <footer className="land-foot">
             <span>SY Creative Production Sdn. Bhd.</span>
             <span>Aerial · Travel · Tech · Hotels · Events</span>
-            <span>Photo: KLCC in Merdeka colours</span>
+            <span>Photos: Aereon Wong · Kuala Lumpur</span>
           </footer>
         </section>
       </div>
