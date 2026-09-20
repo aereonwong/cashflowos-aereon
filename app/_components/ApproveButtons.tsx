@@ -4,7 +4,7 @@
 // (that's server-only) — it calls the 'use server' wrapper in app/approvals/actions.ts
 // instead. One claim implementation, two front doors (here + Telegram).
 import { useState, useTransition } from 'react'
-import { approveAction, rejectAction } from '@/app/approvals/actions'
+import { approveAction, rejectAction } from '@/app/(app)/approvals/actions'
 
 export default function ApproveButtons({ id }: { id: number }) {
   const [pending, startTransition] = useTransition()

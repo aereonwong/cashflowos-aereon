@@ -1,61 +1,48 @@
 import './globals.css'
 import type { Metadata, Viewport } from 'next'
-import Nav from './_components/Nav'
-import BottomNav from './_components/BottomNav'
-import ConnStatus from './_components/ConnStatus'
-import ThemeToggle from './_components/ThemeToggle'
-import { getPendingCount, demoMode } from '@/lib/records'
+
+// The ROOT layout: html, body, fonts and the photo background only. The dashboard
+// chrome (sidebar + bottom bar) lives in app/(app)/layout.tsx, so the public
+// landing page at / and the login screen render full-bleed without it.
 
 export const metadata: Metadata = {
-  title: 'CashFlowOS AI Agents 🤖',
-  description: 'Your Money Robot — one AI HQ for the whole business.',
+  title: 'Aereon Dashboard',
+  description:
+    'Aereon Wong — tech & travel creator, Kuala Lumpur. Invoices, clients, Instagram and AI agents in one place.',
   manifest: '/manifest.webmanifest',
-  appleWebApp: { capable: true, title: 'CashFlowOS', statusBarStyle: 'default' },
+  appleWebApp: { capable: true, title: 'Aereon', statusBarStyle: 'black-translucent' },
 }
 
 // theme-color drives the phone status-bar tint when installed to the home screen.
 export const viewport: Viewport = {
-  themeColor: '#FAF7F2',
+  themeColor: '#070A11',
   width: 'device-width',
   initialScale: 1,
 }
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const [pending, demo] = await Promise.all([getPendingCount(), demoMode()])
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Applies the saved theme before first paint so there's no flash. */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Sora:wght@500;600;700&family=Archivo:wght@500;600;700&display=swap"
+          rel="stylesheet"
+        />
+        {/* Replays the saved look before first paint so nothing flashes. */}
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "try{var d=document.documentElement,m=localStorage.getItem('cfo-theme'),a=localStorage.getItem('cfo-accent'),g=localStorage.getItem('cfo-glass');if(m==='light'||m==='dark')d.setAttribute('data-theme',m);if(a&&a!=='blue')d.setAttribute('data-accent',a);if(g==='clear'||g==='solid')d.setAttribute('data-glass',g)}catch(e){}",
+              "try{var d=document.documentElement,g=localStorage;var m=g.getItem('cfo-theme'),a=g.getItem('cfo-accent'),gl=g.getItem('cfo-glass'),f=g.getItem('cfo-font'),b=g.getItem('cfo-bg');if(m==='light'||m==='dark')d.setAttribute('data-theme',m);if(a&&a!=='blue')d.setAttribute('data-accent',a);if(gl==='clear'||gl==='solid')d.setAttribute('data-glass',gl);d.setAttribute('data-font',f||'grotesk');d.setAttribute('data-bg',b||'photo')}catch(e){document.documentElement.setAttribute('data-font','grotesk');document.documentElement.setAttribute('data-bg','photo')}",
           }}
         />
       </head>
       <body>
-        <div className="app">
-          {/* Desktop sidebar — hidden on phones (BottomNav takes over ≤768px). */}
-          <aside className="side">
-            <div className="brand"><span className="logo" aria-hidden="true">🤖</span> CashFlowOS AI Agents</div>
-            <Nav pendingCount={pending} />
-            <p className="hint">One <code>records</code> table behind every tab. Your robots live in <code>agents/</code>.</p>
-            <ThemeToggle />
-          </aside>
-          <main className="main">
-            <ConnStatus />
-            {demo ? (
-              <div className="banner warn">
-                <b>Demo data is on.</b> Every money, invoice, client and pipeline tab is showing an invented
-                business. Your real records are untouched — turn it off in <a href="/settings">Settings</a>.
-                Instagram and your Telegram bot still use real data.
-              </div>
-            ) : null}
-            {children}
-          </main>
-        </div>
-        {/* Phone bottom bar — hidden on desktop. */}
-        <BottomNav />
+        {/* The KLCC photo + the coloured veil that keeps text readable over it. */}
+        <div className="bg-photo" aria-hidden="true" />
+        <div className="bg-veil" aria-hidden="true" />
+        {children}
       </body>
     </html>
   )

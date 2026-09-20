@@ -1,56 +1,133 @@
-import { getRecords, getFunnel, rm, isIssued } from '@/lib/records'
-import { supabase, supabaseConfigured } from '@/lib/supabase'
-import FunnelBar from '@/app/_components/FunnelBar'
-import Stat from '@/app/_components/Stat'
+// 👉 The public landing page (the only page outside the passcode). It introduces
+// Aereon and links into the locked dashboard. Numbers come from the newest
+// Instagram snapshot; the brands come from the invoices, so both stay current
+// without anyone editing this file. No client names, amounts or private data.
+import { latestSnapshot } from '@/lib/instagram'
+import { getRecords } from '@/lib/records'
+import { toInvoices } from '@/lib/invoices'
 
 export const dynamic = 'force-dynamic'
 
-// Count of proposals still waiting on a human YES — the 🙋 number. Guarded so an
-// unconfigured/placeholder Supabase returns 0 instantly instead of hanging.
-async function proposedCount(): Promise<number> {
-  if (!supabaseConfigured) return 0
-  const { count, error } = await supabase
-    .from('agent_actions')
-    .select('id', { count: 'exact', head: true })
-    .eq('status', 'proposed')
-  if (error) return 0
-  return count ?? 0
-}
+const compact = (n: number) =>
+  n >= 1_000_000 ? `${(n / 1_000_000).toFixed(1)}M` : n >= 1_000 ? `${Math.round(n / 1000)}K` : String(n)
 
-export default async function Dashboard() {
-  const [rows, waiting] = await Promise.all([getRecords(), proposedCount()])
-  const funnel = getFunnel(rows)
+// Brand names worth showing — pulled from invoice project text, not client names.
+const BRAND_WORDS = [
+  'Petronas', 'HONOR', 'Canon', 'Samsung', 'Xiaomi', 'vivo', 'Tecno', 'Lazada', 'Shopee', 'DHL',
+  'Tesla', 'Proton', 'ECCO', 'Anker', 'Ricoh', 'Trip.com', 'Klook', 'Coway', 'Sunlife', 'CIMB',
+  'RHB', 'Public Bank', 'Tourism Malaysia', 'Sabah Tourism', 'Singapore Tourism Board', 'KL Tower',
+  'Merdeka 118', 'PlayStation', 'MOVA', 'Kaadas', 'Etiqa', 'Tetra Pak',
+]
 
-  // ── The Money row ───────────────────────────────────────────────
-  // Issued invoices (payment not tracked yet) stay out of every money total.
-  const sum = (cat: string, statuses?: string[]) =>
-    rows
-      .filter(r => r.category === cat && !isIssued(r) && (!statuses || statuses.includes((r.status || '').toLowerCase())))
-      .reduce((s, r) => s + Number(r.amount || 0), 0)
+export default async function Landing() {
+  const [snap, rows] = await Promise.all([latestSnapshot(), getRecords()])
+  const followers = snap?.profile.followers_count ?? 0
+  const posts = snap?.posts ?? []
+  const reach = posts.reduce((s, p) => s + (p.reach ?? 0), 0)
+  const views = posts.reduce((s, p) => s + (p.views ?? 0), 0)
 
-  const cashIn = sum('cash_in')
-  const cashOut = sum('cash_out')
-  const net = cashIn - cashOut
-  // "Who owes me" = money-in that hasn't landed yet (waiting / overdue / unpaid).
-  const owed = sum('cash_in', ['waiting', 'overdue', 'unpaid', 'pending'])
+  const invoices = toInvoices(rows)
+  const text = invoices.map(i => `${i.project} ${i.client}`).join(' ')
+  const brands = BRAND_WORDS.filter(b => text.toLowerCase().includes(b.toLowerCase())).slice(0, 14)
 
   return (
-    <>
-      <h1 className="ph">Dashboard</h1>
-      <p className="cap">The river, the money, and what needs your YES.</p>
+    <div className="land">
+      <div className="land-photo" aria-hidden="true" />
+      <div className="land-scrim" aria-hidden="true" />
+      <div className="land-inner">
+        <header className="land-top">
+          <span className="land-mark">
+            <span className="dotmark" aria-hidden="true" /> Aereon Wong
+          </span>
+          <a className="land-enter" href="/dashboard">
+            Enter dashboard
+            <svg className="ico-svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </a>
+        </header>
 
-      {/* Row 1 — the funnel (whole-business river) */}
-      <FunnelBar funnel={funnel} />
+        <section className="land-hero">
+          <p className="eyebrow">Kuala Lumpur · Malaysia</p>
+          <h1>
+            Tech &amp; travel,<br />
+            shot from <span className="tint">the sky</span>.
+          </h1>
+          <p className="blurb">
+            Creative visual travel content creator and professional drone pilot. Aerial films, launch
+            campaigns, hotels and tourism — from KLCC rooftops to island resorts. Photography, videography
+            and the occasional drone show at 300 metres.
+          </p>
 
-      {/* Row 2 — the money + the 🙋 count */}
-      <p className="rowlabel">The Money</p>
-      <div className="grid">
-        <Stat label="Cash In" value={rm(cashIn)} />
-        <Stat label="Cash Out" value={rm(cashOut)} />
-        <Stat label="Net" value={rm(net)} />
-        <Stat label="Who Owes Me" value={rm(owed)} />
-        <Stat label="🙋 Needs your YES" value={waiting} yes={waiting > 0} href="/approvals" />
+          <div className="land-stats">
+            {followers > 0 ? (
+              <div className="land-stat">
+                <div className="v">{compact(followers)}</div>
+                <div className="l">Followers</div>
+              </div>
+            ) : null}
+            {reach > 0 ? (
+              <div className="land-stat">
+                <div className="v">{compact(reach)}</div>
+                <div className="l">Reach · recent</div>
+              </div>
+            ) : null}
+            {views > 0 ? (
+              <div className="land-stat">
+                <div className="v">{compact(views)}</div>
+                <div className="l">Views · recent</div>
+              </div>
+            ) : null}
+            <div className="land-stat">
+              <div className="v">CAAM</div>
+              <div className="l">Licensed drone pilot</div>
+            </div>
+          </div>
+
+          {brands.length > 0 ? (
+            <>
+              <p className="eyebrow" style={{ marginBottom: 10 }}>Selected work</p>
+              <div className="land-tags">
+                {brands.map(b => (
+                  <span className="land-tag" key={b}>{b}</span>
+                ))}
+              </div>
+            </>
+          ) : null}
+
+          <div className="land-cta">
+            <a className="land-btn solid" href="https://www.instagram.com/aereonwong/" target="_blank" rel="noopener noreferrer">
+              <svg className="ico-svg" viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="5" />
+                <circle cx="12" cy="12" r="4" />
+                <path d="M17.5 6.5h.01" />
+              </svg>
+              @aereonwong
+            </a>
+            <a className="land-btn ghost" href="mailto:aereon.wong@gmail.com">
+              <svg className="ico-svg" viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="14" rx="3" />
+                <path d="m3.5 7 8.5 6 8.5-6" />
+              </svg>
+              Work with me
+            </a>
+            <a className="land-btn ghost" href="/dashboard">
+              <svg className="ico-svg" viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="4" y="11" width="4" height="9" rx="1" />
+                <rect x="10" y="6" width="4" height="14" rx="1" />
+                <rect x="16" y="14" width="4" height="6" rx="1" />
+              </svg>
+              Dashboard
+            </a>
+          </div>
+
+          <footer className="land-foot">
+            <span>SY Creative Production Sdn. Bhd.</span>
+            <span>Aerial · Travel · Tech · Hotels · Events</span>
+            <span>Photo: KLCC in Merdeka colours</span>
+          </footer>
+        </section>
       </div>
-    </>
+    </div>
   )
 }

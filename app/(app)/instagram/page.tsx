@@ -3,8 +3,10 @@
 // against REACH, the accounts that really saw a post, not your follower count.
 import { latestSnapshot, analyse, type IgPost } from '@/lib/instagram'
 import Stat from '@/app/_components/Stat'
-import Bars from '@/app/_components/Bars'
+import AreaChart from '@/app/_components/AreaChart'
 import RowBars from '@/app/_components/RowBars'
+import Donut from '@/app/_components/Donut'
+import Icon from '@/app/_components/Icon'
 import RefreshButton from '@/app/_components/RefreshButton'
 
 export const dynamic = 'force-dynamic'
@@ -47,12 +49,12 @@ export default async function Instagram() {
       </p>
 
       <div className="grid">
-        <Stat label="Followers" value={n(p.followers_count)} />
-        <Stat label="Posts in window" value={String(s.posts.length)} />
-        <Stat label="Views" value={n(s.totals.views)} />
-        <Stat label="Accounts reached" value={n(s.totals.reach)} />
-        <Stat label="Engagement rate" value={`${s.engagementRate.toFixed(1)}%`} />
-        <Stat label="Reach per post" value={n(s.reachPerPost)} />
+        <Stat label="Followers" value={n(p.followers_count)} icon="users" />
+        <Stat label="Posts in window" value={String(s.posts.length)} icon="camera" />
+        <Stat label="Views" value={n(s.totals.views)} icon="eye" />
+        <Stat label="Accounts reached" value={n(s.totals.reach)} icon="trend" />
+        <Stat label="Engagement rate" value={`${s.engagementRate.toFixed(1)}%`} icon="heart" />
+        <Stat label="Reach per post" value={n(s.reachPerPost)} icon="share" />
       </div>
 
       <p className="metahint">
@@ -62,38 +64,37 @@ export default async function Instagram() {
       </p>
 
       <div className="chart-card">
-        <h2>Reach by week</h2>
+        <h2><Icon name="trend" /> Reach by week</h2>
         <p className="sub">
           Last 6 weeks · this snapshot holds your {snap.posts.length} most recent posts
           {oldest ? `, back to ${oldest}` : ''} — earlier weeks read as empty because they are not in it
         </p>
-        <Bars
+        <AreaChart
           points={s.weekly.map(w => ({
             label: w.label,
             value: w.reach,
-            title: `${w.label}: ${n(w.reach)} reached · ${w.posts} post${w.posts === 1 ? '' : 's'}`,
-            caption: w.reach ? n(w.reach) : '',
+            sub: `${w.posts} post${w.posts === 1 ? '' : 's'}`,
           }))}
+          format={(v: number) => `${n(v)} reached`}
+          caption="hover the line to read any week"
         />
       </div>
 
       <div className="split">
         <div className="chart-card">
-          <h2>What format works</h2>
+          <h2><Icon name="camera" /> What format works</h2>
           <p className="sub">
             {best ? `${best.type} reaches the most: ${n(best.avgReach)} per post` : 'Not enough data yet'}
           </p>
-          <RowBars
-            rows={s.byType.map(t => ({
-              name: t.type,
-              value: t.avgReach,
-              right: `${n(t.avgReach)} reach · ${t.avgEngagement.toFixed(1)}% · ${t.count} post${t.count === 1 ? '' : 's'}`,
-            }))}
+          <Donut
+            slices={s.byType.map(t => ({ label: `${t.type} · ${t.count}`, value: Math.round(t.avgReach) }))}
+            centerLabel="average reach per post"
+            format={(v: number) => n(v)}
           />
         </div>
 
         <div className="chart-card">
-          <h2>Best day to post</h2>
+          <h2><Icon name="calendar" /> Best day to post</h2>
           <p className="sub">
             {bestDay ? `${bestDay.day} posts reach ${n(bestDay.avgReach)} on average` : 'Not enough data yet'}
           </p>
@@ -108,7 +109,7 @@ export default async function Instagram() {
       </div>
 
       <div className="chart-card">
-        <h2>Top posts</h2>
+        <h2><Icon name="sparkle" /> Top posts</h2>
         <p className="sub">By accounts reached</p>
         <table className="tbl">
           <thead>
@@ -149,7 +150,7 @@ export default async function Instagram() {
       </div>
 
       <div className="chart-card">
-        <h2>Quietest posts</h2>
+        <h2><Icon name="clock" /> Quietest posts</h2>
         <p className="sub">Lowest reach in this window — worth asking what was different</p>
         <RowBars
           rows={s.quiet.map(post => ({

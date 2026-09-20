@@ -8,7 +8,7 @@ import MoreSheet, { type MoreTab } from './MoreSheet'
 //    "More" button that opens the slide-up sheet with everything else, so all
 //    10 sections stay reachable on a phone. Keep this in sync with Nav.tsx.
 const PRIMARY = [
-  { href: '/', label: 'Dashboard', ico: '🏠' },
+  { href: '/dashboard', label: 'Dashboard', ico: '🏠' },
   { href: '/cash-in', label: 'Cash In', ico: '💰' },
   { href: '/cash-out', label: 'Cash Out', ico: '🧾' },
   { href: '/approvals', label: 'Approvals', ico: '🙋' },

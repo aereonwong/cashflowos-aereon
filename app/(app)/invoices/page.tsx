@@ -4,8 +4,10 @@ import { getRecords, rm } from '@/lib/records'
 import { summarize } from '@/lib/invoices'
 import Stat from '@/app/_components/Stat'
 import Empty from '@/app/_components/Empty'
-import Bars from '@/app/_components/Bars'
+import InteractiveBars from '@/app/_components/InteractiveBars'
 import RowBars from '@/app/_components/RowBars'
+import Donut from '@/app/_components/Donut'
+import Icon from '@/app/_components/Icon'
 
 export const dynamic = 'force-dynamic'
 
@@ -36,12 +38,12 @@ export default async function InvoiceSummary() {
       <p className="cap">Everything you've invoiced — totals, months, clients, work type.</p>
 
       <div className="grid">
-        <Stat label="Total invoiced" value={rm(s.totalRM)} />
-        <Stat label="Invoices" value={String(s.countRM)} />
-        <Stat label="Clients" value={String(s.clients.length)} />
-        <Stat label="Average invoice" value={rm(Math.round(s.averageRM))} />
-        <Stat label="Biggest invoice" value={rm(s.biggest?.amount ?? 0)} />
-        {s.bestMonth ? <Stat label={`Best month (${s.bestMonth.month})`} value={rm(s.bestMonth.total)} /> : null}
+        <Stat label="Total invoiced" value={rm(s.totalRM)} icon="wallet" />
+        <Stat label="Invoices" value={String(s.countRM)} icon="invoice" />
+        <Stat label="Clients" value={String(s.clients.length)} icon="users" />
+        <Stat label="Average invoice" value={rm(Math.round(s.averageRM))} icon="chart" />
+        <Stat label="Biggest invoice" value={rm(s.biggest?.amount ?? 0)} icon="sparkle" />
+        {s.bestMonth ? <Stat label={`Best month (${s.bestMonth.month})`} value={rm(s.bestMonth.total)} icon="calendar" /> : null}
       </div>
 
       {s.otherCurrency.length > 0 || s.untracked > 0 ? (
@@ -53,21 +55,24 @@ export default async function InvoiceSummary() {
       ) : null}
 
       <div className="chart-card">
-        <h2>Invoiced by month</h2>
+        <h2><Icon name="chart" /> Invoiced by month</h2>
         <p className="sub">RM per month{span ? ` · ${span}` : ''} · hover a bar for the invoice count</p>
-        <Bars
+        <InteractiveBars
           points={s.months.map(m => ({
             label: m.label,
-            value: m.total,
-            title: `${m.month}: ${rm(m.total)} · ${m.count} invoice${m.count === 1 ? '' : 's'}`,
-            caption: m.total ? rm(m.total).replace('RM ', '') : '',
+            sub: `${m.count} invoice${m.count === 1 ? '' : 's'}`,
+            values: { amount: m.total, count: m.count },
           }))}
+          series={[
+            { id: 'amount', label: 'RM', format: (v: number) => rm(Math.round(v)) },
+            { id: 'count', label: 'Invoices', format: (v: number) => `${Math.round(v)}` },
+          ]}
         />
       </div>
 
       <div className="split">
         <div className="chart-card">
-          <h2>Top clients</h2>
+          <h2><Icon name="users" /> Top clients</h2>
           <p className="sub">
             {s.clients[0]?.name} is {pct(s.topClientShare)} of everything you invoiced
             {s.topClientShare >= 40 ? ' — that is a lot from one client' : ''}
@@ -82,26 +87,24 @@ export default async function InvoiceSummary() {
         </div>
 
         <div className="chart-card">
-          <h2>Work type</h2>
-          <p className="sub">Grouped from what each invoice describes</p>
-          <RowBars
-            rows={s.byKind.map(k => ({
-              name: k.kind,
-              value: k.total,
-              right: `${rm(k.total)} · ${k.count}`,
-            }))}
+          <h2><Icon name="pie" /> Work type</h2>
+          <p className="sub">Grouped from what each invoice describes · hover a slice</p>
+          <Donut
+            slices={s.byKind.map(k => ({ label: k.kind, value: k.total }))}
+            centerLabel="invoiced by work type"
+            format={(v: number) => rm(Math.round(v))}
           />
         </div>
       </div>
 
       <div className="grid">
-        <Stat label="Repeat clients" value={`${s.repeatClients} of ${s.clients.length}`} />
-        <Stat label="From repeat clients" value={pct(s.repeatRevenueShare)} />
-        <Stat label="Top-client concentration" value={pct(s.topClientShare)} yes={s.topClientShare >= 40} />
+        <Stat label="Repeat clients" value={`${s.repeatClients} of ${s.clients.length}`} icon="users" />
+        <Stat label="From repeat clients" value={pct(s.repeatRevenueShare)} icon="heart" />
+        <Stat label="Top-client concentration" value={pct(s.topClientShare)} yes={s.topClientShare >= 40} icon="pie" />
       </div>
 
       <div className="chart-card">
-        <h2>All invoices</h2>
+        <h2><Icon name="invoice" /> All invoices</h2>
         <p className="sub">Newest first · the number links to the Canva document</p>
         <table className="tbl">
           <thead>
