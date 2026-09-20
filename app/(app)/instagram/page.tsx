@@ -75,7 +75,7 @@ export default async function Instagram() {
             value: w.reach,
             sub: `${w.posts} post${w.posts === 1 ? '' : 's'}`,
           }))}
-          format={(v: number) => `${n(v)} reached`}
+          suffix=" reached"
           caption="hover the line to read any week"
         />
       </div>
@@ -89,7 +89,6 @@ export default async function Instagram() {
           <Donut
             slices={s.byType.map(t => ({ label: `${t.type} · ${t.count}`, value: Math.round(t.avgReach) }))}
             centerLabel="average reach per post"
-            format={(v: number) => n(v)}
           />
         </div>
 

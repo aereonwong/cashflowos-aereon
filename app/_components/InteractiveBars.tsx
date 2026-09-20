@@ -5,7 +5,13 @@ import { useState } from 'react'
 // chart tells you what it is, in words. Optional metric switcher (e.g. money vs
 // count) flips the whole series without a page load. Pure SVG-free CSS bars, so
 // there's no chart library to download.
-export type Series = { id: string; label: string; format: (v: number) => string }
+export type Unit = 'rm' | 'plain'
+export type Series = { id: string; label: string; unit?: Unit; suffix?: string }
+
+// Formatting lives HERE, in the client component: a server page can't hand a
+// function across the boundary, only plain data.
+export const fmt = (v: number, unit: Unit = 'plain', suffix = '') =>
+  (unit === 'rm' ? `RM ${Math.round(v).toLocaleString('en-MY')}` : Math.round(v).toLocaleString('en-MY')) + suffix
 export type Point = { label: string; values: Record<string, number>; sub?: string }
 
 export default function InteractiveBars({
@@ -32,7 +38,7 @@ export default function InteractiveBars({
         <div className="ibars-read" aria-live="polite">
           {shown !== null ? (
             <>
-              <span className="ir-v">{active.format(values[shown])}</span>
+              <span className="ir-v">{fmt(values[shown], active.unit, active.suffix)}</span>
               <span className="ir-l">
                 {points[shown].label}
                 {points[shown].sub ? ` · ${points[shown].sub}` : ''}
@@ -40,7 +46,7 @@ export default function InteractiveBars({
             </>
           ) : (
             <>
-              <span className="ir-v">{active.format(total)}</span>
+              <span className="ir-v">{fmt(total, active.unit, active.suffix)}</span>
               <span className="ir-l">total · best {points[best]?.label}</span>
             </>
           )}
@@ -68,9 +74,9 @@ export default function InteractiveBars({
               onMouseEnter={() => setHover(i)}
               onFocus={() => setHover(i)}
               onClick={() => setHover(h => (h === i ? null : i))}
-              aria-label={`${p.label}: ${active.format(v)}`}
+              aria-label={`${p.label}: ${fmt(v, active.unit, active.suffix)}`}
             >
-              <span className="bar-val">{v > 0 ? active.format(v) : ''}</span>
+              <span className="bar-val">{v > 0 ? fmt(v, active.unit, active.suffix) : ''}</span>
               <span className="bar" style={{ height: `${pct}%`, animationDelay: `${i * 45}ms` }} />
               <span className="bar-lab">{p.label}</span>
             </button>

@@ -64,8 +64,8 @@ export default async function InvoiceSummary() {
             values: { amount: m.total, count: m.count },
           }))}
           series={[
-            { id: 'amount', label: 'RM', format: (v: number) => rm(Math.round(v)) },
-            { id: 'count', label: 'Invoices', format: (v: number) => `${Math.round(v)}` },
+            { id: 'amount', label: 'RM', unit: 'rm' as const },
+            { id: 'count', label: 'Invoices', unit: 'plain' as const },
           ]}
         />
       </div>
@@ -92,7 +92,7 @@ export default async function InvoiceSummary() {
           <Donut
             slices={s.byKind.map(k => ({ label: k.kind, value: k.total }))}
             centerLabel="invoiced by work type"
-            format={(v: number) => rm(Math.round(v))}
+            unit="rm"
           />
         </div>
       </div>

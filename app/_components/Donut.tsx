@@ -4,7 +4,10 @@ import { useState } from 'react'
 // 👉 A donut you can hover: each slice lights up and the middle tells you what
 // you're looking at. Drawn with one SVG circle per slice using stroke-dasharray,
 // so it animates in with no library.
-export type Slice = { label: string; value: number; format?: (v: number) => string }
+export type Slice = { label: string; value: number }
+export type Unit = 'rm' | 'plain'
+const fmt = (v: number, unit: Unit) =>
+  unit === 'rm' ? `RM ${Math.round(v).toLocaleString('en-MY')}` : Math.round(v).toLocaleString('en-MY')
 
 const COLORS = [
   'var(--accent)',
@@ -18,11 +21,11 @@ const COLORS = [
 export default function Donut({
   slices,
   centerLabel,
-  format = (v: number) => String(Math.round(v)),
+  unit = 'plain',
 }: {
   slices: Slice[]
   centerLabel: string
-  format?: (v: number) => string
+  unit?: Unit
 }) {
   const [hover, setHover] = useState<number | null>(null)
   const total = slices.reduce((s, x) => s + x.value, 0) || 1
@@ -63,7 +66,7 @@ export default function Donut({
           })}
         </svg>
         <div className="donut-mid">
-          <span className="dm-v">{shown ? format(shown.value) : format(total)}</span>
+          <span className="dm-v">{shown ? fmt(shown.value, unit) : fmt(total, unit)}</span>
           <span className="dm-l">{shown ? `${shown.label} · ${shownPct.toFixed(0)}%` : centerLabel}</span>
         </div>
       </div>
@@ -78,7 +81,7 @@ export default function Donut({
           >
             <span className="dk-dot" style={{ background: COLORS[i % COLORS.length] }} />
             <span className="dk-l">{s.label}</span>
-            <span className="dk-v">{(s.format ?? format)(s.value)}</span>
+            <span className="dk-v">{fmt(s.value, unit)}</span>
             <span className="dk-p">{((s.value / total) * 100).toFixed(0)}%</span>
           </li>
         ))}

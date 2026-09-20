@@ -8,13 +8,14 @@ export type AreaPoint = { label: string; value: number; sub?: string }
 
 export default function AreaChart({
   points,
-  format = (v: number) => Math.round(v).toLocaleString('en-MY'),
+  suffix = '',
   caption,
 }: {
   points: AreaPoint[]
-  format?: (v: number) => string
+  suffix?: string
   caption?: string
 }) {
+  const format = (v: number) => `${Math.round(v).toLocaleString('en-MY')}${suffix}`
   const [hover, setHover] = useState<number | null>(null)
   const W = 720
   const H = 220
