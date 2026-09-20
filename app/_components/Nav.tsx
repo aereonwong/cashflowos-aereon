@@ -35,6 +35,9 @@ export const NAV_GROUPS: { label: string; tabs: { href: string; label: string }[
     { href: '/employees', label: 'AI Employees' },
     { href: '/vault', label: 'Vault' },
   ] },
+  { label: 'You', tabs: [
+    { href: '/settings', label: 'Settings' },
+  ] },
 ]
 
 // Flat list kept for anything that wants every tab in one array.

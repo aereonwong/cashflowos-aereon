@@ -536,3 +536,72 @@ body {
 .side { overflow-y: auto; overscroll-behavior: contain; }
 .ms-theme { display: flex; justify-content: center; margin-top: 12px; }
 .ms-theme .theme-toggle { width: auto; padding: 9px 16px; }
+
+/* ============================================================
+   ACCENT PRESETS — set on <html data-accent="…"> from Settings.
+   Each preset drives the buttons, charts, active nav and the light behind
+   the glass. Blue is the default (tokens above).
+   ============================================================ */
+:root { --accent-2: #6B4DFF; }
+
+:root[data-accent="purple"] { --accent: #AF52DE; --accent-deep: #8E3CC0; --accent-2: #FF2D92;
+  --clay-tint: rgba(175,82,222,.14); --clay-tint-2: rgba(175,82,222,.24);
+  --glow-1: rgba(175,82,222,.26); --glow-2: rgba(255,45,146,.20); --glow-3: rgba(120,86,255,.18); }
+:root[data-accent="sunset"] { --accent: #FF9F0A; --accent-deep: #E07B00; --accent-2: #FF375F;
+  --clay-tint: rgba(255,159,10,.16); --clay-tint-2: rgba(255,159,10,.26);
+  --glow-1: rgba(255,159,10,.26); --glow-2: rgba(255,55,95,.20); --glow-3: rgba(255,214,10,.18); }
+:root[data-accent="emerald"] { --accent: #30D158; --accent-deep: #1DA945; --accent-2: #0AB3A6;
+  --clay-tint: rgba(48,209,88,.15); --clay-tint-2: rgba(48,209,88,.25);
+  --glow-1: rgba(48,209,88,.24); --glow-2: rgba(10,179,166,.20); --glow-3: rgba(10,132,255,.14); }
+:root[data-accent="rose"] { --accent: #FF375F; --accent-deep: #D81E46; --accent-2: #AF52DE;
+  --clay-tint: rgba(255,55,95,.14); --clay-tint-2: rgba(255,55,95,.24);
+  --glow-1: rgba(255,55,95,.24); --glow-2: rgba(175,82,222,.20); --glow-3: rgba(255,159,10,.14); }
+:root[data-accent="graphite"] { --accent: #6E7681; --accent-deep: #4E555E; --accent-2: #9AA3AE;
+  --clay-tint: rgba(110,118,129,.14); --clay-tint-2: rgba(110,118,129,.24);
+  --glow-1: rgba(110,118,129,.20); --glow-2: rgba(150,160,175,.16); --glow-3: rgba(90,100,115,.14); }
+:root[data-accent="clay"] { --accent: #D97757; --accent-deep: #BE5C3B; --accent-2: #B6802A;
+  --clay-tint: rgba(217,119,87,.14); --clay-tint-2: rgba(217,119,87,.24);
+  --glow-1: rgba(217,119,87,.24); --glow-2: rgba(182,128,42,.18); --glow-3: rgba(169,83,63,.16); }
+
+/* Gradients follow the preset's second colour. */
+.brand .logo, .btn, .bar, .rowbar .rb-fill { background-image: linear-gradient(160deg, var(--accent), var(--accent-2)); }
+.btn { background-color: var(--accent); }
+.bar { background: linear-gradient(180deg, var(--accent), var(--accent-2)); }
+.rowbar .rb-fill { background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+
+/* ---- Glass strength — <html data-glass="…"> ---- */
+:root[data-glass="clear"]  { --blur: saturate(190%) blur(34px); --card: rgba(255,255,255,0.38); --paper-2: rgba(255,255,255,0.32); }
+:root[data-glass="solid"]  { --blur: saturate(120%) blur(6px);  --card: rgba(255,255,255,0.92); --paper-2: rgba(255,255,255,0.88); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"])[data-glass="clear"] { --card: rgba(22,28,40,0.36); --paper-2: rgba(255,255,255,0.04); }
+  :root:not([data-theme="light"])[data-glass="solid"] { --card: rgba(17,22,32,0.94); --paper-2: rgba(255,255,255,0.10); }
+}
+:root[data-theme="dark"][data-glass="clear"] { --card: rgba(22,28,40,0.36); --paper-2: rgba(255,255,255,0.04); }
+:root[data-theme="dark"][data-glass="solid"] { --card: rgba(17,22,32,0.94); --paper-2: rgba(255,255,255,0.10); }
+
+/* ---- Settings tab ---- */
+.set-section { margin-bottom: 26px; }
+.set-section h2 { font-size: 15px; font-weight: 700; margin: 0 0 4px; color: var(--ink); }
+.set-section .sub { font-size: 13px; color: var(--dim); margin: 0 0 14px; line-height: 1.5; }
+.swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 12px; }
+.swatch {
+  display: flex; align-items: center; gap: 10px; padding: 12px 13px; cursor: pointer;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--r-20);
+  -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+  box-shadow: var(--shadow), var(--edge); color: var(--ink); font: inherit; font-size: 13px;
+  transition: transform 0.16s ease, border-color 0.16s ease;
+}
+.swatch:hover { transform: translateY(-1px); }
+.swatch.on { border-color: var(--accent); box-shadow: 0 0 0 3px var(--clay-tint), var(--shadow); }
+.swatch .dot { width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0; box-shadow: var(--edge); }
+.seg { display: inline-flex; padding: 3px; gap: 3px; background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--r-pill); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); }
+.seg button { font: inherit; font-size: 13px; padding: 7px 15px; border: none; border-radius: var(--r-pill); background: none; color: var(--ink-soft); cursor: pointer; }
+.seg button.on { background: var(--accent); color: #fff; font-weight: 600; box-shadow: 0 4px 12px var(--clay-tint-2); }
+.switchrow { display: flex; align-items: center; justify-content: space-between; gap: 16px; background: var(--card); border: 1px solid var(--line); border-radius: var(--r-20); padding: 16px 18px; -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); box-shadow: var(--shadow), var(--edge); }
+.switchrow .sr-t { font-size: 14px; font-weight: 600; margin: 0 0 3px; color: var(--ink); }
+.switchrow .sr-s { font-size: 12.5px; color: var(--dim); margin: 0; line-height: 1.5; max-width: 62ch; }
+.switch { width: 52px; height: 31px; border-radius: var(--r-pill); border: none; background: var(--line-2); position: relative; cursor: pointer; flex-shrink: 0; transition: background 0.18s ease; }
+.switch .knob { position: absolute; top: 3px; left: 3px; width: 25px; height: 25px; border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.28); transition: transform 0.18s cubic-bezier(.3,.7,.4,1); }
+.switch.on { background: var(--accent); }
+.switch.on .knob { transform: translateX(21px); }
+.demo-flag { background: linear-gradient(90deg, var(--clay-tint-2), transparent); border: 1px solid var(--accent); }

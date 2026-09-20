@@ -1,4 +1,6 @@
 import { supabase, supabaseConfigured } from './supabase'
+import { cookies } from 'next/headers'
+import { demoRecords } from './demo-data'
 
 // One row of the business spine. The whole app reads this single table.
 // `meta` is a free-form bag of extra fields each tab can use (a lead's next
@@ -25,7 +27,20 @@ export type Category = (typeof CATEGORIES)[number]
 export const LEAD_STAGES = ['new', 'contacted', 'appointment', 'closed', 'nurture'] as const
 
 // Every tab calls this, then filters in its own way.
+// Settings → "Use demo data" sets the cfo-demo cookie. It only exists inside a
+// browser request: the Telegram bot and the crons have no cookie jar, so
+// cookies() throws there and they always read your REAL records.
+export async function demoMode(): Promise<boolean> {
+  try {
+    const jar = await cookies()
+    return jar.get('cfo-demo')?.value === '1'
+  } catch {
+    return false
+  }
+}
+
 export async function getRecords(): Promise<Rec[]> {
+  if (await demoMode()) return demoRecords()
   // Before Supabase is wired (placeholder env), skip the fetch entirely — a bad
   // or unreachable URL otherwise hangs ~7s per request before failing. The
   // ConnStatus banner tells the user to add their keys. (Found in the live run.)
@@ -58,6 +73,7 @@ export const isIssued = (r: Pick<Rec, 'status'>) => (r.status || '').toLowerCase
 // How many proposals are waiting for a YES right now (status 'proposed', unexpired).
 // Powers the 🙋 sidebar badge. Returns 0 before Supabase is wired (no hang).
 export async function getPendingCount(): Promise<number> {
+  if (await demoMode()) return 1 // the demo has one pretend approval waiting
   if (!supabaseConfigured) return 0
   const { count, error } = await supabase
     .from('agent_actions')

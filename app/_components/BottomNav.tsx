@@ -25,6 +25,7 @@ const MORE: MoreTab[] = [
   { href: '/tasks', label: 'Tasks', ico: '✅' },
   { href: '/employees', label: 'AI Employees', ico: '🤖' },
   { href: '/vault', label: 'Vault', ico: '🗄️' },
+  { href: '/settings', label: 'Settings', ico: '⚙️' },
 ]
 
 export default function BottomNav() {

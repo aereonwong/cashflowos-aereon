@@ -1,0 +1,195 @@
+import type { Rec } from './records'
+
+// 👉 DEMO DATA — the fake business behind Settings → "Use demo data".
+// Nothing here touches Supabase: these rows are generated in memory, so your real
+// invoices and clients are never read, changed or shown while demo mode is on.
+// Names are deliberately obvious inventions.
+
+const DAY = 86_400_000
+const iso = (daysAgo: number) => new Date(Date.now() - daysAgo * DAY).toISOString()
+const day = (daysAgo: number) => iso(daysAgo).slice(0, 10)
+
+let seq = 0
+const row = (r: Partial<Rec> & { title: string; category: string }): Rec =>
+  ({
+    id: 900_000 + seq++,
+    status: 'open',
+    amount: 0,
+    due_date: null,
+    notes: '',
+    meta: {},
+    created_at: iso(30),
+    ...r,
+  }) as Rec
+
+// A demo client book: [company, contact, invoices as [daysAgo, amount, project]]
+const BOOK: [string, string, [number, number, string][]][] = [
+  ['Lumipix Studios Sdn Bhd', 'Farah Lim', [[12, 6500, 'Rooftop drone shoot: skyline sunset series'], [68, 4200, 'Product launch aerial coverage'], [140, 3800, 'Mall atrium hero video']]],
+  ['Bayu Tourism Board', 'Iskandar Rahim', [[26, 12000, 'Island campaign: 3 reels + stills'], [96, 9000, 'Highland festival coverage']]],
+  ['Northwind Media Group', 'Cheryl Teoh', [[6, 5200, 'Reel campaign for beverage brand'], [47, 5200, 'Second flight: café series']]],
+  ['Kirana Hotels', 'Danial Yusof', [[34, 7400, 'Resort walkthrough film + photo set']]],
+  ['Volt Mobility', 'Adrian Koh', [[19, 3000, 'EV launch event photography']]],
+  ['Selasih Property', 'Nurul Aziz', [[58, 8800, 'Township aerial survey + marketing cut']]],
+  ['Harta Coffee Co.', 'Bryan Ng', [[81, 1800, 'Single reel: new roastery']]],
+  ['Pelangi Events', 'Mei Chan', [[41, 4600, 'Gala dinner coverage, 2 shooters']]],
+  ['Terra Outdoor', 'Sam Devan', [[112, 2600, 'Trail campaign reel']]],
+  ['Bandar Skyline Mall', 'Joanne Foo', [[73, 5400, 'Festive drone show coverage'], [160, 5400, 'Anniversary weekend films']]],
+]
+
+export function demoRecords(): Rec[] {
+  seq = 0
+  const out: Rec[] = []
+
+  // ---- invoices (cash_in, "issued" like the real import) + the client rows ----
+  let n = 1
+  for (const [company, contact, invoices] of BOOK) {
+    const dates = invoices.map(i => day(i[0])).sort()
+    for (const [daysAgo, amount, project] of invoices) {
+      const no = `DEMO-${String(1000 + n++)}`
+      out.push(
+        row({
+          title: `${no} · ${project.split(':')[0]}`,
+          category: 'cash_in',
+          status: 'issued',
+          amount,
+          notes: project,
+          created_at: iso(daysAgo),
+          meta: {
+            customer: company,
+            contact,
+            invoice_no: no,
+            invoice_date: day(daysAgo),
+            source: 'demo',
+            payment_tracked: false,
+          },
+        }),
+      )
+    }
+    out.push(
+      row({
+        title: company,
+        category: 'customer',
+        status: 'active',
+        amount: 0,
+        notes: `Demo client · ${invoices.length} job${invoices.length > 1 ? 's' : ''}`,
+        created_at: iso(invoices[0][0]),
+        meta: {
+          company,
+          contacts: contact,
+          address: 'Demo address, Kuala Lumpur',
+          jobs: invoices.length,
+          total_invoiced: invoices.reduce((s, i) => s + i[1], 0),
+          first_job: dates[0],
+          last_touch: dates[dates.length - 1],
+          owes: 0,
+          payment_tracked: false,
+          source: 'demo',
+        },
+      }),
+    )
+  }
+
+  // One invoice in another currency, so the multi-currency handling shows up.
+  out.push(
+    row({
+      title: 'DEMO-1099 · Regional brand collab',
+      category: 'cash_in',
+      status: 'issued',
+      amount: 1500,
+      notes: 'Regional brand collab: 1 reel, 30-day usage',
+      created_at: iso(23),
+      meta: {
+        customer: 'Pacific Reach Pte Ltd',
+        contact: 'Grace Tan',
+        invoice_no: 'DEMO-1099',
+        invoice_date: day(23),
+        currency: 'USD',
+        source: 'demo',
+        payment_tracked: false,
+      },
+    }),
+  )
+
+  // ---- expenses ----
+  for (const [daysAgo, amount, what, cat] of [
+    [3, 189, 'Drone battery set', 'Equipment'],
+    [9, 420, 'Editing suite subscription', 'Software'],
+    [14, 96, 'Parking + tolls, city shoot', 'Travel'],
+    [22, 1250, 'Second shooter day rate', 'Crew'],
+    [31, 310, 'Insurance instalment', 'Admin'],
+  ] as [number, number, string, string][]) {
+    out.push(
+      row({
+        title: what,
+        category: 'cash_out',
+        status: 'paid',
+        amount,
+        created_at: iso(daysAgo),
+        meta: { category: cat, source: 'demo' },
+      }),
+    )
+  }
+
+  // ---- pipeline ----
+  for (const [name, stage, value, next] of [
+    ['Arus Bank — brand film', 'new', 15000, 'send capability deck'],
+    ['Melur Retail — festive reels', 'contacted', 8000, 'follow up Tuesday'],
+    ['Hikari Auto — launch coverage', 'appointment', 12000, 'recce on site'],
+    ['Pantai Resorts — 2027 retainer', 'appointment', 24000, 'proposal walkthrough'],
+    ['Suria Telco — drone show', 'closed', 18000, 'invoice + schedule'],
+    ['Cahaya Studio — collab', 'nurture', 4000, 'check back next quarter'],
+  ] as [string, string, number, string][]) {
+    out.push(
+      row({
+        title: name,
+        category: 'lead',
+        status: stage,
+        amount: value,
+        due_date: day(-7),
+        created_at: iso(20),
+        meta: { potential: value, next, source: 'demo' },
+      }),
+    )
+  }
+
+  // ---- tasks ----
+  for (const [title, dueIn, owner] of [
+    ['Deliver Lumipix final cut', 1, 'me'],
+    ['Send Bayu Tourism invoice reminder', 0, 'me'],
+    ['Book CAAM permit for mall shoot', 4, 'me'],
+    ['Back up September footage', -2, 'me'],
+  ] as [string, number, string][]) {
+    out.push(
+      row({
+        title,
+        category: 'task',
+        status: 'open',
+        due_date: day(-dueIn),
+        created_at: iso(5),
+        meta: { owner, source: 'demo' },
+      }),
+    )
+  }
+
+  // ---- content ----
+  for (const [title, status, platform, views, daysAgo] of [
+    ['Reel: skyline timelapse', 'posted', 'instagram', 42000, 4],
+    ['Carousel: gear I travel with', 'posted', 'instagram', 18500, 11],
+    ['Reel: behind the drone show', 'scheduled', 'tiktok', 0, -3],
+    ['Vlog: shooting a resort film', 'draft', 'youtube', 0, -8],
+  ] as [string, string, string, number, number][]) {
+    out.push(
+      row({
+        title,
+        category: 'content',
+        status,
+        amount: 0,
+        due_date: day(daysAgo),
+        created_at: iso(Math.max(daysAgo, 0)),
+        meta: { platform, format: 'reel', views, source: 'demo' },
+      }),
+    )
+  }
+
+  return out.sort((a, b) => b.created_at.localeCompare(a.created_at))
+}
