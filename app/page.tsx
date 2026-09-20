@@ -48,6 +48,13 @@ export default async function Landing() {
         </header>
 
         <section className="land-hero">
+          <div className="land-person">
+            <img className="land-face" src="/img/aereon.jpg" alt="Aereon Wong" />
+            <div>
+              <p className="lp-name">Hi, I'm Aereon.</p>
+              <p className="lp-role">Tech &amp; Travel Content Creator · drone pilot · KL</p>
+            </div>
+          </div>
           <p className="eyebrow">Kuala Lumpur · Malaysia</p>
           <h1>
             Tech &amp; travel,<br />
