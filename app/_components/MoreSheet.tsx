@@ -1,6 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import ThemeToggle from './ThemeToggle'
 
 // The slide-up "More" sheet for phones. Holds the tabs that don't fit on the
 // bottom bar, so every one of the 10 sections stays reachable on a phone.
@@ -42,6 +43,7 @@ export default function MoreSheet({
             </Link>
           ))}
         </div>
+        <div className="ms-theme"><ThemeToggle /></div>
         <button type="button" className="ms-close" onClick={onClose}>Close</button>
       </div>
     </div>

@@ -35,6 +35,7 @@ export default async function Instagram() {
   const s = analyse(snap)
   const p = snap.profile
   const best = s.byType[0]
+  const oldest = [...snap.posts].map(p => p.timestamp).sort()[0]?.slice(0, 10)
   const bestDay = s.byWeekday.filter(d => d.count >= 2)[0] ?? s.byWeekday[0]
 
   return (
@@ -62,7 +63,10 @@ export default async function Instagram() {
 
       <div className="chart-card">
         <h2>Reach by week</h2>
-        <p className="sub">Last 6 weeks · hover for how many posts went out</p>
+        <p className="sub">
+          Last 6 weeks · this snapshot holds your {snap.posts.length} most recent posts
+          {oldest ? `, back to ${oldest}` : ''} — earlier weeks read as empty because they are not in it
+        </p>
         <Bars
           points={s.weekly.map(w => ({
             label: w.label,
