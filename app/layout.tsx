@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from 'next'
 import Nav from './_components/Nav'
 import BottomNav from './_components/BottomNav'
 import ConnStatus from './_components/ConnStatus'
+import ThemeToggle from './_components/ThemeToggle'
 import { getPendingCount } from '@/lib/records'
 
 export const metadata: Metadata = {
@@ -22,7 +23,16 @@ export const viewport: Viewport = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const pending = await getPendingCount()
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Applies the saved theme before first paint so there's no flash. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{var m=localStorage.getItem('cfo-theme');if(m==='light'||m==='dark')document.documentElement.setAttribute('data-theme',m)}catch(e){}",
+          }}
+        />
+      </head>
       <body>
         <div className="app">
           {/* Desktop sidebar — hidden on phones (BottomNav takes over ≤768px). */}
@@ -30,6 +40,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <div className="brand"><span className="logo" aria-hidden="true">🤖</span> CashFlowOS AI Agents</div>
             <Nav pendingCount={pending} />
             <p className="hint">One <code>records</code> table behind every tab. Your robots live in <code>agents/</code>.</p>
+            <ThemeToggle />
           </aside>
           <main className="main"><ConnStatus />{children}</main>
         </div>

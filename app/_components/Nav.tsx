@@ -19,6 +19,13 @@ export const NAV_GROUPS: { label: string; tabs: { href: string; label: string }[
     { href: '/leads', label: 'Leads' },
     { href: '/customers', label: 'Customers' },
   ] },
+  { label: 'Invoice', tabs: [
+    { href: '/invoices', label: 'Invoice Summary' },
+    { href: '/clients', label: 'Clients' },
+  ] },
+  { label: 'Social', tabs: [
+    { href: '/instagram', label: 'Instagram' },
+  ] },
   { label: 'Work', tabs: [
     { href: '/content', label: 'Content' },
     { href: '/tasks', label: 'Tasks' },

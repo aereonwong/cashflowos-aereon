@@ -8,13 +8,15 @@
     "start": "next start",
     "webhook:set": "node --env-file-if-exists=.env scripts/set-webhook.mjs",
     "webhook:info": "node --env-file-if-exists=.env scripts/webhook-info.mjs",
-    "import": "node --env-file-if-exists=.env scripts/import.mjs"
+    "import": "node --env-file-if-exists=.env scripts/import.mjs",
+    "ig:refresh": "node --env-file-if-exists=.env scripts/ig-refresh.mjs"
   },
   "engines": {
     "node": ">=20"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.100.1",
+    "@composio/core": "^0.18.1",
     "@supabase/supabase-js": "^2.105.4",
     "next": "16.2.6",
     "react": "19.2.4",

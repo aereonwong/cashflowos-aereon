@@ -285,3 +285,249 @@ code {
 
 /* ---- Two-row dashboard: money row lives in .grid; funnel above it ---- */
 .rowlabel { font-size: 13px; color: var(--ink-soft); font-weight: 600; margin: 0 0 10px; }
+
+/* ============================================================
+   LIQUID GLASS — Apple-style restyle (light + dark).
+   Tokens are redefined here, so every existing class keeps its name and
+   picks up the new palette. Dark mode follows the device by default and is
+   overridden by <html data-theme="light|dark"> (the sidebar toggle).
+   ============================================================ */
+:root {
+  --accent:      #007AFF;
+  --accent-deep: #0A63D8;
+
+  --paper:   #EAF0F8;
+  --paper-2: rgba(255, 255, 255, 0.55);
+  --card:    rgba(255, 255, 255, 0.62);
+
+  --ink:       #0B0F16;
+  --ink-soft:  #4A5261;
+  --ink-faint: #8891A1;
+  --dim:       #5C6472;
+
+  --clay:      var(--accent);
+  --clay-deep: var(--accent-deep);
+  --clay-tint:   rgba(0, 122, 255, 0.13);
+  --clay-tint-2: rgba(0, 122, 255, 0.22);
+  --amber:     var(--accent);
+
+  --line:   rgba(11, 15, 22, 0.09);
+  --line-2: rgba(11, 15, 22, 0.15);
+
+  --sage:  #34A853;
+  --honey: #C98A17;
+  --rust:  #E0483C;
+
+  /* the glass recipe */
+  --blur:      saturate(180%) blur(22px);
+  --sheen:     linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0.12));
+  --edge:      inset 0 1px 0 rgba(255,255,255,0.65);
+  --shadow:    0 10px 34px rgba(11, 30, 60, 0.10);
+  --shadow-lg: 0 20px 60px rgba(11, 30, 60, 0.16);
+
+  /* the coloured light behind the glass */
+  --glow-1: rgba(0, 122, 255, 0.24);
+  --glow-2: rgba(120, 86, 255, 0.20);
+  --glow-3: rgba(255, 128, 168, 0.16);
+
+  --f-views:   #0A84FF;
+  --f-leads:   #FFB020;
+  --f-appts:   #7C5CFF;
+  --f-closed:  #34C759;
+  --f-nurture: #FF6B5E;
+}
+
+/* Dark: device preference (unless overridden to light) … */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper:   #070A11;
+    --paper-2: rgba(255, 255, 255, 0.06);
+    --card:    rgba(22, 28, 40, 0.58);
+
+    --ink:       #F2F5FA;
+    --ink-soft:  #A9B2C3;
+    --ink-faint: #737E92;
+    --dim:       #96A0B2;
+
+    --accent:      #0A84FF;
+    --accent-deep: #409CFF;
+    --clay-tint:   rgba(10, 132, 255, 0.20);
+    --clay-tint-2: rgba(10, 132, 255, 0.30);
+
+    --line:   rgba(255, 255, 255, 0.10);
+    --line-2: rgba(255, 255, 255, 0.17);
+
+    --sheen:  linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02));
+    --edge:   inset 0 1px 0 rgba(255,255,255,0.10);
+    --shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
+    --shadow-lg: 0 24px 70px rgba(0, 0, 0, 0.60);
+
+    --glow-1: rgba(10, 132, 255, 0.30);
+    --glow-2: rgba(128, 86, 255, 0.24);
+    --glow-3: rgba(255, 92, 140, 0.16);
+  }
+}
+/* … and the manual override. */
+:root[data-theme="dark"] {
+  --paper:   #070A11;
+  --paper-2: rgba(255, 255, 255, 0.06);
+  --card:    rgba(22, 28, 40, 0.58);
+
+  --ink:       #F2F5FA;
+  --ink-soft:  #A9B2C3;
+  --ink-faint: #737E92;
+  --dim:       #96A0B2;
+
+  --accent:      #0A84FF;
+  --accent-deep: #409CFF;
+  --clay-tint:   rgba(10, 132, 255, 0.20);
+  --clay-tint-2: rgba(10, 132, 255, 0.30);
+
+  --line:   rgba(255, 255, 255, 0.10);
+  --line-2: rgba(255, 255, 255, 0.17);
+
+  --sheen:  linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02));
+  --edge:   inset 0 1px 0 rgba(255,255,255,0.10);
+  --shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 24px 70px rgba(0, 0, 0, 0.60);
+
+  --glow-1: rgba(10, 132, 255, 0.30);
+  --glow-2: rgba(128, 86, 255, 0.24);
+  --glow-3: rgba(255, 92, 140, 0.16);
+}
+
+/* The lit background the glass sits on. */
+body {
+  background: var(--paper);
+  background-image:
+    radial-gradient(60vw 60vw at 12% -8%, var(--glow-1), transparent 60%),
+    radial-gradient(52vw 52vw at 96% 4%, var(--glow-2), transparent 62%),
+    radial-gradient(48vw 48vw at 62% 108%, var(--glow-3), transparent 60%);
+  background-attachment: fixed;
+  letter-spacing: -0.005em;
+}
+
+/* Every raised surface becomes glass. */
+.stat, .tbl, .funnel, .kc, .agent-card, .vcard, .brief, .empty, .login-card, .banner, .chart-card {
+  background-color: var(--card);
+  -webkit-backdrop-filter: var(--blur);
+  backdrop-filter: var(--blur);
+  box-shadow: var(--shadow), var(--edge);
+  border-color: var(--line);
+}
+.stat, .kc, .agent-card, .vcard, .chart-card { border-radius: var(--r-20); }
+.tbl, .funnel, .login-card { border-radius: var(--r-20); }
+.stat { transition: transform 0.18s ease, box-shadow 0.18s ease; }
+.stat:hover { transform: translateY(-1px); box-shadow: var(--shadow-lg), var(--edge); }
+.stat .v { letter-spacing: -0.02em; }
+
+/* Sidebar: a frosted rail that stays put while the page scrolls. */
+.side {
+  background: var(--paper-2);
+  -webkit-backdrop-filter: var(--blur);
+  backdrop-filter: var(--blur);
+  border-right: 1px solid var(--line);
+  position: sticky; top: 0; height: 100vh;
+}
+.brand { color: var(--ink); }
+.brand .logo { background: linear-gradient(160deg, var(--accent), #6B4DFF); box-shadow: 0 6px 16px rgba(0,122,255,0.35); }
+.nav a { transition: background 0.15s ease, color 0.15s ease; }
+.nav a:hover { background: var(--clay-tint); color: var(--ink); }
+.nav a.active { background: var(--clay-tint-2); color: var(--accent-deep); box-shadow: var(--edge); }
+.nav-badge { background: var(--accent); color: #fff; }
+
+.tbl { overflow: hidden; }
+.tbl thead th { background: var(--paper-2); }
+.tbl tbody tr { transition: background 0.14s ease; }
+.tbl tbody tr:hover { background: var(--clay-tint); }
+
+.pill { background: var(--paper-2); box-shadow: var(--edge); }
+.btn { background: linear-gradient(180deg, var(--accent), var(--accent-deep)); box-shadow: 0 6px 18px rgba(0,122,255,0.30); }
+.btn:hover:not(:disabled) { filter: brightness(1.06); background: linear-gradient(180deg, var(--accent), var(--accent-deep)); }
+.btn.ghost { background: var(--paper-2); color: var(--ink); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); box-shadow: var(--edge); }
+.btn.ghost:hover:not(:disabled) { background: var(--clay-tint); }
+.btn.danger { background: linear-gradient(180deg, #FF6B5E, #D6392C); box-shadow: 0 6px 18px rgba(214,57,44,0.30); }
+
+.bottomnav, .ms-panel {
+  background: var(--card);
+  -webkit-backdrop-filter: var(--blur);
+  backdrop-filter: var(--blur);
+}
+.ms-grid a { background: var(--paper-2); box-shadow: var(--edge); }
+.ms-grid a.active { background: var(--clay-tint-2); border-color: var(--accent); color: var(--accent-deep); }
+.login-wrap { background: transparent; }
+.login-input { background: var(--paper-2); color: var(--ink); }
+
+/* Dark-mode readability for the status pills (their light-mode text is dark). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .pill.open, :root:not([data-theme="light"]) .pill.new,
+  :root:not([data-theme="light"]) .pill.contacted, :root:not([data-theme="light"]) .pill.waiting,
+  :root:not([data-theme="light"]) .pill.active, :root:not([data-theme="light"]) .pill.scheduled { background: rgba(10,132,255,.22); color: #8FC4FF; }
+  :root:not([data-theme="light"]) .pill.pending, :root:not([data-theme="light"]) .pill.draft,
+  :root:not([data-theme="light"]) .pill.proposed, :root:not([data-theme="light"]) .pill.appointment { background: rgba(255,176,32,.20); color: #FFCF7A; }
+  :root:not([data-theme="light"]) .pill.won, :root:not([data-theme="light"]) .pill.done,
+  :root:not([data-theme="light"]) .pill.paid, :root:not([data-theme="light"]) .pill.closed,
+  :root:not([data-theme="light"]) .pill.filed, :root:not([data-theme="light"]) .pill.posted,
+  :root:not([data-theme="light"]) .pill.executed, :root:not([data-theme="light"]) .pill.approved { background: rgba(52,199,89,.20); color: #8CE6A6; }
+  :root:not([data-theme="light"]) .pill.lost, :root:not([data-theme="light"]) .pill.overdue,
+  :root:not([data-theme="light"]) .pill.rejected, :root:not([data-theme="light"]) .pill.failed,
+  :root:not([data-theme="light"]) .pill.expired { background: rgba(255,107,94,.20); color: #FFA79E; }
+  :root:not([data-theme="light"]) .banner { color: #FFB4AB; }
+  :root:not([data-theme="light"]) .banner.info { color: #9CC8FF; }
+  :root:not([data-theme="light"]) .banner.warn { color: #FFD28A; }
+  :root:not([data-theme="light"]) .login-error { color: #FFA79E; }
+}
+:root[data-theme="dark"] .pill.open, :root[data-theme="dark"] .pill.new,
+:root[data-theme="dark"] .pill.contacted, :root[data-theme="dark"] .pill.waiting,
+:root[data-theme="dark"] .pill.active, :root[data-theme="dark"] .pill.scheduled { background: rgba(10,132,255,.22); color: #8FC4FF; }
+:root[data-theme="dark"] .pill.pending, :root[data-theme="dark"] .pill.draft,
+:root[data-theme="dark"] .pill.proposed, :root[data-theme="dark"] .pill.appointment { background: rgba(255,176,32,.20); color: #FFCF7A; }
+:root[data-theme="dark"] .pill.won, :root[data-theme="dark"] .pill.done,
+:root[data-theme="dark"] .pill.paid, :root[data-theme="dark"] .pill.closed,
+:root[data-theme="dark"] .pill.filed, :root[data-theme="dark"] .pill.posted,
+:root[data-theme="dark"] .pill.executed, :root[data-theme="dark"] .pill.approved { background: rgba(52,199,89,.20); color: #8CE6A6; }
+:root[data-theme="dark"] .pill.lost, :root[data-theme="dark"] .pill.overdue,
+:root[data-theme="dark"] .pill.rejected, :root[data-theme="dark"] .pill.failed,
+:root[data-theme="dark"] .pill.expired { background: rgba(255,107,94,.20); color: #FFA79E; }
+:root[data-theme="dark"] .banner { color: #FFB4AB; }
+:root[data-theme="dark"] .banner.info { color: #9CC8FF; }
+:root[data-theme="dark"] .banner.warn { color: #FFD28A; }
+:root[data-theme="dark"] .login-error { color: #FFA79E; }
+
+/* ---- Theme toggle (sidebar + phone header) ---- */
+.theme-toggle {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 12px; padding: 7px 10px; width: 100%;
+  background: var(--paper-2); color: var(--ink-soft);
+  border: 1px solid var(--line); border-radius: var(--r-pill);
+  font: inherit; font-size: 13px; cursor: pointer;
+  -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+  box-shadow: var(--edge);
+}
+.theme-toggle:hover { color: var(--ink); background: var(--clay-tint); }
+.theme-toggle .tt-ico { font-size: 14px; line-height: 1; }
+
+/* ---- Charts + analytics cards (Invoice & Instagram tabs) ---- */
+.chart-card { border: 1px solid var(--line); padding: 18px; margin-bottom: 20px; }
+.chart-card h2 { font-size: 14px; color: var(--ink-soft); font-weight: 600; margin: 0 0 4px; }
+.chart-card .sub { font-size: 12px; color: var(--dim); margin: 0 0 16px; }
+.bars { display: flex; align-items: flex-end; gap: 10px; height: 190px; padding-top: 8px; }
+.bar-col { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; justify-content: flex-end; }
+.bar-val { font-size: 11px; color: var(--ink-soft); white-space: nowrap; }
+.bar {
+  width: 100%; max-width: 52px; border-radius: 10px 10px 4px 4px; min-height: 3px;
+  background: linear-gradient(180deg, var(--accent), #6B4DFF);
+  box-shadow: 0 6px 16px rgba(0,122,255,0.25), var(--edge);
+  transition: filter 0.15s ease;
+}
+.bar-col:hover .bar { filter: brightness(1.12); }
+.bar-lab { font-size: 11px; color: var(--dim); white-space: nowrap; }
+.rowbars { display: flex; flex-direction: column; gap: 10px; }
+.rowbar { display: grid; grid-template-columns: minmax(90px, 30%) 1fr auto; align-items: center; gap: 10px; font-size: 13px; }
+.rowbar .rb-name { color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rowbar .rb-track { height: 9px; border-radius: var(--r-pill); background: var(--paper-2); overflow: hidden; }
+.rowbar .rb-fill { height: 100%; border-radius: var(--r-pill); background: linear-gradient(90deg, var(--accent), #6B4DFF); }
+.rowbar .rb-val { color: var(--ink-soft); font-size: 12px; white-space: nowrap; }
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 900px) { .split { grid-template-columns: 1fr; } }
+.metahint { font-size: 12px; color: var(--dim); margin: -12px 0 18px; line-height: 1.5; }
