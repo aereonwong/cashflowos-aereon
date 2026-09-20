@@ -647,32 +647,35 @@ body { font-family: var(--font-body); }
   --glow-1: rgba(49,112,142,.34); --glow-2: rgba(143,193,227,.26); --glow-3: rgba(104,120,100,.18);
   --f-views: #5085A5; --f-leads: #8FC1E3; --f-appts: #31708E; --f-closed: #687864; --f-nurture: #A9836B; }
 
-/* ---- The photo behind everything — <html data-bg="photo|off"> ---- */
+/* ---- The photo behind everything — <html data-bg="merdeka|sunset|off"> ----
+   Two of Aereon's own KLCC shots; --hero-img is what the landing page uses too. */
+:root { --hero-img: url('/img/klcc-merdeka.jpg'); --hero-pos: center 22%; }
+:root[data-bg="sunset"] { --hero-img: url('/img/klcc-sunset.jpg'); --hero-pos: center 46%; }
 .bg-photo { display: none; }
-:root[data-bg="photo"] .bg-photo {
+:root[data-bg="merdeka"] .bg-photo, :root[data-bg="photo"] .bg-photo, :root[data-bg="sunset"] .bg-photo {
   display: block; position: fixed; inset: 0; z-index: -2;
-  background: url('/img/klcc-merdeka.jpg') center 22% / cover no-repeat fixed;
+  background: var(--hero-img) var(--hero-pos) / cover no-repeat fixed;
   opacity: 0.30; filter: saturate(115%);
 }
-:root[data-bg="photo"] .bg-veil {
+:root[data-bg="merdeka"] .bg-veil, :root[data-bg="photo"] .bg-veil, :root[data-bg="sunset"] .bg-veil {
   display: block; position: fixed; inset: 0; z-index: -1; pointer-events: none;
   background:
     radial-gradient(70vw 70vh at 18% 0%, var(--glow-1), transparent 62%),
     radial-gradient(60vw 60vh at 92% 8%, var(--glow-2), transparent 66%),
     linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.78));
 }
-:root[data-bg="photo"] body { background-image: none; }
+:root[data-bg="merdeka"] body, :root[data-bg="photo"] body, :root[data-bg="sunset"] body { background-image: none; }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"])[data-bg="photo"] .bg-photo { opacity: 0.42; }
-  :root:not([data-theme="light"])[data-bg="photo"] .bg-veil {
+  :root:not([data-theme="light"])[data-bg="merdeka"] .bg-photo, :root:not([data-theme="light"])[data-bg="photo"] .bg-photo, :root:not([data-theme="light"])[data-bg="sunset"] .bg-photo { opacity: 0.42; }
+  :root:not([data-theme="light"])[data-bg="merdeka"] .bg-veil, :root:not([data-theme="light"])[data-bg="photo"] .bg-veil, :root:not([data-theme="light"])[data-bg="sunset"] .bg-veil {
     background:
       radial-gradient(70vw 70vh at 18% 0%, var(--glow-1), transparent 62%),
       radial-gradient(60vw 60vh at 92% 8%, var(--glow-2), transparent 66%),
       linear-gradient(180deg, rgba(4,7,12,.62), rgba(4,7,12,.82));
   }
 }
-:root[data-theme="dark"][data-bg="photo"] .bg-photo { opacity: 0.42; }
-:root[data-theme="dark"][data-bg="photo"] .bg-veil {
+:root[data-theme="dark"][data-bg="merdeka"] .bg-photo, :root[data-theme="dark"][data-bg="photo"] .bg-photo, :root[data-theme="dark"][data-bg="sunset"] .bg-photo { opacity: 0.42; }
+:root[data-theme="dark"][data-bg="merdeka"] .bg-veil, :root[data-theme="dark"][data-bg="photo"] .bg-veil, :root[data-theme="dark"][data-bg="sunset"] .bg-veil {
   background:
     radial-gradient(70vw 70vh at 18% 0%, var(--glow-1), transparent 62%),
     radial-gradient(60vw 60vh at 92% 8%, var(--glow-2), transparent 66%),
@@ -708,7 +711,7 @@ body { font-family: var(--font-body); }
 
 /* ---- Landing page (public, before the passcode) ---- */
 .land { position: relative; min-height: 100vh; color: #fff; overflow: hidden; }
-.land-photo { position: absolute; inset: 0; background: url('/img/klcc-merdeka.jpg') center 28% / cover no-repeat; transform: scale(1.04); animation: land-drift 26s ease-in-out infinite alternate; }
+.land-photo { position: absolute; inset: 0; background: var(--hero-img) var(--hero-pos) / cover no-repeat; transform: scale(1.04); animation: land-drift 26s ease-in-out infinite alternate; }
 .land-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(3,8,14,.62) 0%, rgba(3,8,14,.55) 42%, rgba(3,8,14,.92) 100%); }
 .land-inner { position: relative; max-width: 1080px; margin: 0 auto; padding: 34px 26px 60px; display: flex; flex-direction: column; min-height: 100vh; }
 .land-top { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
@@ -790,3 +793,9 @@ body { font-family: var(--font-body); }
 .stat { position: relative; overflow: hidden; }
 .stat::after { content: ''; position: absolute; inset: auto -20% -60% auto; width: 120px; height: 120px; border-radius: 50%; background: var(--clay-tint); opacity: 0; transition: opacity .2s ease; }
 .stat:hover::after { opacity: 1; }
+.bgpick { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.bgcard { padding: 0; border: 1px solid var(--line); border-radius: var(--r-20); overflow: hidden; background: var(--card); cursor: pointer; font: inherit; color: var(--ink); text-align: left; box-shadow: var(--shadow), var(--edge); transition: transform .16s ease, border-color .16s ease; }
+.bgcard:hover { transform: translateY(-1px); }
+.bgcard.on { border-color: var(--accent); box-shadow: 0 0 0 3px var(--clay-tint), var(--shadow); }
+.bgthumb { display: block; height: 86px; background: linear-gradient(140deg, var(--accent), var(--accent-2)); background-size: cover; background-position: center 40%; }
+.bglabel { display: block; padding: 10px 13px; font-size: 13px; font-weight: 500; }

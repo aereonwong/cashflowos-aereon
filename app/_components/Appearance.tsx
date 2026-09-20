@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
 type Mode = 'auto' | 'light' | 'dark'
 type Glass = 'clear' | 'frosted' | 'solid'
 type Font = 'grotesk' | 'sora' | 'archivo' | 'system'
-type Bg = 'photo' | 'off'
+type Bg = 'merdeka' | 'sunset' | 'off'
 
 type Swatch = { id: string; label: string; from: string; to: string; note?: string }
 
@@ -64,7 +64,7 @@ export default function Appearance() {
   const [mode, setMode] = useState<Mode>('auto')
   const [glass, setGlass] = useState<Glass>('frosted')
   const [font, setFont] = useState<Font>('grotesk')
-  const [bg, setBg] = useState<Bg>('photo')
+  const [bg, setBg] = useState<Bg>('merdeka')
 
   useEffect(() => {
     const a = read(KEYS.accent)
@@ -76,7 +76,8 @@ export default function Appearance() {
     if (m === 'light' || m === 'dark' || m === 'auto') setMode(m)
     if (g === 'clear' || g === 'frosted' || g === 'solid') setGlass(g)
     if (f === 'grotesk' || f === 'sora' || f === 'archivo' || f === 'system') setFont(f)
-    if (b === 'photo' || b === 'off') setBg(b)
+    if (b === 'merdeka' || b === 'sunset' || b === 'off') setBg(b)
+    else if (b === 'photo') setBg('merdeka') // the old name for the Merdeka shot
   }, [])
 
   const pickAccent = (id: string) => {
@@ -189,23 +190,33 @@ export default function Appearance() {
 
       <div className="set-section">
         <h2>Background</h2>
-        <p className="sub">Your KLCC Merdeka photo, dimmed behind every tab — or plain colour.</p>
-        <div className="seg">
+        <p className="sub">
+          One of your own KLCC shots, dimmed behind every tab — and used full-bleed on your public
+          landing page. Or turn the photo off for plain colour.
+        </p>
+        <div className="bgpick">
           {([
-            ['photo', '🌃 KLCC photo'],
-            ['off', 'Plain colour'],
-          ] as [Bg, string][]).map(([id, label]) => (
+            ['merdeka', 'Merdeka night', '/img/klcc-merdeka.jpg'],
+            ['sunset', 'KLCC sunset', '/img/klcc-sunset.jpg'],
+            ['off', 'Plain colour', ''],
+          ] as [Bg, string, string][]).map(([id, label, thumb]) => (
             <button
               key={id}
               type="button"
-              className={bg === id ? 'on' : ''}
+              className={`bgcard${bg === id ? ' on' : ''}`}
               onClick={() => {
                 setBg(id)
                 store(KEYS.bg, id)
                 document.documentElement.setAttribute('data-bg', id)
               }}
+              aria-pressed={bg === id}
             >
-              {label}
+              <span
+                className="bgthumb"
+                style={thumb ? { backgroundImage: `url(${thumb})` } : undefined}
+                aria-hidden="true"
+              />
+              <span className="bglabel">{label}</span>
             </button>
           ))}
         </div>
