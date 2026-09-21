@@ -46,17 +46,18 @@ and only six documents survive; 2022 has visible gaps (see below).
 Gaps: no `2023-01`, `-03`, `-14`, `-16`; 2022 jumps `2022-13` → `2022-16`; `SYCP-2022-37`/`-38`
 never appear; there is no `SYCP-202503` series at all (no March 2025 invoice).
 
-### 2. Eight duplicate invoice numbers
+### 2. Six duplicate invoice numbers
 | Number | Used on |
 |---|---|
 | `2023-19` | 10 Sep 2023, 19 Oct 2023, 19 Oct 2023 — **three times** |
-| `SYCP-202608-002` | 17, 17 and 18 Aug 2026 |
 | `2021-16` | 3 Nov 2021, 29 Dec 2021 |
 | `2022-02` | 9 Jan 2022, 18 Feb 2022 |
 | `SYCP-2023-34` | 15 Nov 2023, 17 Nov 2023 |
 | `2023-21` | 16 Nov 2023, 21 Dec 2023 |
-| `SYCP-202608-001` | 8 and 16 Aug 2026 |
 | `SYCP-202604-006` | 3 and 10 Apr 2026 |
+
+Two more (`SYCP-202608-001`, `SYCP-202608-002`) were fixed at source in Canva on 21 Sep 2026 and
+re-imported — see "Corrections applied" below. The six above are still live in the documents.
 
 ### 3. The file name disagrees with the document
 - `2023-20 - Lazada September` prints **2023-19** inside
@@ -118,3 +119,22 @@ all. The Pavilion KL invoice says *"30% Deposit of RM30,000"* on a **RM 9,000** 
 8. A **status** field: Draft / Issued / Cancelled — so cancelled work is never confused with income.
 9. Quotations, delivery orders and credit notes get **their own folders and prefixes**
    (`SYCP-Q-`, `SYCP-DO-`, `SYCP-CN-`).
+
+
+## Corrections applied · 21 Sep 2026
+
+Aereon corrected four invoices in Canva; they were re-read and the database updated to match.
+
+| Was | Now | What changed |
+|---|---|---|
+| `SYCP-202608-001`, 8 Aug 2026 | `SYCP-202609-001`, 8 Sep 2026 | Wrong month in the number and the date |
+| `SYCP-202608-002`, 17 Aug 2026 | `SYCP-202609-002`, 17 Sep 2026 | Wrong month in the number and the date |
+| `SYCP-202608-002`, 17 Aug 2026 (StarGather) | `SYCP-202609-003`, 17 Sep 2026 | Wrong month; also clears a three-way number clash |
+| Client "SGO Communications" | **G.O. Communications** | Misspelt company name on the three Marvel Wolverine invoices |
+
+Effects: RM 5,000 moved from August 2026 into September 2026 (September is no longer an empty
+month); duplicate invoice numbers fell from eight to six; and G.O. Communications — RM 14,500 across
+three jobs — now appears under its real name, which matters because it is a top-five client of the
+last twelve months.
+
+Totals are unchanged: 185 invoices, RM 579,957.47, 131 clients.
