@@ -12,8 +12,9 @@ Written at the end of the first build session, so the next one starts informed.
    Until then refresh locally: `npm run ig:refresh`. Add `COMPOSIO_USER_ID` if the default user fails.
 4. **Payment tracking** — the big one. Invoices are all status `issued` (documented, payment unknown).
    Next step is paid/outstanding, days-to-pay, and "who owes me" answering truthfully again.
-5. **Invoices before Jan 2026** were not imported (Dec 2025 and earlier: Xiaomi RM14k, Coway RM10k,
-   Canon, Sunlife…). Quotations and the one credit note were skipped by choice.
+5. ~~Invoices before Jan 2026 were not imported.~~ **Done 21 Sep 2026** — the entire Canva Invoices
+   folder (2021–2026, 185 invoices) is in. Quotations, a delivery order, three cancelled invoices and
+   one duplicated document were skipped on purpose; see `docs/INVOICE-AUDIT.md`.
 6. **Design tools installed but unused** — run `/impeccable audit` and `/web-design-guidelines`
    over the dashboard. Known findings already: bar charts animate `width` (should be `transform`),
    and Inter/Space Grotesk are flagged as over-used fonts.

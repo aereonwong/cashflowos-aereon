@@ -32,8 +32,11 @@ handing over instructions — except for passwords and secret keys, which are al
 - An invoice = a `cash_in` row with `meta.invoice_no`, status **`issued`** = documented but payment
   not tracked yet. `issued` must never count as paid, owed or overdue — see `isIssued()` in
   `lib/records.ts`, honoured by the dashboard, Cash In, the morning brief and the bot's tools.
-- Invoices were imported from Canva (Jan–Aug 2026, 33 invoices, RM 102,034.47 + USD 1,400, 29 clients).
-  Three invoices are in USD (`meta.currency`) and are never added into RM totals.
+- Invoices were imported from Canva — the whole folder, Mar 2021 → Aug 2026: 185 invoices,
+  RM 579,957.47 plus USD 10,130.30, SGD 7,378.40, RMB 4,000 and EUR 230, across 131 clients.
+  Foreign-currency rows carry `meta.currency` and are never added into RM totals.
+  `docs/INVOICE-AUDIT.md` lists what the source documents disagree about — read it before
+  changing how invoices are parsed or before designing a new invoice template.
 - Instagram lives in its own `ig_snapshots` table, one row per refresh. Instagram caps a media page
   at ~40 posts for this field set — asking for 50 silently returns zero, so never raise the cap.
 - Demo mode: `cfo-demo` httpOnly cookie set by `/api/demo` after checking `DEMO_PASSCODE`. It swaps
