@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 // 👉 Appearance controls for Settings: colour theme (Basic + Advanced), light/dark,
 // glass strength, typeface and the photo background. Each choice sets an attribute
@@ -9,6 +10,7 @@ type Mode = 'auto' | 'light' | 'dark'
 type Glass = 'clear' | 'frosted' | 'solid'
 type Font = 'grotesk' | 'sora' | 'archivo' | 'system'
 type Bg = 'merdeka' | 'sunset' | 'off'
+type Dash = 'v1' | 'v2'
 
 type Swatch = { id: string; label: string; from: string; to: string; note?: string }
 
@@ -60,11 +62,19 @@ const setAttr = (attr: string, value: string, clearWhen: string) => {
 }
 
 export default function Appearance() {
+  const router = useRouter()
   const [accent, setAccent] = useState('blue')
   const [mode, setMode] = useState<Mode>('auto')
   const [glass, setGlass] = useState<Glass>('frosted')
   const [font, setFont] = useState<Font>('grotesk')
   const [bg, setBg] = useState<Bg>('merdeka')
+  const [dash, setDash] = useState<Dash>('v2')
+
+  // The dashboard layout lives in a cookie so the server can read it; mirror it
+  // into state on mount so the right card shows as selected.
+  useEffect(() => {
+    setDash(/(?:^|;\s*)cfo-dash=v1(?:;|$)/.test(document.cookie) ? 'v1' : 'v2')
+  }, [])
 
   useEffect(() => {
     const a = read(KEYS.accent)
@@ -109,6 +119,45 @@ export default function Appearance() {
 
   return (
     <>
+      <div className="set-section">
+        <h2>Dashboard layout</h2>
+        <p className="sub">
+          Two ways to read the same numbers. Nothing changes in the data — only what the Dashboard
+          leads with.
+        </p>
+        <div className="layoutpick">
+          {([
+            [
+              'v2',
+              'Operating picture',
+              'Built for decisions: how the year is tracking, what needs attention, which kind of work is growing, and who has gone quiet.',
+            ],
+            [
+              'v1',
+              'Creator view',
+              'The original: your portrait and headline numbers, last six months, top clients and Instagram.',
+            ],
+          ] as [Dash, string, string][]).map(([id, label, note]) => (
+            <button
+              key={id}
+              type="button"
+              className={`layoutcard${dash === id ? ' on' : ''}`}
+              aria-pressed={dash === id}
+              onClick={() => {
+                setDash(id)
+                // A cookie, not localStorage: the Dashboard is rendered on the
+                // server, so it has to be able to read this before it draws.
+                document.cookie = `cfo-dash=${id}; path=/; max-age=31536000; samesite=lax`
+                router.refresh()
+              }}
+            >
+              <span className="layoutlabel">{label}</span>
+              <span className="layoutnote">{note}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div className="set-section">
         <h2>Colour theme — Basic</h2>
         <p className="sub">Clean single-accent looks. Saved on this device.</p>
