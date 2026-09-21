@@ -15,9 +15,14 @@ Written at the end of the first build session, so the next one starts informed.
 5. ~~Invoices before Jan 2026 were not imported.~~ **Done 21 Sep 2026** — the entire Canva Invoices
    folder (2021–2026, 185 invoices) is in. Quotations, a delivery order, three cancelled invoices and
    one duplicated document were skipped on purpose; see `docs/INVOICE-AUDIT.md`.
-6. **Design tools installed but unused** — run `/impeccable audit` and `/web-design-guidelines`
-   over the dashboard. Known findings already: bar charts animate `width` (should be `transform`),
-   and Inter/Space Grotesk are flagged as over-used fonts.
+6. **Design tools** — `impeccable` drove the v2 Dashboard redesign (21 Sep 2026) and its detector
+   now runs clean over `_v2.tsx`, `MixTrend`, `Rhythm`, `Delta` and `globals.css`. The one finding
+   left is a false positive: it flags `transition: stroke-width` on `.donut-seg` as a layout
+   animation, but that is an SVG paint property, not CSS `width` — leave it alone.
+   Still unrun: `/web-design-guidelines` over the other tabs.
+7. **The other tabs still assume one year of data.** Cash In, Clients and Invoice Summary were
+   built when the book held 2026 only; it now runs from March 2021. v1's "Invoiced · 12 months"
+   was actually the all-time total and has been relabelled — check the rest for the same trap.
 
 ## Watch out for
 

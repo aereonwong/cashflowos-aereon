@@ -19,9 +19,16 @@ handing over instructions — except for passwords and secret keys, which are al
 - Next.js 16 App Router, TypeScript, no CSS framework — one hand-written `app/globals.css`.
 - `app/page.tsx` — public landing page (portrait, bio, live IG numbers, brand strip from invoices).
 - `app/(app)/**` — everything behind the passcode; `app/(app)/layout.tsx` holds sidebar + bottom bar.
+- The Dashboard has two layouts. `app/(app)/dashboard/page.tsx` reads the `cfo-dash` cookie and
+  renders `_v2.tsx` (default, "Operating picture") or `_v1.tsx` ("Creator view"). Settings sets the
+  cookie. Both read the same rows, so switching never changes a number.
 - `proxy.ts` — the passcode gate (Next 16 name for middleware). Public paths are listed in its matcher.
 - `lib/records.ts` — every tab reads ONE Supabase `records` table; `meta` jsonb carries per-tab fields.
 - `lib/invoices.ts` — invoice/client roll-ups. `lib/instagram.ts` — snapshots + analytics.
+- `lib/analytics.ts` — everything Dashboard v2 states: rolling 12-month windows, client
+  concentration, dormant clients, movers, seasonality, and the two classifiers (`service()` /
+  `sector()`). Order matters in both classifiers — the comments say why. If a figure appears on v2,
+  the function that produced it is in here; nothing on that page is estimated.
 - `app/api/` — `telegram` (bot webhook), `cron-daily` (8:30am brief), `cron-news` (9am digest),
   `instagram/refresh`, `demo` (password-guarded demo switch), `login`.
 - Charts are hand-built client components: `InteractiveBars`, `Donut`, `AreaChart`, `RowBars`.
