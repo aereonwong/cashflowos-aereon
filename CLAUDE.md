@@ -29,7 +29,7 @@ handing over instructions — except for passwords and secret keys, which are al
   concentration, dormant clients, movers, seasonality, and the two classifiers (`service()` /
   `sector()`). Order matters in both classifiers — the comments say why. If a figure appears on v2,
   the function that produced it is in here; nothing on that page is estimated.
-- `app/api/` — `telegram` (bot webhook), `cron-daily` (8:30am brief), `cron-news` (9am digest),
+- `app/api/` — `telegram` (bot webhook), `cron-daily` (agent sweep; brief disabled), `cron-news` (9am digest),
   `instagram/refresh`, `demo` (password-guarded demo switch), `login`.
 - Charts are hand-built client components: `InteractiveBars`, `Donut`, `AreaChart`, `RowBars`.
   **Server components may not pass functions to them** — pass `unit`/`suffix` flags instead.
@@ -59,9 +59,28 @@ Tokens live at the top of `globals.css`; attributes are `data-theme`, `data-acce
 
 ## Scheduled
 
-- 8:30am MYT — money brief to Telegram (`0 30 * * *` is `30 0 * * *` UTC)
+- 8:30am MYT — `cron-daily`. The **morning brief is OFF** (Aereon turned it off on 22 Sep 2026;
+  `MORNING_BRIEF_ENABLED` in the route flips it back). The cron still runs, because the same job
+  sweeps the scheduled agents and creates proposals — that part is deliberately still on.
 - 9:00am MYT — tech & travel news digest via Claude web search, owner only
 - Vercel Hobby fires crons within an hour of the stated time, and allows only 2 — both are used.
+
+## Raising an invoice
+
+`/invoice` in Telegram runs an eight-question interview (`lib/invoice-bot.ts` drives the chat,
+`lib/invoice-intake.ts` holds the rules) and files a `cash_in` row the moment it is confirmed.
+
+- **The number is issued by the database**, never typed: `SYCP-YYYYMM-NNN`, restarting at 001 each
+  month, taken from the highest number already filed that month. This is what makes the duplicate
+  numbers found in the 2021–2023 book impossible to repeat.
+- A discount is its own field and its own line — never folded into the price.
+- The row lands with `meta.render.status = 'pending'`; `/pending` lists those.
+
+The Canva document is a **separate, Claude-driven step**. Canva's design-editing API exists only in
+the MCP connector — Composio and the public Connect API cannot edit a design — so the app cannot do
+it. `lib/invoice-render.ts` holds the locator map and `buildOperations()`, which keeps that step to
+four cheap calls instead of a 9,000-token re-read of the element tree each time. Read the header of
+that file before touching it; it explains the token arithmetic.
 
 ## House rules
 
