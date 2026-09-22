@@ -24,8 +24,16 @@ import type { Rec } from './records'
 // If the source design is ever replaced, re-read the new one ONCE with the full
 // tree and update PAGE + FIELDS. That is a one-off cost, not a per-invoice one.
 
-/** The design every new invoice is copied from. */
-export const SOURCE_DESIGN = 'DAHVcbEmxxY' // SYCP-202609-003 · StarGather
+/** The canonical templates. Both live in the Canva folder "SYCP Templates (bot)".
+ *  The quotation was made as a COPY of the invoice and only its wording changed,
+ *  so the two layouts are identical by construction and cannot drift apart —
+ *  which is exactly what went wrong with the hand-placed ones. A copy inherits
+ *  element ids, so the single FIELDS map below drives both. */
+export const TEMPLATES = {
+  invoice: 'DAHV2ML9PtM',
+  quotation: 'DAHV5YQpb70',
+} as const
+export type DocKind = keyof typeof TEMPLATES
 
 /** Page id of the source design — every locator is prefixed with it. */
 const PAGE = 'PBCY2tSg9MmB06fp'
@@ -66,8 +74,9 @@ export type Operation = Record<string, unknown>
  * replace would render the whole scope of work bold. The `format_text` that
  * follows resets it to normal weight, which is why the two always ship together.
  */
-export function buildOperations(rec: Rec): Operation[] {
+export function buildOperations(rec: Rec, kind: DocKind = 'invoice'): Operation[] {
   const m = rec.meta ?? {}
+  const isQuote = kind === 'quotation'
   const cur = String(m.currency ?? 'MYR')
   const net = Number(rec.amount ?? 0)
   const list = Number(m.list_price ?? net)
@@ -90,12 +99,15 @@ export function buildOperations(rec: Rec): Operation[] {
     ...(Array.isArray(m.deliverables) ? m.deliverables.map(String) : []),
     ...(discount ? ['', `Discount applied: −${money(discount, cur)}`] : []),
     ...(m.terms ? ['', 'Payment Terms', String(m.terms)] : []),
+    ...(isQuote
+      ? ['', `This quotation is valid for ${Number(m.validity_days ?? 14)} days from the date above.`]
+      : []),
   ].join('\n')
 
   const header = [
     '',
-    `INVOICE No. ${m.invoice_no}`,
-    ...(m.quotation_no ? [`quotation no. ${m.quotation_no}`] : []),
+    `${isQuote ? 'QUOTATION' : 'INVOICE'} No. ${m.invoice_no}`,
+    ...(!isQuote && m.quotation_no ? [`quotation no. ${m.quotation_no}`] : []),
     `Date: ${stamp(String(m.invoice_date))}`,
   ].join('\n')
 
@@ -115,9 +127,17 @@ export function buildOperations(rec: Rec): Operation[] {
   ]
 }
 
-/** Invoices filed by the bot that have no Canva document yet. */
+/** Invoices AND quotations filed by the bot that have no Canva document yet. */
 export function pendingRender(rows: Rec[]): Rec[] {
   return rows
-    .filter(r => r.category === 'cash_in' && r.meta?.invoice_no && r.meta?.render?.status === 'pending')
+    .filter(
+      r =>
+        (r.category === 'cash_in' || (r.category === 'doc' && r.status === 'quotation')) &&
+        r.meta?.invoice_no &&
+        r.meta?.render?.status === 'pending',
+    )
     .sort((a, b) => String(a.meta?.invoice_date).localeCompare(String(b.meta?.invoice_date)))
 }
+
+/** Which template a filed row should be drawn from. */
+export const kindOf = (r: Rec): DocKind => (r.category === 'doc' && r.status === 'quotation' ? 'quotation' : 'invoice')

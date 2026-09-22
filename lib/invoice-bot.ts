@@ -11,6 +11,7 @@ import {
   TERMS,
   type Draft,
 } from './invoice-intake'
+import type { DocKind } from './invoice-render'
 
 // 👉 The Telegram side of the invoice interview: it owns the conversation, and
 // lib/invoice-intake.ts owns the rules. Every reply routes through here while a
@@ -27,10 +28,10 @@ async function put(chatId: number, draft: Draft) {
   else await sendMessage(chatId, a.text)
 }
 
-/** /invoice — begin, replacing any half-finished one. */
-export async function startInvoice(chatId: number): Promise<void> {
+/** /invoice and /quote — begin, replacing any half-finished one. */
+export async function startInvoice(chatId: number, kind: DocKind = 'invoice'): Promise<void> {
   await clearDraft(chatId)
-  await put(chatId, { step: 'client' })
+  await put(chatId, { kind, step: 'client' })
 }
 
 /** True if this chat has an interview running and the text was consumed. */
@@ -45,7 +46,7 @@ export async function handleInvoiceText(chatId: number, text: string): Promise<b
     return true
   }
   // Any other command aborts the interview rather than being swallowed.
-  if (text.startsWith('/') && !/^\/invoice$/i.test(text)) {
+  if (text.startsWith('/') && !/^\/(invoice|quote|quotation)$/i.test(text)) {
     await clearDraft(chatId)
     await sendMessage(chatId, 'Invoice cancelled — you sent another command.')
     return false
@@ -145,6 +146,16 @@ export async function handleInvoiceText(chatId: number, text: string): Promise<b
       await put(chatId, advance({ ...d, quotation: text.trim() }))
       return true
 
+    case 'validity': {
+      const days = Number(text.trim().match(/\d+/)?.[0])
+      if (!Number.isFinite(days) || days <= 0) {
+        await sendMessage(chatId, 'Send a number of days, or tap one of the buttons.')
+        return true
+      }
+      await put(chatId, advance({ ...d, validityDays: days }))
+      return true
+    }
+
     case 'date': {
       const iso = text.trim().match(/^(\d{4})-(\d{2})-(\d{2})$/)
       const dmy = text.trim().match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/)
@@ -200,6 +211,10 @@ export async function handleInvoiceCallback(chatId: number, data: string): Promi
     await put(chatId, advance({ ...d, quotation: undefined }))
     return true
   }
+  if (kind === 'valid') {
+    await put(chatId, advance({ ...d, validityDays: Number(value) || 14 }))
+    return true
+  }
   if (kind === 'date') {
     await put(chatId, advance({ ...d, date: todayKL() }))
     return true
@@ -211,9 +226,14 @@ export async function handleInvoiceCallback(chatId: number, data: string): Promi
       await sendMessage(chatId, '⚠️ Could not file that — the database refused it. Nothing was saved.')
       return true
     }
+    const isQuote = d.kind === 'quotation'
     await sendMessage(
       chatId,
-      `✅ Filed as <b>${filed.no}</b>.\n\nIt's already in your Invoice Summary and counted on the Dashboard.\n\nThe Canva document is still to be made — it's queued as <i>pending</i>.`,
+      `✅ Filed as <b>${filed.no}</b>.\n\n` +
+        (isQuote
+          ? 'Quotations are kept out of your income totals, so nothing on the Dashboard moved.'
+          : "It's already in your Invoice Summary and counted on the Dashboard.") +
+        `\n\nThe Canva document is still to be made — it's queued as <i>pending</i>.`,
     )
     return true
   }

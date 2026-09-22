@@ -73,9 +73,10 @@ const HELP_CARD =
   `📣 <b>Content</b> — "what's scheduled?"\n` +
   `🤝 <b>People</b> — "who do I follow up with?" · "draft a follow-up for Angela"\n` +
   `🚨 <b>Triage</b> — "what needs my attention today?"\n\n` +
-  `🧾 <b>/invoice</b> — I walk you through eight questions and file a real invoice. ` +
-  `The number is issued by the system (SYCP-YYYYMM-NNN, restarting each month), so it can never clash. ` +
-  `<code>/pending</code> lists invoices still waiting for their Canva document.\n\n` +
+  `🧾 <b>/invoice</b> and <b>/quote</b> — the same eight questions, one files an invoice, ` +
+  `the other a quotation. Numbers are issued by the system (SYCP-YYYYMM-NNN and SYCP-Q-YYYYMM-NNN, ` +
+  `each restarting every month), so they can never clash. Quotations stay out of your income totals. ` +
+  `<code>/pending</code> lists documents still waiting to be drawn in Canva.\n\n` +
   `I can also <b>DO</b> things — "log RM45 Grab", "add task chase supplier Friday", ` +
   `"add lead Angela 8000", "mark ABC invoice paid", "move Koochester to appointment".\n` +
   `Small stuff I just do (reply <code>/undo-&lt;id&gt;</code> to reverse). Money stuff I propose ` +
@@ -257,7 +258,11 @@ async function handleMessage(msg: any): Promise<Response> {
   // /invoice begins it. While one is open every plain reply belongs to it, so a
   // half-typed client name never reaches the AI and gets answered as a question.
   if (/^\/invoice\b/i.test(text)) {
-    await startInvoice(chatId)
+    await startInvoice(chatId, 'invoice')
+    return Response.json({ ok: true })
+  }
+  if (/^\/(quote|quotation)\b/i.test(text)) {
+    await startInvoice(chatId, 'quotation')
     return Response.json({ ok: true })
   }
   if (await handleInvoiceText(chatId, text)) {

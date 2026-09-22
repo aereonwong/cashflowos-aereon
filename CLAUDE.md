@@ -65,16 +65,31 @@ Tokens live at the top of `globals.css`; attributes are `data-theme`, `data-acce
 - 9:00am MYT — tech & travel news digest via Claude web search, owner only
 - Vercel Hobby fires crons within an hour of the stated time, and allows only 2 — both are used.
 
-## Raising an invoice
+## Raising an invoice or a quotation
 
-`/invoice` in Telegram runs an eight-question interview (`lib/invoice-bot.ts` drives the chat,
-`lib/invoice-intake.ts` holds the rules) and files a `cash_in` row the moment it is confirmed.
+`/invoice` and `/quote` in Telegram run the SAME eight-question interview (`lib/invoice-bot.ts`
+drives the chat, `lib/invoice-intake.ts` holds the rules). An invoice files a `cash_in` row; a
+quotation files a `doc` row with status `quotation`.
+
+**A quotation is never income.** It is filed outside `cash_in` so no total, chart or brief can
+mistake a quoted figure for money earned — the exact mistake the old Canva folder made by keeping
+quotations next to invoices. Quotations get their own number series, `SYCP-Q-YYYYMM-NNN`.
 
 - **The number is issued by the database**, never typed: `SYCP-YYYYMM-NNN`, restarting at 001 each
   month, taken from the highest number already filed that month. This is what makes the duplicate
   numbers found in the 2021–2023 book impossible to repeat.
 - A discount is its own field and its own line — never folded into the price.
 - The row lands with `meta.render.status = 'pending'`; `/pending` lists those.
+
+Both documents are drawn from two canonical Canva templates in the folder **SYCP Templates (bot)**:
+`TEMPLATE · Invoice` (`DAHV2ML9PtM`) and `TEMPLATE · Quotation` (`DAHV5YQpb70`). The quotation was
+created as a COPY of the invoice with only its wording changed, so the layouts are identical by
+construction and cannot drift apart — and because a Canva copy inherits element ids, ONE locator map
+in `lib/invoice-render.ts` drives both. Verified empirically, not assumed.
+
+⚠️ Existing quotations live only in Canva, not in the database, so `SYCP-Q-` numbering currently
+counts from zero for any month with no filed quote. Importing the quotation history would close that
+gap and give quote→win-rate analysis.
 
 The Canva document is a **separate, Claude-driven step**. Canva's design-editing API exists only in
 the MCP connector — Composio and the public Connect API cannot edit a design — so the app cannot do

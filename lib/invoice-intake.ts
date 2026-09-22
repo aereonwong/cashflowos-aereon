@@ -1,5 +1,6 @@
 import { supabase, supabaseConfigured } from './supabase'
 import type { InlineKeyboard } from './telegram'
+import type { DocKind } from './invoice-render'
 
 // 👉 The invoice interview. Aereon says /invoice in Telegram, answers eight
 // questions, and a real invoice record is filed the moment he confirms.
@@ -20,6 +21,8 @@ import type { InlineKeyboard } from './telegram'
 export type Currency = 'MYR' | 'USD' | 'SGD' | 'EUR' | 'RMB'
 
 export type Draft = {
+  /** Invoice or quotation — same interview, different number series and template. */
+  kind: DocKind
   step: Step
   client?: { name: string; contact?: string; address?: string; reg?: string; isNew?: boolean }
   job?: string
@@ -29,6 +32,7 @@ export type Draft = {
   discount?: number
   terms?: string
   quotation?: string
+  validityDays?: number
   date?: string // YYYY-MM-DD
   /** Candidate clients from the last search, so a numeric reply can pick one. */
   matches?: { name: string; contact?: string; address?: string }[]
@@ -43,6 +47,7 @@ export const STEPS = [
   'discount',
   'terms',
   'quotation',
+  'validity',
   'date',
   'confirm',
 ] as const
@@ -104,11 +109,15 @@ export async function clearDraft(chatId: number | string): Promise<void> {
  * when the month turns. Derived from the highest number already filed in that
  * month, so it stays correct even if invoices are added from elsewhere.
  */
-export async function nextInvoiceNo(date: string): Promise<string> {
+export async function nextInvoiceNo(date: string, kind: DocKind = 'invoice'): Promise<string> {
   const stamp = date.slice(0, 7).replace('-', '') // YYYYMM
-  const prefix = `SYCP-${stamp}-`
+  // Quotations keep their own series so an invoice and a quote raised in the
+  // same month never share a number.
+  const prefix = kind === 'quotation' ? `SYCP-Q-${stamp}-` : `SYCP-${stamp}-`
   if (!supabaseConfigured) return `${prefix}001`
-  const { data } = await supabase.from('records').select('meta').eq('category', 'cash_in').limit(2000)
+  // Older quotations were numbered with two digits (SYCP-Q-202607-01). We read
+  // whatever is there and always WRITE three, so the series standardises itself.
+  const { data } = await supabase.from('records').select('meta').limit(3000)
   let top = 0
   for (const r of data ?? []) {
     const no = String((r.meta as any)?.invoice_no ?? '')
@@ -164,7 +173,12 @@ const b = (text: string, data: string) => ({ text, callback_data: data })
 export function ask(draft: Draft): Ask {
   switch (draft.step) {
     case 'client':
-      return { text: '🧾 <b>New invoice</b>\n\nWho is it for? Type part of the company name — I\'ll check who you\'ve invoiced before.\n\n<i>Send /cancel any time to stop.</i>' }
+      return {
+        text:
+          `🧾 <b>New ${draft.kind === 'quotation' ? 'quotation' : 'invoice'}</b>\n\n` +
+          "Who is it for? Type part of the company name — I'll check who you've worked with before.\n\n" +
+          '<i>Send /cancel any time to stop.</i>',
+      }
     case 'client_details':
       return { text: 'New client. Send their details in one message, one per line:\n\n<code>Company legal name\nRegistration no (or -)\nContact person (or -)\nFull address</code>' }
     case 'job':
@@ -192,6 +206,11 @@ export function ask(draft: Draft): Ask {
         text: 'Is there a quotation reference for this?',
         buttons: [[b('No quotation', 'inv:quote:none')]],
       }
+    case 'validity':
+      return {
+        text: 'How long should this quotation stay valid?',
+        buttons: [[b('14 days', 'inv:valid:14'), b('30 days', 'inv:valid:30')]],
+      }
     case 'date':
       return {
         text: 'Invoice date?',
@@ -205,7 +224,7 @@ export function ask(draft: Draft): Ask {
 export function summary(d: Draft): string {
   const cur = d.currency ?? 'MYR'
   const lines = [
-    '<b>Check this over</b>',
+    `<b>Check this ${d.kind === 'quotation' ? 'quotation' : 'invoice'} over</b>`,
     '',
     `<b>Client</b>  ${d.client?.name ?? '—'}`,
     d.client?.contact ? `<b>Attn</b>  ${d.client.contact}` : '',
@@ -217,19 +236,24 @@ export function summary(d: Draft): string {
     d.discount ? `<b>Discount</b>  −${money(d.discount, cur)}` : '',
     d.discount ? `<b>Total</b>  ${money(netOf(d), cur)}` : '',
     `<b>Date</b>  ${d.date ?? '—'}`,
-    d.quotation ? `<b>Quotation</b>  ${d.quotation}` : '',
+    d.quotation ? `<b>Quotation ref</b>  ${d.quotation}` : '',
+    d.validityDays ? `<b>Valid for</b>  ${d.validityDays} days` : '',
     '',
-    '<i>The invoice number is issued when you confirm, so it can never clash.</i>',
+    `<i>The ${d.kind === 'quotation' ? 'quotation' : 'invoice'} number is issued when you confirm, so it can never clash.</i>`,
   ]
   return lines.filter(Boolean).join('\n')
 }
 
-/** Move to the next step, skipping the ones that don't apply. */
+/** Move to the next step, skipping the ones that don't apply to this document. */
 export function advance(draft: Draft): Draft {
   const order = [...STEPS]
-  let i = order.indexOf(draft.step)
-  let next = order[Math.min(i + 1, order.length - 1)]
-  if (next === 'client_details' && !draft.client?.isNew) next = 'job'
+  let next = order[Math.min(order.indexOf(draft.step) + 1, order.length - 1)]
+  const skip = (s: Step) =>
+    (s === 'client_details' && !draft.client?.isNew) ||
+    // A quotation has no quotation reference; an invoice has no validity period.
+    (s === 'quotation' && draft.kind === 'quotation') ||
+    (s === 'validity' && draft.kind !== 'quotation')
+  while (skip(next) && next !== 'confirm') next = order[order.indexOf(next) + 1]
   return { ...draft, step: next }
 }
 
@@ -242,8 +266,9 @@ export function advance(draft: Draft): Draft {
  */
 export async function fileInvoice(draft: Draft): Promise<{ no: string; id: number } | null> {
   if (!supabaseConfigured) return null
+  const isQuote = draft.kind === 'quotation'
   const date = draft.date ?? new Date().toISOString().slice(0, 10)
-  const no = await nextInvoiceNo(date)
+  const no = await nextInvoiceNo(date, draft.kind)
   const cur = draft.currency ?? 'MYR'
   const net = netOf(draft)
   const project = [draft.job, ...(draft.deliverables ?? [])].filter(Boolean).join(' — ')
@@ -252,8 +277,11 @@ export async function fileInvoice(draft: Draft): Promise<{ no: string; id: numbe
   const { data, error } = await supabase
     .from('records')
     .insert({
-      category: 'cash_in',
-      status: 'issued',
+      // A quotation is NOT income. It is filed as a `doc` so no total, chart or
+      // brief can ever mistake a quoted figure for money earned — the mistake the
+      // old Canva folder made by keeping quotations beside invoices.
+      category: isQuote ? 'doc' : 'cash_in',
+      status: isQuote ? 'quotation' : 'issued',
       amount: net,
       due_date: null,
       created_at: `${date}T09:00:00+08:00`,
@@ -272,6 +300,7 @@ export async function fileInvoice(draft: Draft): Promise<{ no: string; id: numbe
         job: draft.job,
         terms: draft.terms,
         quotation_no: draft.quotation || undefined,
+        validity_days: draft.validityDays || undefined,
         source: 'telegram',
         payment_tracked: false,
         render: { status: 'pending' },
