@@ -26,6 +26,9 @@ export type Draft = {
   step: Step
   client?: { name: string; contact?: string; address?: string; reg?: string; isNew?: boolean }
   job?: string
+  venue?: string
+  eventDate?: string // YYYY-MM-DD
+  eventTime?: string
   deliverables?: string[]
   amount?: number
   currency?: Currency
@@ -42,6 +45,9 @@ export const STEPS = [
   'client',
   'client_details',
   'job',
+  'venue',
+  'event_date',
+  'event_time',
   'deliverables',
   'amount',
   'discount',
@@ -182,7 +188,13 @@ export function ask(draft: Draft): Ask {
     case 'client_details':
       return { text: 'New client. Send their details in one message, one per line:\n\n<code>Company legal name\nRegistration no (or -)\nContact person (or -)\nFull address</code>' }
     case 'job':
-      return { text: 'What is the job called?\n\n<i>e.g. Proton X50 AI campaign</i>' }
+      return { text: 'What is the job called?\n\n<i>e.g. Awards Ceremony Photography</i>' }
+    case 'venue':
+      return { text: 'Where is it?\n\n<i>e.g. Sime Motors, Ara Damansara</i>' }
+    case 'event_date':
+      return { text: 'What date is the job itself?\n\n<i>e.g. 22/10/26</i>', buttons: [[b('Same as the invoice date', 'inv:edate:same')]] }
+    case 'event_time':
+      return { text: 'How long, and when?\n\n<i>e.g. 4 hours (4:00pm – 8:00pm)</i>' }
     case 'deliverables':
       return { text: 'What are you delivering? One per line.\n\n<i>e.g.\n1 x IG reel synced to TikTok\n1 x IG story\n1 month usage rights</i>' }
     case 'amount':
@@ -229,6 +241,9 @@ export function summary(d: Draft): string {
     `<b>Client</b>  ${d.client?.name ?? '—'}`,
     d.client?.contact ? `<b>Attn</b>  ${d.client.contact}` : '',
     `<b>Job</b>  ${d.job ?? '—'}`,
+    d.venue ? `<b>Venue</b>  ${d.venue}` : '',
+    d.eventDate ? `<b>Job date</b>  ${d.eventDate}` : '',
+    d.eventTime ? `<b>Time</b>  ${d.eventTime}` : '',
     '',
     ...(d.deliverables ?? []).map(x => `  • ${x}`),
     '',
@@ -298,6 +313,9 @@ export async function fileInvoice(draft: Draft): Promise<{ no: string; id: numbe
         discount: draft.discount || undefined,
         deliverables: draft.deliverables,
         job: draft.job,
+        venue: draft.venue,
+        event_date: draft.eventDate,
+        event_time: draft.eventTime,
         terms: draft.terms,
         quotation_no: draft.quotation || undefined,
         validity_days: draft.validityDays || undefined,

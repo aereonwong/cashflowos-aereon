@@ -21,6 +21,16 @@ import type { DocKind } from './invoice-render'
 const todayKL = () =>
   new Date(Date.now() + 8 * 3600 * 1000).toISOString().slice(0, 10) // UTC+8
 
+/** Accepts 2026-10-22 or 22/10/26 or 22-10-2026. */
+function parseDate(text: string): string | null {
+  const t = text.trim()
+  if (/^\d{4}-\d{2}-\d{2}$/.test(t)) return t
+  const dmy = t.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/)
+  if (!dmy) return null
+  const [, dd, mm, yy] = dmy
+  return `${yy.length === 2 ? `20${yy}` : yy}-${mm.padStart(2, '0')}-${dd.padStart(2, '0')}`
+}
+
 async function put(chatId: number, draft: Draft) {
   await saveDraft(chatId, draft)
   const a = ask(draft)
@@ -107,6 +117,24 @@ export async function handleInvoiceText(chatId: number, text: string): Promise<b
       await put(chatId, advance({ ...d, job: text.trim() }))
       return true
 
+    case 'venue':
+      await put(chatId, advance({ ...d, venue: text.trim() }))
+      return true
+
+    case 'event_date': {
+      const iso = parseDate(text)
+      if (!iso) {
+        await sendMessage(chatId, 'Send the date as <code>DD/MM/YY</code>, or tap the button.')
+        return true
+      }
+      await put(chatId, advance({ ...d, eventDate: iso }))
+      return true
+    }
+
+    case 'event_time':
+      await put(chatId, advance({ ...d, eventTime: text.trim() }))
+      return true
+
     case 'deliverables':
       await put(
         chatId,
@@ -157,15 +185,7 @@ export async function handleInvoiceText(chatId: number, text: string): Promise<b
     }
 
     case 'date': {
-      const iso = text.trim().match(/^(\d{4})-(\d{2})-(\d{2})$/)
-      const dmy = text.trim().match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/)
-      let date: string | null = null
-      if (iso) date = text.trim()
-      else if (dmy) {
-        const [, dd, mm, yy] = dmy
-        const year = yy.length === 2 ? `20${yy}` : yy
-        date = `${year}-${mm.padStart(2, '0')}-${dd.padStart(2, '0')}`
-      }
+      const date = parseDate(text)
       if (!date) {
         await sendMessage(chatId, 'Send the date as <code>DD/MM/YY</code>, or tap <b>Today</b>.')
         return true
@@ -213,6 +233,10 @@ export async function handleInvoiceCallback(chatId: number, data: string): Promi
   }
   if (kind === 'valid') {
     await put(chatId, advance({ ...d, validityDays: Number(value) || 14 }))
+    return true
+  }
+  if (kind === 'edate') {
+    await put(chatId, advance({ ...d, eventDate: d.date ?? todayKL() }))
     return true
   }
   if (kind === 'date') {

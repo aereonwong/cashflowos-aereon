@@ -1,44 +1,56 @@
 import type { Rec } from './records'
 
-// 👉 Turning a filed invoice into the exact Canva edit that draws it.
+// 👉 Turning a filed invoice or quotation into the exact Canva edit that draws it.
 //
-// WHY THIS FILE EXISTS — it is a token-cost decision, not a style one.
+// ── WHY THIS FILE EXISTS ────────────────────────────────────────────────────
 // Canva's design-editing API lives only in the MCP connector, so the Canva step
-// has to be driven by Claude rather than by this app. The expensive part of that
-// is DISCOVERY: `read-design` returns the entire element tree (~9,000 tokens)
-// just to learn which element holds which field.
+// is driven by Claude rather than by this app. The expensive part is DISCOVERY:
+// `read-design` returns the whole element tree (~9,000 tokens) just to learn
+// which element holds which field. It only has to be learnt once, because every
+// document is a copy of a template and a Canva copy inherits element ids.
+// With the map below the render is four cheap calls and no exploration:
 //
-// It only has to be learnt once. Every invoice is a copy of the same source
-// design, and a copy inherits its element ids, so the map below is stable.
-// With it the render is four cheap calls and no exploration:
-//
-//   1. copy-design            (source below)                        ~200 tokens
-//   2. read-design            filter: {fields:["thumbnails"]}      ~1,800 tokens
+//   1. copy-design     TEMPLATES[kind]                        ~200 tokens
+//   2. read-design     filter: {fields:["thumbnails"]}      ~1,800 tokens
 //      → returns ONLY a transaction_id and a thumbnail, not the tree
-//   3. edit-design            operations: buildOperations(invoice) ~12,000 tokens
-//   4. edit-design            finalize: "commit"                     ~100 tokens
+//   3. edit-design     operations: buildOperations(rec)     ~12,000 tokens
+//   4. edit-design     finalize: "commit"                     ~100 tokens
 //
-// The PDF export afterwards costs this app nothing — it is a plain REST call the
-// server makes through Composio (CANVA_POST_EXPORTS), no model involved.
+// The PDF export afterwards costs nothing — a plain REST call the server makes
+// through Composio (CANVA_POST_EXPORTS), no model involved.
 //
-// If the source design is ever replaced, re-read the new one ONCE with the full
-// tree and update PAGE + FIELDS. That is a one-off cost, not a per-invoice one.
+// ── THE RULE THAT SHAPES EVERYTHING BELOW ───────────────────────────────────
+// Canva has no operation for formatting part of a text element. Mixed bold and
+// normal text inside one element exists only as "runs", and the API can only
+// preserve runs, never create them. Text inserted by find_and_replace inherits
+// the formatting of the character IMMEDIATELY BEFORE it — so writing at the
+// very start of a run silently adopts the previous run's formatting. That is
+// how the client address kept turning bold.
+//
+// Hence the two-step token pattern used throughout. Instead of replacing the
+// whole `{{TOKEN}}`, replace only the NAME inside the braces — which always has
+// a `{{` before it in the same run, so the value inherits the right formatting —
+// and then delete the braces separately. Deletion never triggers inheritance.
+//
+//   "{{CLIENT_ADDRESS}}"  →  "{{<the address>}}"  →  "<the address>"
+//
+// Break that pattern and Aereon's bold/normal distinctions collapse.
 
-/** The canonical templates. Both live in the Canva folder "SYCP Templates (bot)".
- *  The quotation was made as a COPY of the invoice and only its wording changed,
- *  so the two layouts are identical by construction and cannot drift apart —
- *  which is exactly what went wrong with the hand-placed ones. A copy inherits
- *  element ids, so the single FIELDS map below drives both. */
+/** The canonical templates, both in the Canva folder "SYCP Templates (bot)".
+ *  Built from the quotation Aereon corrected by hand on 22 Sep 2026: the
+ *  invoice is a copy of it with only the wording changed, so the two layouts
+ *  are identical by construction and cannot drift apart again. */
 export const TEMPLATES = {
-  invoice: 'DAHV2ML9PtM',
-  quotation: 'DAHV5YQpb70',
+  invoice: 'DAHV7Bjn0oI',
+  quotation: 'DAHV7GY129w',
 } as const
 export type DocKind = keyof typeof TEMPLATES
 
-/** Page id of the source design — every locator is prefixed with it. */
+/** Page id of the templates — every locator is prefixed with it. */
 const PAGE = 'PBCY2tSg9MmB06fp'
 
-/** Which element holds which field, learnt once from the source design. */
+/** Which element holds which field. The four totals elements are NOT a group:
+ *  Aereon ungrouped them so the values could be right-aligned under AMOUNT. */
 export const FIELDS = {
   numberAndDate: `${PAGE}-LBKPP21CHKtJ2yf1-LBkZscVPqvZqvNck`,
   client: `${PAGE}-LBhtPsYH96y17cpl`,
@@ -46,14 +58,9 @@ export const FIELDS = {
   price: `${PAGE}-LBBbkYJgmJD49hf9`,
   qty: `${PAGE}-LB2N80sgNgMB5fjk`,
   lineAmount: `${PAGE}-LB1pMj0cQ4zv02w0`,
-  subtotal: `${PAGE}-LBr9mt6Bw1fR7xwV-LBNxX0Wb5l5vzmhC`,
-  total: `${PAGE}-LBr9mt6Bw1fR7xwV-LB77S3CrfV7rZYZX`,
-  footer: `${PAGE}-LB8q68pQyP4p2Vf1`,
+  subtotal: `${PAGE}-LBqP0hvs588mJgRF`,
+  total: `${PAGE}-LB2WPPKpqK756JyQ`,
 } as const
-
-/** The footer, minus the IC number that used to be printed on every invoice. */
-export const FOOTER =
-  'PHONE: 0122100827\nIG: aereonwong\nEMAIL: aereon.wong@gmail.com\nTAX ID: C29931532000\n'
 
 const money = (n: number, cur: string) =>
   `${cur} ${n.toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
@@ -64,15 +71,36 @@ const stamp = (iso: string) => {
   return `${d}/${m}/${y.slice(2)}`
 }
 
+/** "22 October 2026" — the long form Aereon uses for the event date. */
+const longDate = (iso: string) =>
+  new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC',
+  })
+
 export type Operation = Record<string, unknown>
 
+const fill = (locator: string, token: string, value: string): Operation => ({
+  type: 'find_and_replace_text',
+  locator_id: locator,
+  find_text: token,
+  replace_text: value,
+})
+
+/** Strip the brace anchors once every value in an element has been written. */
+const strip = (locator: string): Operation[] => [
+  { type: 'find_and_replace_text', locator_id: locator, find_text: '{{', replace_text: '' },
+  { type: 'find_and_replace_text', locator_id: locator, find_text: '}}', replace_text: '' },
+]
+
 /**
- * The full `operations` array for `edit-design`, built from a filed invoice row.
+ * The full `operations` array for `edit-design`.
  *
- * One quirk worth knowing: `replace_text` collapses an element to its FIRST text
- * run's formatting. The description's first run is bold in the source, so a bare
- * replace would render the whole scope of work bold. The `format_text` that
- * follows resets it to normal weight, which is why the two always ship together.
+ * Token order matters: CLIENT_ADDRESS must be written before CLIENT, because
+ * "CLIENT" is a substring of "CLIENT_ADDRESS" and would otherwise match it
+ * first and corrupt the address.
  */
 export function buildOperations(rec: Rec, kind: DocKind = 'invoice'): Operation[] {
   const m = rec.meta ?? {}
@@ -80,51 +108,54 @@ export function buildOperations(rec: Rec, kind: DocKind = 'invoice'): Operation[
   const cur = String(m.currency ?? 'MYR')
   const net = Number(rec.amount ?? 0)
   const list = Number(m.list_price ?? net)
-  const discount = Number(m.discount ?? 0)
 
-  const clientBlock = [
-    '',
-    m.contact ? `ATTN: ${m.contact}` : '',
-    String(m.customer ?? ''),
-    m.client_reg ? String(m.client_reg) : '',
-    String(m.address ?? ''),
-  ]
-    .filter(Boolean)
-    .join('\n')
+  const deliverables = (Array.isArray(m.deliverables) ? m.deliverables : []).map(String).join('\n')
+  const terms = String(m.terms ?? '').trim()
 
-  const body = [
-    String(m.job ?? rec.title),
-    '',
-    'Scope of Work:',
-    ...(Array.isArray(m.deliverables) ? m.deliverables.map(String) : []),
-    ...(discount ? ['', `Discount applied: −${money(discount, cur)}`] : []),
-    ...(m.terms ? ['', 'Payment Terms', String(m.terms)] : []),
-    ...(isQuote
-      ? ['', `This quotation is valid for ${Number(m.validity_days ?? 14)} days from the date above.`]
-      : []),
-  ].join('\n')
-
-  const header = [
-    '',
-    `${isQuote ? 'QUOTATION' : 'INVOICE'} No. ${m.invoice_no}`,
-    ...(!isQuote && m.quotation_no ? [`quotation no. ${m.quotation_no}`] : []),
-    `Date: ${stamp(String(m.invoice_date))}`,
-  ].join('\n')
-
-  return [
+  const ops: Operation[] = [
     { type: 'update_title', title: `${m.invoice_no} - ${m.job ?? rec.title}` },
-    { type: 'replace_text', locator_id: FIELDS.numberAndDate, text: header },
-    { type: 'replace_text', locator_id: FIELDS.client, text: clientBlock },
-    { type: 'replace_text', locator_id: FIELDS.description, text: body },
-    // Undo the bold inherited from the first run — see the note above.
-    { type: 'format_text', locator_id: FIELDS.description, formatting: { font_weight: 'normal' } },
-    { type: 'replace_text', locator_id: FIELDS.price, text: `${money(list, cur)}\n` },
-    { type: 'replace_text', locator_id: FIELDS.qty, text: '1' },
-    { type: 'replace_text', locator_id: FIELDS.lineAmount, text: money(list, cur) },
-    { type: 'replace_text', locator_id: FIELDS.subtotal, text: money(list, cur) },
-    { type: 'replace_text', locator_id: FIELDS.total, text: money(net, cur) },
-    { type: 'replace_text', locator_id: FIELDS.footer, text: FOOTER },
+
+    // Header — number and issue date.
+    fill(FIELDS.numberAndDate, 'NUMBER', String(m.invoice_no ?? '')),
+    fill(FIELDS.numberAndDate, 'DATE', stamp(String(m.invoice_date))),
+    ...strip(FIELDS.numberAndDate),
+
+    // Client — ATTN and company stay bold, the address stays normal.
+    fill(FIELDS.client, 'CLIENT_ADDRESS', String(m.address ?? '')),
+    fill(FIELDS.client, 'CONTACT', String(m.contact ?? '')),
+    fill(FIELDS.client, 'CLIENT', String(m.customer ?? '')),
+    ...strip(FIELDS.client),
+
+    // Body — job, the venue/date/time highlights, scope, terms.
+    fill(FIELDS.description, 'JOB', String(m.job ?? rec.title)),
+    fill(FIELDS.description, 'VENUE', String(m.venue ?? '—')),
+    fill(FIELDS.description, 'EVENT_DATE', m.event_date ? longDate(String(m.event_date)) : '—'),
+    fill(FIELDS.description, 'TIME', String(m.event_time ?? '—')),
+    fill(FIELDS.description, 'DELIVERABLES', deliverables),
+    fill(FIELDS.description, 'TERMS', terms),
+    ...(isQuote
+      ? [
+          fill(
+            FIELDS.description,
+            'VALIDITY',
+            `This quotation is valid for ${Number(m.validity_days ?? 14)} days from the date above.`,
+          ),
+        ]
+      : []),
+    ...strip(FIELDS.description),
+
+    // Money.
+    fill(FIELDS.price, 'PRICE', money(list, cur)),
+    ...strip(FIELDS.price),
+    fill(FIELDS.lineAmount, 'AMOUNT', money(list, cur)),
+    ...strip(FIELDS.lineAmount),
+    fill(FIELDS.subtotal, 'SUBTOTAL', money(list, cur)),
+    ...strip(FIELDS.subtotal),
+    fill(FIELDS.total, 'TOTAL', money(net, cur)),
+    ...strip(FIELDS.total),
   ]
+
+  return ops
 }
 
 /** Invoices AND quotations filed by the bot that have no Canva document yet. */
@@ -140,4 +171,5 @@ export function pendingRender(rows: Rec[]): Rec[] {
 }
 
 /** Which template a filed row should be drawn from. */
-export const kindOf = (r: Rec): DocKind => (r.category === 'doc' && r.status === 'quotation' ? 'quotation' : 'invoice')
+export const kindOf = (r: Rec): DocKind =>
+  r.category === 'doc' && r.status === 'quotation' ? 'quotation' : 'invoice'

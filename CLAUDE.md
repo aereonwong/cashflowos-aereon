@@ -82,10 +82,16 @@ quotations next to invoices. Quotations get their own number series, `SYCP-Q-YYY
 - The row lands with `meta.render.status = 'pending'`; `/pending` lists those.
 
 Both documents are drawn from two canonical Canva templates in the folder **SYCP Templates (bot)**:
-`TEMPLATE · Invoice` (`DAHV2ML9PtM`) and `TEMPLATE · Quotation` (`DAHV5YQpb70`). The quotation was
-created as a COPY of the invoice with only its wording changed, so the layouts are identical by
-construction and cannot drift apart — and because a Canva copy inherits element ids, ONE locator map
-in `lib/invoice-render.ts` drives both. Verified empirically, not assumed.
+`TEMPLATE · Invoice` (`DAHV7Bjn0oI`) and `TEMPLATE · Quotation` (`DAHV7GY129w`). Both descend from
+the quotation Aereon corrected by hand on 22 Sep 2026 — the invoice is a copy of it with only the
+wording changed — so the layouts are identical by construction and cannot drift apart. A Canva copy
+inherits element ids, so ONE locator map in `lib/invoice-render.ts` drives both.
+
+**Do not "simplify" `buildOperations()` into plain `replace_text`.** Canva cannot create mixed
+bold/normal text inside one element; it can only preserve runs that already exist. Inserted text
+inherits the formatting of the character immediately before it, so writing at the start of a run
+silently adopts the previous run's weight — which is why the client address kept coming out bold.
+The two-step `{{TOKEN}}` pattern in that file exists solely to avoid this. Its header explains it.
 
 ⚠️ Existing quotations live only in Canva, not in the database, so `SYCP-Q-` numbering currently
 counts from zero for any month with no filed quote. Importing the quotation history would close that
