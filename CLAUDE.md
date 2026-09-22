@@ -82,7 +82,7 @@ quotations next to invoices. Quotations get their own number series, `SYCP-Q-YYY
 - The row lands with `meta.render.status = 'pending'`; `/pending` lists those.
 
 Both documents are drawn from two canonical Canva templates in the folder **SYCP Templates (bot)**:
-`TEMPLATE · Invoice` (`DAHV7Bjn0oI`) and `TEMPLATE · Quotation` (`DAHV7GY129w`). Both descend from
+`TEMPLATE · Invoice` (`DAHV7BUsplg`) and `TEMPLATE · Quotation` (`DAHV7GY129w`). Both descend from
 the quotation Aereon corrected by hand on 22 Sep 2026 — the invoice is a copy of it with only the
 wording changed — so the layouts are identical by construction and cannot drift apart. A Canva copy
 inherits element ids, so ONE locator map in `lib/invoice-render.ts` drives both.
@@ -96,6 +96,10 @@ The two-step `{{TOKEN}}` pattern in that file exists solely to avoid this. Its h
 ⚠️ Existing quotations live only in Canva, not in the database, so `SYCP-Q-` numbering currently
 counts from zero for any month with no filed quote. Importing the quotation history would close that
 gap and give quote→win-rate analysis.
+
+**Finished documents are filed by type** — `FOLDERS` in `lib/invoice-render.ts`: invoices into
+Canva's "Invoices" folder, quotations into "Quotation". Never put a quotation in Invoices; that
+mixing is exactly what made the 2021–2026 back catalogue so hard to audit.
 
 The Canva document is a **separate, Claude-driven step**. Canva's design-editing API exists only in
 the MCP connector — Composio and the public Connect API cannot edit a design — so the app cannot do

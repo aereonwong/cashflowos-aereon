@@ -39,12 +39,26 @@ import type { Rec } from './records'
 /** The canonical templates, both in the Canva folder "SYCP Templates (bot)".
  *  Built from the quotation Aereon corrected by hand on 22 Sep 2026: the
  *  invoice is a copy of it with only the wording changed, so the two layouts
- *  are identical by construction and cannot drift apart again. */
+ *  are identical by construction and cannot drift apart again.
+ *
+ *  When Aereon changes a template by hand, REBUILD the other one as a fresh
+ *  copy rather than trying to repeat the edit — the API cannot re-create mixed
+ *  bold/normal runs, so a copy is the only way to carry a formatting fix across.
+ *  That is how the invoice template got his un-bolded Venue value. */
 export const TEMPLATES = {
-  invoice: 'DAHV7Bjn0oI',
+  invoice: 'DAHV7BUsplg',
   quotation: 'DAHV7GY129w',
 } as const
 export type DocKind = keyof typeof TEMPLATES
+
+/** Where a finished document belongs. Quotations must never land in the
+ *  Invoices folder — mixing the two is what made the old back catalogue so hard
+ *  to audit, and it is the same separation the database enforces by filing a
+ *  quotation as a `doc` rather than `cash_in`. */
+export const FOLDERS = {
+  invoice: 'FAE8mD8bgIw', // "Invoices"
+  quotation: 'FAE09QXvOvk', // "Quotation"
+} as const
 
 /** Page id of the templates — every locator is prefixed with it. */
 const PAGE = 'PBCY2tSg9MmB06fp'
