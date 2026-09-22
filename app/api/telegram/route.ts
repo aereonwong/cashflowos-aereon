@@ -19,6 +19,8 @@ import { BOT_ACTION_TOOLS, ACTION_TOOL_NAMES, runBotAction } from '@/lib/bot-act
 import { SCHEDULED } from '@/agents/registry'
 import { jarvisIdentity, jarvisName } from '@/jarvis/config'
 import { logRun } from '@/lib/runs'
+import { startInvoice, handleInvoiceText, handleInvoiceCallback } from '@/lib/invoice-bot'
+import { pendingRender } from '@/lib/invoice-render'
 
 // 🔒 Don't edit — this keeps your robot safe.
 // The Telegram brain + hands. This ONE webhook does three jobs:
@@ -71,6 +73,9 @@ const HELP_CARD =
   `📣 <b>Content</b> — "what's scheduled?"\n` +
   `🤝 <b>People</b> — "who do I follow up with?" · "draft a follow-up for Angela"\n` +
   `🚨 <b>Triage</b> — "what needs my attention today?"\n\n` +
+  `🧾 <b>/invoice</b> — I walk you through eight questions and file a real invoice. ` +
+  `The number is issued by the system (SYCP-YYYYMM-NNN, restarting each month), so it can never clash. ` +
+  `<code>/pending</code> lists invoices still waiting for their Canva document.\n\n` +
   `I can also <b>DO</b> things — "log RM45 Grab", "add task chase supplier Friday", ` +
   `"add lead Angela 8000", "mark ABC invoice paid", "move Koochester to appointment".\n` +
   `Small stuff I just do (reply <code>/undo-&lt;id&gt;</code> to reverse). Money stuff I propose ` +
@@ -146,6 +151,14 @@ async function handleCallback(cb: any): Promise<Response> {
   // Allowlist on the TAPPER's id — fail closed, and echo the id so they can add it.
   if (!isAllowed(fromId)) {
     await answerCallbackQuery(cbId, `Not authorized (your id: ${fromId})`)
+    return Response.json({ ok: true })
+  }
+
+  // Invoice interview buttons own the `inv:` namespace — handled before the
+  // approve/reject parser, which would otherwise reject them as unknown.
+  if (data.startsWith('inv:')) {
+    await answerCallbackQuery(cbId)
+    if (chatId) await handleInvoiceCallback(chatId, data)
     return Response.json({ ok: true })
   }
 
@@ -239,6 +252,33 @@ async function handleMessage(msg: any): Promise<Response> {
 
   const text: string = (msg.text || '').trim()
   if (!text) return Response.json({ ok: true })
+
+  // ---- Invoice interview ----
+  // /invoice begins it. While one is open every plain reply belongs to it, so a
+  // half-typed client name never reaches the AI and gets answered as a question.
+  if (/^\/invoice\b/i.test(text)) {
+    await startInvoice(chatId)
+    return Response.json({ ok: true })
+  }
+  if (await handleInvoiceText(chatId, text)) {
+    return Response.json({ ok: true })
+  }
+
+  // /pending — invoices the bot filed that still have no Canva document.
+  if (/^\/pending\b/i.test(text)) {
+    const rows = await getRecords()
+    const waiting = pendingRender(rows)
+    await sendMessage(
+      chatId,
+      waiting.length
+        ? `🧾 <b>${waiting.length} invoice${waiting.length === 1 ? '' : 's'} waiting for a Canva document</b>\n\n` +
+            waiting
+              .map(r => `• <b>${r.meta?.invoice_no}</b> — ${r.meta?.customer} · ${rm(Number(r.amount))}`)
+              .join('\n')
+        : '✅ Every filed invoice has its Canva document.',
+    )
+    return Response.json({ ok: true })
+  }
 
   if (text.toLowerCase() === '/start' || text.toLowerCase() === '/help') {
     await sendMessage(chatId, HELP_CARD)

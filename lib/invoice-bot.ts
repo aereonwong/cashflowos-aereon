@@ -1,0 +1,221 @@
+import { sendMessage, sendWithButtons } from './telegram'
+import {
+  ask,
+  advance,
+  loadDraft,
+  saveDraft,
+  clearDraft,
+  findClients,
+  parseMoney,
+  fileInvoice,
+  TERMS,
+  type Draft,
+} from './invoice-intake'
+
+// 👉 The Telegram side of the invoice interview: it owns the conversation, and
+// lib/invoice-intake.ts owns the rules. Every reply routes through here while a
+// draft is open, so a half-finished invoice can't be mistaken for a question to
+// the AI.
+
+const todayKL = () =>
+  new Date(Date.now() + 8 * 3600 * 1000).toISOString().slice(0, 10) // UTC+8
+
+async function put(chatId: number, draft: Draft) {
+  await saveDraft(chatId, draft)
+  const a = ask(draft)
+  if (a.buttons) await sendWithButtons(chatId, a.text, a.buttons)
+  else await sendMessage(chatId, a.text)
+}
+
+/** /invoice — begin, replacing any half-finished one. */
+export async function startInvoice(chatId: number): Promise<void> {
+  await clearDraft(chatId)
+  await put(chatId, { step: 'client' })
+}
+
+/** True if this chat has an interview running and the text was consumed. */
+export async function handleInvoiceText(chatId: number, text: string): Promise<boolean> {
+  const open = await loadDraft(chatId)
+  if (!open) return false
+  const d = open.draft
+
+  if (/^\/cancel$/i.test(text)) {
+    await clearDraft(chatId)
+    await sendMessage(chatId, 'Dropped it. Nothing was filed.')
+    return true
+  }
+  // Any other command aborts the interview rather than being swallowed.
+  if (text.startsWith('/') && !/^\/invoice$/i.test(text)) {
+    await clearDraft(chatId)
+    await sendMessage(chatId, 'Invoice cancelled — you sent another command.')
+    return false
+  }
+
+  switch (d.step) {
+    case 'client': {
+      // A bare number answers an earlier shortlist rather than naming a client.
+      if (d.matches?.length && /^\d+$/.test(text.trim())) {
+        const pick = d.matches[Number(text.trim()) - 1]
+        if (!pick) {
+          await sendMessage(chatId, `Pick a number between 1 and ${d.matches.length}.`)
+          return true
+        }
+        await sendMessage(chatId, `Using <b>${pick.name}</b>.`)
+        await put(chatId, advance({ ...d, client: { ...pick }, matches: undefined }))
+        return true
+      }
+      const found = await findClients(text)
+      if (found.length === 0) {
+        await put(chatId, {
+          ...d,
+          step: 'client_details',
+          client: { name: text.trim(), isNew: true },
+        })
+        return true
+      }
+      if (found.length === 1) {
+        await sendMessage(chatId, `Using <b>${found[0].name}</b>.`)
+        await put(chatId, advance({ ...d, client: { ...found[0] } }))
+        return true
+      }
+      const list = found.map((c, i) => `${i + 1}. ${c.name}`).join('\n')
+      await saveDraft(chatId, { ...d, matches: found })
+      await sendMessage(chatId, `Which one?\n\n${list}\n\nReply with a number, or type a fuller name.`)
+      return true
+    }
+
+    case 'client_details': {
+      const [name, reg, contact, ...rest] = text.split('\n').map(s => s.trim())
+      await put(
+        chatId,
+        advance({
+          ...d,
+          step: 'client_details',
+          client: {
+            name: name || d.client?.name || 'Unknown',
+            reg: reg && reg !== '-' ? reg : undefined,
+            contact: contact && contact !== '-' ? contact : undefined,
+            address: rest.join(', ') || undefined,
+          },
+        }),
+      )
+      return true
+    }
+
+    case 'job':
+      await put(chatId, advance({ ...d, job: text.trim() }))
+      return true
+
+    case 'deliverables':
+      await put(
+        chatId,
+        advance({ ...d, deliverables: text.split('\n').map(s => s.replace(/^[-•]\s*/, '').trim()).filter(Boolean) }),
+      )
+      return true
+
+    case 'amount': {
+      const m = parseMoney(text)
+      if (!m) {
+        await sendMessage(chatId, "I couldn't read an amount there. Try something like <code>2500</code> or <code>USD 1150</code>.")
+        return true
+      }
+      await put(chatId, advance({ ...d, amount: m.amount, currency: m.currency }))
+      return true
+    }
+
+    case 'discount': {
+      const m = parseMoney(text)
+      if (!m) {
+        await sendMessage(chatId, 'Send the discount as a number, or tap <b>No discount</b>.')
+        return true
+      }
+      if (m.amount >= (d.amount ?? 0)) {
+        await sendMessage(chatId, `That discount is not smaller than the amount (${d.amount}). Send a smaller number.`)
+        return true
+      }
+      await put(chatId, advance({ ...d, discount: m.amount }))
+      return true
+    }
+
+    case 'terms':
+      await put(chatId, advance({ ...d, terms: text.trim() }))
+      return true
+
+    case 'quotation':
+      await put(chatId, advance({ ...d, quotation: text.trim() }))
+      return true
+
+    case 'date': {
+      const iso = text.trim().match(/^(\d{4})-(\d{2})-(\d{2})$/)
+      const dmy = text.trim().match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/)
+      let date: string | null = null
+      if (iso) date = text.trim()
+      else if (dmy) {
+        const [, dd, mm, yy] = dmy
+        const year = yy.length === 2 ? `20${yy}` : yy
+        date = `${year}-${mm.padStart(2, '0')}-${dd.padStart(2, '0')}`
+      }
+      if (!date) {
+        await sendMessage(chatId, 'Send the date as <code>DD/MM/YY</code>, or tap <b>Today</b>.')
+        return true
+      }
+      await put(chatId, advance({ ...d, date }))
+      return true
+    }
+
+    case 'confirm': {
+      // A number here picks from an earlier client shortlist; otherwise nudge.
+      await sendMessage(chatId, 'Tap <b>Create it</b> or <b>Discard</b> above.')
+      return true
+    }
+  }
+  return true
+}
+
+/** Handles inv:* button taps. Returns true if it was ours. */
+export async function handleInvoiceCallback(chatId: number, data: string): Promise<boolean> {
+  if (!data.startsWith('inv:')) return false
+  const open = await loadDraft(chatId)
+  if (!open) {
+    await sendMessage(chatId, 'That invoice is no longer open. Send /invoice to start again.')
+    return true
+  }
+  const d = open.draft
+  const [, kind, value] = data.split(':')
+
+  if (kind === 'cancel') {
+    await clearDraft(chatId)
+    await sendMessage(chatId, 'Discarded. Nothing was filed.')
+    return true
+  }
+  if (kind === 'disc') {
+    await put(chatId, advance({ ...d, discount: 0 }))
+    return true
+  }
+  if (kind === 'terms') {
+    await put(chatId, advance({ ...d, terms: TERMS[value] ?? TERMS.half }))
+    return true
+  }
+  if (kind === 'quote') {
+    await put(chatId, advance({ ...d, quotation: undefined }))
+    return true
+  }
+  if (kind === 'date') {
+    await put(chatId, advance({ ...d, date: todayKL() }))
+    return true
+  }
+  if (kind === 'go') {
+    const filed = await fileInvoice({ ...d, date: d.date ?? todayKL() })
+    await clearDraft(chatId)
+    if (!filed) {
+      await sendMessage(chatId, '⚠️ Could not file that — the database refused it. Nothing was saved.')
+      return true
+    }
+    await sendMessage(
+      chatId,
+      `✅ Filed as <b>${filed.no}</b>.\n\nIt's already in your Invoice Summary and counted on the Dashboard.\n\nThe Canva document is still to be made — it's queued as <i>pending</i>.`,
+    )
+    return true
+  }
+  return true
+}
