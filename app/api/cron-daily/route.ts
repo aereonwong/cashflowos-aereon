@@ -66,19 +66,29 @@ export async function GET(req: Request) {
     proposed = (data ?? []) as any[]
   }
 
-  const brief = buildBrief(f, { cashIn, cashOut, owed }, proposed)
+  // Aereon turned the morning brief off on 22 Sep 2026 — he reads the numbers on
+  // the Dashboard instead. Flip this back to true to bring it back; nothing else
+  // needs changing. The 9am news digest (cron-news) is a separate cron and still
+  // runs, and the scheduled-agent sweep below is deliberately NOT affected, so
+  // proposals still reach him.
+  const MORNING_BRIEF_ENABLED = false
 
-  // ② Optional Jarvis-Oyen narrative — a warm chief-of-staff paragraph. Only when a
-  //    key is set; its absence NEVER blocks the mandated brief above.
-  let narrative: string | null = null
-  if (process.env.ANTHROPIC_API_KEY?.trim()) narrative = await chiefOfStaff(rows, today)
+  let sent = 0
+  let to: string[] = []
+  if (MORNING_BRIEF_ENABLED) {
+    const brief = buildBrief(f, { cashIn, cashOut, owed }, proposed)
 
-  const message = `${brief}${narrative ? `\n\n🐱 <b>Jarvis Oyen</b>\n${narrative}` : ''}`
+    // ② Optional Jarvis-Oyen narrative — a warm chief-of-staff paragraph. Only when a
+    //    key is set; its absence NEVER blocks the mandated brief above.
+    let narrative: string | null = null
+    if (process.env.ANTHROPIC_API_KEY?.trim()) narrative = await chiefOfStaff(rows, today)
 
-  // Send the brief.
-  const to = recipients()
-  const sends = await Promise.allSettled(to.map((id) => sendMessage(id, message)))
-  const sent = sends.filter((r) => r.status === 'fulfilled').length
+    const message = `${brief}${narrative ? `\n\n🐱 <b>Jarvis Oyen</b>\n${narrative}` : ''}`
+
+    to = recipients()
+    const sends = await Promise.allSettled(to.map((id) => sendMessage(id, message)))
+    sent = sends.filter((r) => r.status === 'fulfilled').length
+  }
 
   // ③ SWEEP the scheduled agents — CREATE proposals only (they pass through ASK).
   const owner = process.env.OWNER_CHAT_ID?.trim()
