@@ -6,9 +6,9 @@
     "semantic_hash": ""
   },
   ".claude/settings.json": {
-    "mtime": 1790345799.8703547,
-    "seen": 1790345833.091485,
-    "ast_hash": "3b541b9935fcf0831355da956f897645",
+    "mtime": 1790346814.3545732,
+    "seen": 1790346824.8568242,
+    "ast_hash": "6969d7df7c5ac3a02f87e4c640980b7c",
     "semantic_hash": ""
   },
   "agents/_template/definition.ts": {
@@ -861,6 +861,24 @@
     "mtime": 1790324492.6549873,
     "seen": 1790345833.091646,
     "ast_hash": "1b2f75b390e28b2025cc917ffabfc37e",
+    "semantic_hash": ""
+  },
+  ".claude/hooks/session-start.sh": {
+    "mtime": 1790346814.3228626,
+    "seen": 1790346824.8568141,
+    "ast_hash": "ffc80a382ddbdbdabcf98ea150e9ccf4",
+    "semantic_hash": ""
+  },
+  "supabase/instagram.sql": {
+    "mtime": 1790324492.6611335,
+    "seen": 1790346824.8569424,
+    "ast_hash": "3acc71a70c7ce73866a0d5a7779291d7",
+    "semantic_hash": ""
+  },
+  "supabase/schema.sql": {
+    "mtime": 1790324492.6614223,
+    "seen": 1790346824.8569436,
+    "ast_hash": "3dec877edc40f30122c42ba3c4287669",
     "semantic_hash": ""
   }
 }
