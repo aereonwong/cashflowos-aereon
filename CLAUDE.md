@@ -113,3 +113,13 @@ that file before touching it; it explains the token arithmetic.
 - `.env` is gitignored and holds the real secrets; the repo is public, so nothing secret goes in it.
 - Verify before claiming: build locally (`npm run build`), and check a page actually renders.
 - The Telegram bot in group chats only answers when @mentioned, replied to, or sent a /command.
+
+## graphify
+
+This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
+
+Rules:
+- For codebase questions, first run `graphify query "<question>"` when graphify-out/graph.json exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
+- If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
+- Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
+- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).

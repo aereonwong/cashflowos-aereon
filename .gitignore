@@ -17,3 +17,6 @@ next-env.d.ts
 *.tsbuildinfo
 .DS_Store
 .vercel
+
+# graphify: keep the graph, not its per-machine cache
+graphify-out/cache/
