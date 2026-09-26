@@ -52,6 +52,7 @@ export default function Strip({
             className="v3-cell"
             style={{ ['--d' as string]: f.density.toFixed(3) }}
             data-future={f.future}
+            data-lit={f.density > 0.42}
             data-keeper={f.key === bestKey}
             data-selected={f.key === sel}
             onClick={() => pick(f)}
@@ -69,7 +70,10 @@ export default function Strip({
             <>
               <b>{chosen.label}</b> · {rmFull(chosen.total)} across {chosen.count} invoice{chosen.count === 1 ? '' : 's'}
               <br />
-              <span className="code">{chosen.numbers.join('  ▸  ')}</span>
+              <span className="code">
+                {chosen.numbers.slice(0, 5).join('  ▸  ')}
+                {chosen.numbers.length > 5 ? `  ▸  +${chosen.numbers.length - 5} more` : ''}
+              </span>
             </>
           ) : (
             <>

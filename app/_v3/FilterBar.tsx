@@ -107,8 +107,7 @@ export default function FilterBar({
       ) : null}
 
       {kinds ? (
-        <>
-          <span className="v3-divider" aria-hidden="true" />
+        <div className="v3-filters-kinds" role="group" aria-label="Kind of work">
           {KINDS.map(k => (
             <button
               key={k}
@@ -120,7 +119,7 @@ export default function FilterBar({
               {k}
             </button>
           ))}
-        </>
+        </div>
       ) : null}
 
       {active ? (

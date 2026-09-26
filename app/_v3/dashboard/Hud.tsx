@@ -71,7 +71,7 @@ export default function Hud({
         <div className="v3-tape" aria-hidden="true">
           <div className="v3-tape-scale">
             {ticks.map((t, i) => (
-              <span key={i} className={`v3-tape-tick${i % 2 === 0 ? ' major' : ''}`} style={{ top: pos(t) }}>
+              <span key={i} className={`v3-tape-tick${i % 2 === 0 ? ' major' : ''}${i === 0 || i === 10 ? ' edge' : ''}`} style={{ top: pos(t) }}>
                 {i % 2 === 0 ? compact(t) : ''}
               </span>
             ))}
@@ -84,6 +84,10 @@ export default function Hud({
 
         <div className="v3-hud-centre">
           <span className="v3-reticle" aria-hidden="true" />
+          <div className="v3-gs" aria-live="polite">
+            <div className="v3-gs-label">Ground speed · vs {year - 1}</div>
+            <div className={`v3-gs-value${speed !== null && speed < 0 ? ' down' : ''}`}>{pct(speed)}</div>
+          </div>
           <div className="v3-readout" aria-live="polite">
             <div className="v3-readout-label">
               Income · {pace[m].month} {year}
@@ -93,8 +97,11 @@ export default function Hud({
               {Math.round(alt).toLocaleString('en-MY')}
             </div>
             <div className="v3-readout-sub">
-              Ground speed <b className={speed !== null && speed < 0 ? 'down' : ''}>{pct(speed)}</b> on {year - 1} at this point
+              {rmFull(before)} at this point in {year - 1}
             </div>
+          </div>
+          <div className="v3-live">
+            <i aria-hidden="true" /> LIVE · RECORDS AS OF TODAY
           </div>
         </div>
 

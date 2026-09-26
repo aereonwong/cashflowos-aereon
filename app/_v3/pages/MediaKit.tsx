@@ -18,7 +18,7 @@ import { compact, num } from '../fmt'
 const SERVICES: Record<WorkKind, { title: string; line: string } | null> = {
   'Drone / aerial': { title: 'Aerial & drone', line: 'Licensed aerial film and photography — skylines, resorts, launches and drone shows.' },
   'Social campaign': { title: 'Social campaigns', line: 'Reels and TikToks built to travel, posted to an audience that engages.' },
-  'Event coverage': { title: 'Event coverage', line: 'Launches, ceremonies and awards nights, delivered edited within a day.' },
+  'Event coverage': { title: 'Event coverage', line: 'Launches, ceremonies and awards nights, covered from arrival to the last award.' },
   'Production / licensing': { title: 'Production & licensing', line: 'Footage produced to brief, and archive shots licensed for campaigns.' },
   Other: null,
 }
@@ -43,12 +43,10 @@ export default function MediaKit({
   const top = audience.top[0]
   const services = kinds.map(k => SERVICES[k]).filter(Boolean) as { title: string; line: string }[]
 
-  const figures = [
-    audience.followers ? { v: compact(audience.followers), l: 'Instagram followers' } : null,
-    s ? { v: compact(s.totals.reach), l: 'Accounts reached, last 30 days' } : null,
-    top?.reach ? { v: compact(top.reach), l: 'Reach on the top reel' } : null,
-    s ? { v: `${s.engagementRate.toFixed(1)}%`, l: 'Engagement on reach' } : null,
-  ].filter(Boolean) as { v: string; l: string }[]
+  // Reach as one composed sentence, built only from figures that exist.
+  const reachLine = s ? compact(s.totals.reach) : null
+  const topLine = top?.reach ? compact(top.reach) : null
+  const engage = s ? `${s.engagementRate.toFixed(1)}%` : null
 
   return (
     <div className={`v3 v3-kit ${v3Fonts}`} data-world={world}>
@@ -107,6 +105,7 @@ export default function MediaKit({
                   Creative visual travel content creator and professional drone pilot in Kuala Lumpur. Aerial films, launch
                   campaigns, hotels and tourism — from KLCC rooftops to island resorts.
                 </p>
+                <span className="v3-kit-credential">CAAM-licensed drone pilot</span>
                 <div className="v3-kit-ctas">
                   <a className="v3-btn v3-btn-primary" href={`mailto:${EMAIL}?subject=Collaboration`}>
                     Book a collaboration
@@ -132,10 +131,13 @@ export default function MediaKit({
           )}
           {world === 'contact' ? (
             <div className="v3-kit-intro">
-              <p className="v3-kit-blurb">
-                Creative visual travel content creator and professional drone pilot in Kuala Lumpur. Aerial films, launch
-                campaigns, hotels and tourism — from KLCC rooftops to island resorts.
-              </p>
+              <div>
+                <p className="v3-kit-blurb">
+                  Creative visual travel content creator and professional drone pilot in Kuala Lumpur. Aerial films, launch
+                  campaigns, hotels and tourism — from KLCC rooftops to island resorts.
+                </p>
+                <span className="v3-kit-credential">CAAM-licensed drone pilot</span>
+              </div>
               <div className="v3-kit-ctas">
                 <a className="v3-btn v3-btn-primary" href={`mailto:${EMAIL}?subject=Collaboration`}>
                   Book a collaboration
@@ -153,23 +155,29 @@ export default function MediaKit({
           <h2 className="v3-kit-h2" id="k-reach">
             Reach
           </h2>
-          <div className="v3-kit-figures">
-            {figures.map(f => (
-              <div key={f.l} className="v3-kit-figure">
-                <span className="v3-kit-figure-v">{f.v}</span>
-                <span className="v3-kit-figure-l">{f.l}</span>
-              </div>
-            ))}
-            <div className="v3-kit-figure">
-              <span className="v3-kit-figure-v">CAAM</span>
-              <span className="v3-kit-figure-l">Licensed drone pilot</span>
-            </div>
-          </div>
-          {top ? (
-            <p className="v3-kit-proof">
-              The top reel of the last month reached {num(top.reach ?? 0)} accounts and was watched {num(top.views ?? 0)} times.
-            </p>
-          ) : null}
+          <p className="v3-kit-statement">
+            {audience.followers ? (
+              <>
+                <b>{compact(audience.followers)}</b> people follow along.{' '}
+              </>
+            ) : null}
+            {reachLine ? (
+              <>
+                In the last 30 days the work reached <b>{reachLine}</b> accounts
+                {topLine ? (
+                  <>
+                    {' '}— the top reel alone reached <b>{topLine}</b>
+                  </>
+                ) : null}
+                {engage ? (
+                  <>
+                    , and <b>{engage}</b> of the people it reached engaged
+                  </>
+                ) : null}
+                .
+              </>
+            ) : null}
+          </p>
         </section>
 
         {/* ---------------- Best work, playable ---------------- */}
@@ -178,7 +186,7 @@ export default function MediaKit({
             <h2 className="v3-kit-h2" id="k-work">
               Recent work
             </h2>
-            <PostGrid posts={audience.top} limit={6} />
+            <PostGrid posts={audience.top} limit={6} circleFirst={world === 'contact'} />
           </section>
         ) : null}
 

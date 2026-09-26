@@ -100,7 +100,7 @@ export default function Instagram({ audience, sp }: { audience: Audience; sp: Pa
             <div>
               <div className="v3-kpi-label">Posting</div>
               <div className="v3-kpi-value num">{s.postsPerWeek.toFixed(1)}/wk</div>
-              <div className="v3-kpi-note">last post {s.daysSinceLastPost} days ago</div>
+              <div className="v3-kpi-note">last post {s.daysSinceLastPost === 0 ? 'today' : `${s.daysSinceLastPost} day${s.daysSinceLastPost === 1 ? '' : 's'} ago`}</div>
             </div>
           </div>
         </section>

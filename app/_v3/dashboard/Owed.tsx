@@ -35,6 +35,10 @@ export default function Owed({
     return d.toISOString().slice(0, 10)
   })
   const [msg, setMsg] = useState<string | null>(null)
+  const [sort, setSort] = useState<'days' | 'amount' | 'client'>('days')
+  const sorted = [...lines].sort((a, b) =>
+    sort === 'amount' ? b.amount - a.amount : sort === 'client' ? a.client.localeCompare(b.client) : b.days - a.days,
+  )
 
   const toggle = (id: number) => {
     setBusy(id)
@@ -64,8 +68,20 @@ export default function Owed({
           <b>Nothing waiting.</b> Every invoice from the last {OWED_WINDOW_DAYS} days is confirmed as paid.
         </p>
       ) : (
+        <>
+        <div className="v3-seg" role="group" aria-label="Sort" style={{ marginBottom: 'var(--space-3)' }}>
+          {([
+            ['days', 'Longest waiting'],
+            ['amount', 'Largest'],
+            ['client', 'Client A–Z'],
+          ] as const).map(([id, label]) => (
+            <button key={id} type="button" aria-pressed={sort === id} onClick={() => setSort(id)}>
+              {label}
+            </button>
+          ))}
+        </div>
         <div className="v3-rows">
-          {lines.map(l => (
+          {sorted.map(l => (
             <div className="v3-row" key={l.id} style={{ opacity: done[l.id] ? 0.45 : 1 }}>
               <div className="v3-row-main">
                 <div className="v3-row-title">{l.client}</div>
@@ -100,6 +116,7 @@ export default function Owed({
             </div>
           ))}
         </div>
+        </>
       )}
 
       <div className="v3-owed-foot">

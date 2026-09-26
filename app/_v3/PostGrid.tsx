@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { IgPost } from '@/lib/instagram'
 import Icon from '@/app/_components/Icon'
+import Circle from './Circle'
 import { compact, num } from './fmt'
 
 // Top Instagram posts as frames. Clicking one opens Instagram's own player for
@@ -11,7 +12,7 @@ import { compact, num } from './fmt'
 const embed = (p: IgPost) => (p.permalink ? `${p.permalink.replace(/\/?$/, '/')}embed/` : null)
 const isVideo = (p: IgPost) => /REEL|VIDEO/i.test(p.type)
 
-export default function PostGrid({ posts, limit = 6 }: { posts: IgPost[]; limit?: number }) {
+export default function PostGrid({ posts, limit = 6, circleFirst = false }: { posts: IgPost[]; limit?: number; circleFirst?: boolean }) {
   const [open, setOpen] = useState<IgPost | null>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
   const opener = useRef<HTMLElement | null>(null)
@@ -52,6 +53,7 @@ export default function PostGrid({ posts, limit = 6 }: { posts: IgPost[]; limit?
             )}
             <span className="v3-post-shade" />
             <span className="v3-post-rank">#{i + 1}</span>
+            {circleFirst && i === 0 ? <Circle drawn /> : null}
             <span className="v3-post-meta">
               <span className="v3-post-reach num">
                 {compact(p.reach ?? 0)}
