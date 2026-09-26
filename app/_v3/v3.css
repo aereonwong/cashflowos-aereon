@@ -493,7 +493,14 @@ html[data-theme="dark"] .v3[data-world="canon"] {
   transform: scale(1.18) translateY(-6px); z-index: 3;
   box-shadow: inset 0 0 0 3px var(--frame), 0 22px 40px -12px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(0, 0, 0, 0.8);
 }
-.v3-circle { position: absolute; inset: -14px -10px; pointer-events: none; overflow: visible; }
+.v3-circle {
+  /* An absolutely positioned SVG is a replaced element: given both top and bottom
+     insets, the browser ignores bottom and takes height from the viewBox ratio, so
+     a wide figure grew a tall, misplaced circle. Size it explicitly instead. */
+  position: absolute; pointer-events: none; overflow: visible;
+  left: calc(var(--cx, 10px) * -1); top: calc(var(--cy, 14px) * -1);
+  width: calc(100% + 2 * var(--cx, 10px)); height: calc(100% + 2 * var(--cy, 14px));
+}
 .v3-circle path { fill: none; stroke: var(--mark); stroke-width: 3.2; stroke-linecap: round; stroke-dasharray: 600; stroke-dashoffset: 600; }
 .v3-circle.drawn path { animation: v3-draw 900ms var(--ease) 200ms forwards; }
 .v3[data-world="contact"] .v3-cell:hover .v3-circle path,
@@ -803,7 +810,7 @@ a.v3-story-head:hover { text-decoration: underline; }
 .v3-kit-frames { display: grid; grid-template-rows: repeat(3, minmax(0, 1fr)); gap: var(--space-4); }
 .v3-kit-frame { position: relative; border: 8px solid var(--frame); overflow: visible; background: #000; }
 .v3-kit-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.v3-kit-frame .v3-circle { inset: -16px -14px; }
+
 .v3-kit-frame .v3-circle path { stroke-width: 3.5; }
 .v3-kit-intro { display: grid; grid-template-columns: minmax(0, 1.4fr) auto; gap: var(--space-6); align-items: end; margin-top: var(--space-6); }
 .v3-kit-intro .v3-kit-blurb { margin: 0; }
@@ -895,7 +902,7 @@ a.v3-story-head:hover { text-decoration: underline; }
 .v3-sheet-note { position: relative; display: block; text-decoration: none; padding: var(--space-2) var(--space-3); }
 .v3-sheet-note .q { font-family: var(--f-note); color: var(--mark); font-size: var(--t-lg); margin: 0; }
 .v3-sheet-note .a { position: relative; display: inline-block; font-family: var(--f-note); font-size: 2.1rem; line-height: 1.05; margin: 2px 0; padding: 2px 14px; }
-.v3-sheet-note .a .v3-circle { inset: -8px -6px; }
+.v3-sheet-note .a .v3-circle { --cx: 8px; --cy: 7px; }
 .v3-sheet-note .n { color: var(--ink-2); font-size: var(--t-sm); margin: 0; }
 .v3-sheet-note:hover .a { color: #fff; }
 .v3-sheet-strip { margin-top: var(--space-2); }
@@ -911,7 +918,7 @@ a.v3-story-head:hover { text-decoration: underline; }
 
 /* Contact: post ranks are frame numbers printed on the mat, not pills. */
 .v3[data-world="contact"] .v3-post-rank { background: none; top: auto; bottom: -1px; left: 50%; transform: translateX(-50%); padding: 0; font-size: 10px; color: var(--edge); text-shadow: 0 0 6px #000; }
-.v3-post .v3-circle { inset: 6px; z-index: 2; }
+.v3-post .v3-circle { --cx: -8px; --cy: -8px; z-index: 2; }
 .v3-post .v3-circle path { stroke-width: 4; }
 
 /* Edge codes stay on one rebate line. */
@@ -926,7 +933,8 @@ a.v3-story-head:hover { text-decoration: underline; }
 .v3[data-world="canon"] .v3-kit-statement b { color: var(--accent); }
 .v3-kit-credential { display: inline-flex; align-items: center; gap: 8px; margin-top: var(--space-4); font-size: var(--t-sm); color: var(--ink-2); padding: 5px 12px; border: 1px solid var(--line-2); border-radius: 99px; }
 .v3[data-world="contact"] .v3-kit-credential, .v3[data-world="hud"] .v3-kit-credential { border-radius: 0; }
-.v3-kit-frame .v3-circle { inset: 8px 6px; }
+.v3-kit-frame { overflow: hidden; }
+.v3-kit-frame .v3-circle { --cx: -8px; --cy: -8px; }
 
 /* Phones */
 @media (max-width: 720px) {
@@ -945,3 +953,45 @@ a.v3-story-head:hover { text-decoration: underline; }
 }
 .v3-stack { display: flex; flex-direction: column; gap: var(--space-5); min-width: 0; }
 @media (max-width: 1100px) { .v3-stack { grid-column: span 12; } }
+
+
+/* ================================================================ finish review, round 3 */
+
+/* Contact notes: the subline starts below the circle's reach. */
+.v3-sheet-note .a { margin: 4px 0 10px; }
+
+/* Studio Standard: a KPI value and its delta may wrap rather than overflow. */
+.v3-kpi-value { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; }
+.v3-delta { margin-left: 0; }
+
+/* Date inputs leave room for the calendar icon. */
+.v3-date { min-width: 150px; padding-right: 8px; }
+
+/* Media kit brand wall: official marks, flattened to the world's ink so twelve
+   brands read as one line-up instead of twelve competing colours. */
+.v3-kit-logos { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--space-5) var(--space-6); align-items: center; }
+.v3-kit-logos li { display: flex; align-items: center; justify-content: center; height: 76px; }
+.v3-logo { display: block; width: 100%; height: calc(48px * var(--s, 1)); max-width: 160px; background: var(--ink-2);
+  -webkit-mask: var(--logo) center / contain no-repeat; mask: var(--logo) center / contain no-repeat; transition: background var(--dur) var(--ease); }
+.v3-kit-logos li:hover .v3-logo { background: var(--ink); }
+.v3[data-world="canon"] .v3-logo { background: var(--ink-3); }
+.v3[data-world="canon"] .v3-kit-logos li:hover .v3-logo { background: var(--ink); }
+
+/* Instagram covers with a letterbox baked into the image: the band is measured
+   when the snapshot is taken and cropped out here. */
+.v3-post img[data-crop] { top: var(--crop-top); height: var(--crop-h); }
+
+@media (max-width: 720px) {
+  .v3-print-line .long { display: none; }
+  /* HUD on a phone: readouts across the top, then the tape beside the gauges so
+     it keeps a real height and reads as a tape. */
+  .v3-hud { grid-template-columns: 64px minmax(0, 1fr); min-height: 0; }
+  .v3-hud-centre { order: -1; grid-column: 1 / -1; }
+  .v3-tape { grid-column: 1; min-height: 300px; }
+  .v3-gauges { grid-column: 2; flex-direction: column; }
+  .v3-tape-label { bottom: auto; top: -20px; }
+  .v3-tape-pointer { right: -6px; }
+  .v3-tape-pointer span { margin-left: 6px; font-size: 11px; padding: 3px 5px; }
+  .v3-kit-logos { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); }
+  .v3-kit-logos li { height: 48px; }
+}

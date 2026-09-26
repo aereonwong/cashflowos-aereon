@@ -47,7 +47,21 @@ export default function PostGrid({ posts, limit = 6, circleFirst = false }: { po
           >
             {p.thumb ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={p.thumb} alt="" loading="lazy" referrerPolicy="no-referrer" />
+              <img
+                src={p.thumb}
+                alt=""
+                loading="lazy"
+                referrerPolicy="no-referrer"
+                data-crop={p.crop ? '' : undefined}
+                style={
+                  p.crop
+                    ? ({
+                        ['--crop-top' as string]: `${(-p.crop.t / (1 - p.crop.t - p.crop.b)) * 100}%`,
+                        ['--crop-h' as string]: `${(1 / (1 - p.crop.t - p.crop.b)) * 100}%`,
+                      } as React.CSSProperties)
+                    : undefined
+                }
+              />
             ) : (
               <span className="v3-post-fallback">{p.caption.split('\n')[0].slice(0, 110)}</span>
             )}

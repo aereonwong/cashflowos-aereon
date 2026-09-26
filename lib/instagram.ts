@@ -32,6 +32,9 @@ export type IgPost = {
   /** Cover image: the photo itself, or a reel's thumbnail. Instagram CDN URLs
    *  expire, so these are refreshed with every snapshot and may be stale between. */
   thumb?: string
+  /** A letterbox baked into the cover (a landscape video in a vertical frame):
+   *  the fraction of the image height that is black band, top and bottom. */
+  crop?: { t: number; b: number }
 }
 
 export type IgSnapshot = {
@@ -138,7 +141,53 @@ async function attachCovers(exec: Exec, igUserId: string, posts: IgPost[]): Prom
       want.delete(post.id)
     }
     after = body?.paging?.cursors?.after
-    if (!items.length || !after) return
+    if (!items.length || !after) break
+  }
+  await measureLetterbox(posts)
+}
+
+// Some reel covers carry a letterbox: a landscape video placed in a vertical
+// frame leaves solid black bands above and below. Measured here, once per
+// snapshot, so the page can crop the band out rather than show it. Uses sharp,
+// which ships with Next.js; if it is unavailable the covers simply stay as they are.
+async function measureLetterbox(posts: IgPost[]): Promise<void> {
+  let sharp: typeof import('sharp')
+  try {
+    sharp = (await import('sharp')).default
+  } catch {
+    return
+  }
+  for (const p of posts) {
+    if (!p.thumb || !/REEL|VIDEO/i.test(p.type)) continue
+    try {
+      const res = await fetch(p.thumb)
+      if (!res.ok) continue
+      const buf = Buffer.from(await res.arrayBuffer())
+      const { data, info } = await sharp(buf).greyscale().resize({ width: 90 }).raw().toBuffer({ resolveWithObject: true })
+      const dark = (row: number) => {
+        let sum = 0
+        let max = 0
+        for (let x = 0; x < info.width; x++) {
+          const v = data[row * info.width + x]
+          sum += v
+          if (v > max) max = v
+        }
+        return sum / info.width < 14 && max < 40
+      }
+      let top = 0
+      while (top < info.height && dark(top)) top++
+      let bottom = 0
+      while (bottom < info.height - top && dark(info.height - 1 - bottom)) bottom++
+      const t = top / info.height
+      const b = bottom / info.height
+      // A letterbox is symmetric. A dark band on one side only is usually real
+      // content — night sky over a skyline — and must not be cropped away.
+      if (t >= 0.04 && b >= 0.04 && Math.abs(t - b) < 0.05 && t + b < 0.7) {
+        p.crop = { t: Math.round(t * 1000) / 1000, b: Math.round(b * 1000) / 1000 }
+      }
+    } catch {
+      // a cover that cannot be read is shown as it is
+    }
   }
 }
 

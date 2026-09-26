@@ -80,10 +80,11 @@ export default function Dashboard({
                 {Math.round(s.ytd).toLocaleString('en-MY')}
               </p>
               <p className="v3-print-line">
-                invoiced in {s.year}
-                {s.pacePct === null ? '' : (
+                <span className="long">invoiced in {s.year} · </span>
+                {s.pacePct === null ? `invoiced in ${s.year}` : (
                   <>
-                    {' '}· <b>{pct(s.pacePct)}</b> on this point in {s.year - 1}
+                    <b>{pct(s.pacePct)}</b> on {s.year - 1}
+                    <span className="long"> at this point</span>
                   </>
                 )}
               </p>

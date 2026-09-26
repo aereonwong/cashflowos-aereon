@@ -53,14 +53,13 @@ export default async function Landing({
   if (site.landing === 'kit' || preview) {
     const [audience, recs] = await Promise.all([readAudience(), getRecords()])
     const inv = toInvoices(recs)
-    const text = inv.map(i => `${i.project} ${i.client}`).join(' ').toLowerCase()
     const kinds = [...new Set(inv.map(i => i.kind))]
     const since = inv.map(i => i.date).sort()[0]?.slice(0, 4) ?? '2021'
     return (
       <MediaKit
         world={world}
         audience={audience}
-        brands={BRAND_WORDS.filter(b => text.includes(b.toLowerCase())).slice(0, 16)}
+        brands={[]}
         kinds={kinds}
         since={since}
       />

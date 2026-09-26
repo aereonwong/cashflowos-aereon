@@ -7,6 +7,7 @@ import PostGrid from '../PostGrid'
 import Circle from '../Circle'
 import Icon from '@/app/_components/Icon'
 import { compact, num } from '../fmt'
+import { KIT_BRANDS } from '@/lib/v3/brands'
 
 // 👉 The public creator media kit — the one page brands see. Persuade mode: its
 // job is to make a brand want to book Aereon, and make booking one tap away.
@@ -208,18 +209,24 @@ export default function MediaKit({
         ) : null}
 
         {/* ---------------- Brands ---------------- */}
-        {brands.length ? (
-          <section className="v3-kit-section" aria-labelledby="k-brands">
-            <h2 className="v3-kit-h2" id="k-brands">
-              Brands I&rsquo;ve made work for
-            </h2>
-            <ul className="v3-kit-brands">
-              {brands.map(b => (
-                <li key={b}>{b}</li>
-              ))}
-            </ul>
-          </section>
-        ) : null}
+        <section className="v3-kit-section" aria-labelledby="k-brands">
+          <h2 className="v3-kit-h2" id="k-brands">
+            Brands I&rsquo;ve made work for
+          </h2>
+          <ul className="v3-kit-logos">
+            {KIT_BRANDS.map(b => (
+              <li key={b.slug}>
+                <span
+                  className="v3-logo"
+                  role="img"
+                  aria-label={b.name}
+                  title={b.name}
+                  style={{ ['--logo' as string]: `url(/img/brands/${b.slug}.svg)`, ['--s' as string]: String(b.scale) }}
+                />
+              </li>
+            ))}
+          </ul>
+        </section>
 
         {/* ---------------- The close ---------------- */}
         <section className="v3-kit-close" aria-labelledby="k-close">

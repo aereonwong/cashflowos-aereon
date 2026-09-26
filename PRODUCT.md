@@ -62,6 +62,12 @@ are his, and its insights are written in plain language rather than accounting t
 - Instagram handle **@aereonwong**. Bio: "Creative Visual Travel Content Creator — Tech | Aerial |
   Travel | Hotel | Tourism | Adventure — Portraits | Events", based in KL.
 - Voice: plain, direct, specific. Insights read like a sharp adviser, not a report.
+- **Brands on the public media kit** — confirmed by Aereon on 26 Sep 2026: show them, as logos,
+  chosen for prestige and trust rather than how often each was invoiced. His list of recent work:
+  Petronas Twin Towers, KL Tower, BYD, XPENG, JETOUR, Tesla, Tourism Malaysia, Singapore Tourism,
+  Brunei Tourism, China Tourism, Shangri-La Hotel, CelcomDigi, Zhiyun, SmallRig, DJI, Insta360,
+  Dubai Tourism, AirAsia MOVE, Hyatt Centric, Xiaomi, Huawei, Thailand Tourism, Ricoh, HONOR.
+  The current selection lives in `lib/v3/brands.ts`.
 
 ## Evidence on Hand
 
@@ -70,9 +76,8 @@ are his, and its insights are written in plain language rather than accounting t
 - Instagram snapshot of 20 Sep 2026: 40 posts (23 Reels, 17 Feed), 29 Aug to 19 Sep 2026.
   Top post: the Petronas Twin Towers Merdeka Reel — 480,109 reach, 683,750 views, 36,176 likes.
   Merdeka content holds the top three positions.
-- **Absent, must not be fabricated:** follower-growth history (only two snapshots, both taken
-  20 Sep 2026), brand logos or client permission to display them publicly, testimonials, and
-  audience demographics.
+- **Absent, must not be fabricated:** testimonials or quotes attributed to any client, and
+  audience demographics. Follower history began 20 Sep 2026 and grows with each snapshot.
 
 ## Product Principles
 
