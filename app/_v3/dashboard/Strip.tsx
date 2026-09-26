@@ -1,0 +1,85 @@
+'use client'
+
+import { useRouter, usePathname, useSearchParams } from 'next/navigation'
+import { useState, useTransition } from 'react'
+import type { MonthFrame } from '@/lib/v3/studio'
+import type { World } from '@/lib/v3/version'
+import Circle from '../Circle'
+import { rmFull, compact } from '../fmt'
+
+// The months of the year as frames, every one on the same scale. Selecting one
+// prints its invoice numbers underneath. In the Studio Standard world a click
+// also filters the whole page to that month (crossfilter).
+
+export default function Strip({
+  frames,
+  bestKey,
+  world,
+}: {
+  frames: MonthFrame[]
+  bestKey: string | null
+  world: World
+}) {
+  const [sel, setSel] = useState<string | null>(bestKey)
+  const router = useRouter()
+  const path = usePathname()
+  const params = useSearchParams()
+  const [, start] = useTransition()
+  const chosen = frames.find(f => f.key === sel) ?? null
+
+  const pick = (f: MonthFrame) => {
+    if (f.future) return
+    setSel(f.key)
+    if (world === 'canon') {
+      const [y, m] = f.key.split('-').map(Number)
+      const last = new Date(Date.UTC(y, m, 0)).getUTCDate()
+      const p = new URLSearchParams(params?.toString())
+      p.set('range', 'custom')
+      p.set('from', `${f.key}-01`)
+      p.set('to', `${f.key}-${String(last).padStart(2, '0')}`)
+      start(() => router.replace(`${path}?${p.toString()}`, { scroll: false }))
+    }
+  }
+
+  return (
+    <>
+      <div className="v3-strip" role="list">
+        {frames.map(f => (
+          <button
+            key={f.key}
+            type="button"
+            role="listitem"
+            className="v3-cell"
+            style={{ ['--d' as string]: f.density.toFixed(3) }}
+            data-future={f.future}
+            data-keeper={f.key === bestKey}
+            data-selected={f.key === sel}
+            onClick={() => pick(f)}
+            aria-label={f.future ? `${f.label}: still to come` : `${f.label}: ${rmFull(f.total)} from ${f.count} invoices`}
+          >
+            {world === 'contact' ? <Circle drawn={f.key === bestKey} /> : null}
+            <span className="v3-cell-v num">{f.future ? '' : f.total ? compact(f.total) : '0'}</span>
+            <span className="v3-cell-m">{f.label}</span>
+          </button>
+        ))}
+      </div>
+      <p className="v3-strip-detail" aria-live="polite">
+        {chosen ? (
+          chosen.count ? (
+            <>
+              <b>{chosen.label}</b> · {rmFull(chosen.total)} across {chosen.count} invoice{chosen.count === 1 ? '' : 's'}
+              <br />
+              <span className="code">{chosen.numbers.join('  ▸  ')}</span>
+            </>
+          ) : (
+            <>
+              <b>{chosen.label}</b> · no invoice was raised this month.
+            </>
+          )
+        ) : (
+          'Select a month to see the invoices behind it.'
+        )}
+      </p>
+    </>
+  )
+}

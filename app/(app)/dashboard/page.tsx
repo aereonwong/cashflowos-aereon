@@ -8,6 +8,10 @@ import { latestSnapshot } from '@/lib/instagram'
 import { supabase, supabaseConfigured } from '@/lib/supabase'
 import DashboardV1 from './_v1'
 import DashboardV2 from './_v2'
+import DashboardV3 from '@/app/_v3/dashboard/Dashboard'
+import { readVersion } from '@/lib/v3/version'
+import { parseFilters } from '@/lib/v3/filters'
+import { readAudience } from '@/lib/v3/audience'
 
 export const dynamic = 'force-dynamic'
 
@@ -33,7 +37,17 @@ async function layout(): Promise<'v1' | 'v2'> {
   }
 }
 
-export default async function Dashboard() {
+export default async function Dashboard({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>
+}) {
+  const { version, world } = await readVersion()
+  if (version === 'v3') {
+    const [rows, audience, sp] = await Promise.all([getRecords(), readAudience(), searchParams])
+    return <DashboardV3 rows={rows} filters={parseFilters(sp)} world={world} audience={audience} />
+  }
+
   const [rows, snap, waiting, which] = await Promise.all([
     getRecords(),
     latestSnapshot(),

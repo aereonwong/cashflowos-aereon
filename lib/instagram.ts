@@ -29,6 +29,9 @@ export type IgPost = {
   reach?: number
   saved?: number
   shares?: number
+  /** Cover image: the photo itself, or a reel's thumbnail. Instagram CDN URLs
+   *  expire, so these are refreshed with every snapshot and may be stale between. */
+  thumb?: string
 }
 
 export type IgSnapshot = {

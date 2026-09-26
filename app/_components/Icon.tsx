@@ -6,6 +6,7 @@ export type IconName =
   | 'instagram' | 'content' | 'tasks' | 'approvals' | 'robot' | 'vault' | 'settings'
   | 'chart' | 'calendar' | 'trend' | 'eye' | 'heart' | 'share' | 'bookmark' | 'sparkle'
   | 'clock' | 'users' | 'pie' | 'refresh' | 'camera' | 'wallet'
+  | 'news' | 'play' | 'filter' | 'close' | 'check' | 'search' | 'external' | 'chevron'
 
 const P: Record<IconName, React.ReactNode> = {
   dashboard: <><rect x="3" y="3" width="7" height="9" rx="2" /><rect x="14" y="3" width="7" height="5" rx="2" /><rect x="14" y="12" width="7" height="9" rx="2" /><rect x="3" y="16" width="7" height="5" rx="2" /></>,
@@ -36,6 +37,14 @@ const P: Record<IconName, React.ReactNode> = {
   refresh: <><path d="M20 12a8 8 0 1 1-2.6-5.9" /><path d="M20 4v4.5h-4.5" /></>,
   camera: <><rect x="3" y="7" width="18" height="13" rx="3" /><circle cx="12" cy="13.5" r="3.6" /><path d="M8.5 7 10 4.5h4L15.5 7" /></>,
   wallet: <><rect x="3" y="6" width="18" height="13" rx="3" /><path d="M3 10h18" /><circle cx="17" cy="14" r="1.3" /></>,
+  news: <><path d="M5 4h11a2 2 0 0 1 2 2v13a1 1 0 0 0 2 0V9" /><path d="M5 4v15a2 2 0 0 0 2 2h13" /><path d="M8.5 8.5h6M8.5 12h6M8.5 15.5h3.5" /></>,
+  play: <><path d="M8 5.5v13l10.5-6.5L8 5.5Z" /></>,
+  filter: <><path d="M4 5h16l-6.2 7.3V19l-3.6-1.8v-4.9L4 5Z" /></>,
+  close: <><path d="M6 6l12 12M18 6 6 18" /></>,
+  check: <><path d="m5 12.5 4.5 4.5L19 7" /></>,
+  search: <><circle cx="11" cy="11" r="6.5" /><path d="m16 16 4.5 4.5" /></>,
+  external: <><path d="M14 4h6v6" /><path d="M20 4 11 13" /><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4" /></>,
+  chevron: <><path d="m9 6 6 6-6 6" /></>,
 }
 
 export default function Icon({ name, className = 'ico-svg' }: { name: IconName; className?: string }) {

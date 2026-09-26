@@ -3,11 +3,21 @@ import BottomNav from '@/app/_components/BottomNav'
 import ConnStatus from '@/app/_components/ConnStatus'
 import ThemeToggle from '@/app/_components/ThemeToggle'
 import { getPendingCount, demoMode } from '@/lib/records'
+import { readVersion } from '@/lib/v3/version'
+import V3Shell from '@/app/_v3/Shell'
 
 // The dashboard chrome: sidebar on desktop, bottom bar on phones. Everything
 // inside app/(app)/ gets it; the landing page and /login do not.
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
-  const [pending, demo] = await Promise.all([getPendingCount(), demoMode()])
+  const [pending, demo, { version, world }] = await Promise.all([getPendingCount(), demoMode(), readVersion()])
+  // v3 is a whole-app version with its own chrome; v1 and v2 share the classic one.
+  if (version === 'v3') {
+    return (
+      <V3Shell world={world} pending={pending} demo={demo}>
+        {children}
+      </V3Shell>
+    )
+  }
   return (
     <>
       <div className="app">

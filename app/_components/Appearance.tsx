@@ -10,7 +10,9 @@ type Mode = 'auto' | 'light' | 'dark'
 type Glass = 'clear' | 'frosted' | 'solid'
 type Font = 'grotesk' | 'sora' | 'archivo' | 'system'
 type Bg = 'merdeka' | 'sunset' | 'off'
-type Dash = 'v1' | 'v2'
+import { VERSIONS, WORLDS, type World } from '@/lib/v3/catalog'
+
+type Dash = 'v1' | 'v2' | 'v3'
 
 type Swatch = { id: string; label: string; from: string; to: string; note?: string }
 
@@ -69,11 +71,15 @@ export default function Appearance() {
   const [font, setFont] = useState<Font>('grotesk')
   const [bg, setBg] = useState<Bg>('merdeka')
   const [dash, setDash] = useState<Dash>('v2')
+  const [world, setWorld] = useState<World>('contact')
 
   // The dashboard layout lives in a cookie so the server can read it; mirror it
   // into state on mount so the right card shows as selected.
   useEffect(() => {
-    setDash(/(?:^|;\s*)cfo-dash=v1(?:;|$)/.test(document.cookie) ? 'v1' : 'v2')
+    const d = document.cookie.match(/(?:^|;\s*)cfo-dash=(v1|v2|v3)(?:;|$)/)?.[1] as Dash | undefined
+    setDash(d ?? 'v2')
+    const w = document.cookie.match(/(?:^|;\s*)cfo-v3=(contact|hud|canon)(?:;|$)/)?.[1] as World | undefined
+    if (w) setWorld(w)
   }, [])
 
   useEffect(() => {
@@ -120,42 +126,59 @@ export default function Appearance() {
   return (
     <>
       <div className="set-section">
-        <h2>Dashboard layout</h2>
+        <h2>App version</h2>
         <p className="sub">
-          Two ways to read the same numbers. Nothing changes in the data — only what the Dashboard
-          leads with.
+          Three versions read exactly the same records. Nothing changes in the data — only how the app is laid
+          out and what it leads with. Saved on this device.
         </p>
         <div className="layoutpick">
-          {([
-            [
-              'v2',
-              'Operating picture',
-              'Built for decisions: how the year is tracking, what needs attention, which kind of work is growing, and who has gone quiet.',
-            ],
-            [
-              'v1',
-              'Creator view',
-              'The original: your portrait and headline numbers, last six months, top clients and Instagram.',
-            ],
-          ] as [Dash, string, string][]).map(([id, label, note]) => (
+          {VERSIONS.map(v => (
             <button
-              key={id}
+              key={v.id}
               type="button"
-              className={`layoutcard${dash === id ? ' on' : ''}`}
-              aria-pressed={dash === id}
+              className={`layoutcard${dash === v.id ? ' on' : ''}`}
+              aria-pressed={dash === v.id}
               onClick={() => {
-                setDash(id)
-                // A cookie, not localStorage: the Dashboard is rendered on the
-                // server, so it has to be able to read this before it draws.
-                document.cookie = `cfo-dash=${id}; path=/; max-age=31536000; samesite=lax`
+                setDash(v.id)
+                // A cookie, not localStorage: pages are drawn on the server, so it
+                // has to read this before it draws.
+                document.cookie = `cfo-dash=${v.id}; path=/; max-age=31536000; samesite=lax`
                 router.refresh()
               }}
             >
-              <span className="layoutlabel">{label}</span>
-              <span className="layoutnote">{note}</span>
+              <span className="layoutlabel">
+                {v.id} · {v.name}
+              </span>
+              <span className="layoutnote">
+                {v.date} — {v.note}
+              </span>
             </button>
           ))}
         </div>
+        {dash === 'v3' ? (
+          <>
+            <h3 style={{ margin: '18px 0 6px', fontSize: 15 }}>v3 world</h3>
+            <p className="sub">The same studio in three looks. Switch any time.</p>
+            <div className="layoutpick">
+              {WORLDS.map(w => (
+                <button
+                  key={w.id}
+                  type="button"
+                  className={`layoutcard${world === w.id ? ' on' : ''}`}
+                  aria-pressed={world === w.id}
+                  onClick={() => {
+                    setWorld(w.id)
+                    document.cookie = `cfo-v3=${w.id}; path=/; max-age=31536000; samesite=lax`
+                    router.refresh()
+                  }}
+                >
+                  <span className="layoutlabel">{w.name}</span>
+                  <span className="layoutnote">{w.note}</span>
+                </button>
+              ))}
+            </div>
+          </>
+        ) : null}
       </div>
 
       <div className="set-section">
