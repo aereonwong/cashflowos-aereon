@@ -1,0 +1,1160 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-26T06:54:49+00:00",
+  "title": "Design System: Aereon Studio v3",
+  "extensions": {
+    "colorMeta": {
+      "contact-ground": {
+        "role": "neutral",
+        "displayName": "Film Black",
+        "canonical": "oklch(15.9% 0.000 89.9)",
+        "tonalRamp": [
+          "oklch(15% 0.000 89.9)",
+          "oklch(26% 0.000 89.9)",
+          "oklch(38% 0.000 89.9)",
+          "oklch(50% 0.000 89.9)",
+          "oklch(62% 0.000 89.9)",
+          "oklch(74% 0.000 89.9)",
+          "oklch(85% 0.000 89.9)",
+          "oklch(95% 0.000 89.9)"
+        ],
+        "world": "contact"
+      },
+      "contact-film": {
+        "role": "neutral",
+        "displayName": "Film Base",
+        "canonical": "oklch(20.0% 0.000 89.9)",
+        "tonalRamp": [
+          "oklch(15% 0.000 89.9)",
+          "oklch(26% 0.000 89.9)",
+          "oklch(38% 0.000 89.9)",
+          "oklch(50% 0.000 89.9)",
+          "oklch(62% 0.000 89.9)",
+          "oklch(74% 0.000 89.9)",
+          "oklch(85% 0.000 89.9)",
+          "oklch(95% 0.000 89.9)"
+        ],
+        "world": "contact"
+      },
+      "contact-film-2": {
+        "role": "neutral",
+        "displayName": "Film Base Lifted",
+        "canonical": "oklch(23.5% 0.000 89.9)",
+        "tonalRamp": [
+          "oklch(15% 0.000 89.9)",
+          "oklch(26% 0.000 89.9)",
+          "oklch(38% 0.000 89.9)",
+          "oklch(50% 0.000 89.9)",
+          "oklch(62% 0.000 89.9)",
+          "oklch(74% 0.000 89.9)",
+          "oklch(85% 0.000 89.9)",
+          "oklch(95% 0.000 89.9)"
+        ],
+        "world": "contact"
+      },
+      "contact-print-white": {
+        "role": "neutral",
+        "displayName": "Print White",
+        "canonical": "oklch(93.7% 0.010 87.5)",
+        "tonalRamp": [
+          "oklch(15% 0.010 87.5)",
+          "oklch(26% 0.010 87.5)",
+          "oklch(38% 0.010 87.5)",
+          "oklch(50% 0.010 87.5)",
+          "oklch(62% 0.010 87.5)",
+          "oklch(74% 0.010 87.5)",
+          "oklch(85% 0.010 87.5)",
+          "oklch(95% 0.010 87.5)"
+        ],
+        "world": "contact"
+      },
+      "contact-ink-2": {
+        "role": "neutral",
+        "displayName": "Darkroom Grey",
+        "canonical": "oklch(75.8% 0.015 88.7)",
+        "tonalRamp": [
+          "oklch(15% 0.015 88.7)",
+          "oklch(26% 0.015 88.7)",
+          "oklch(38% 0.015 88.7)",
+          "oklch(50% 0.015 88.7)",
+          "oklch(62% 0.015 88.7)",
+          "oklch(74% 0.015 88.7)",
+          "oklch(85% 0.015 88.7)",
+          "oklch(95% 0.015 88.7)"
+        ],
+        "world": "contact"
+      },
+      "contact-ink-3": {
+        "role": "neutral",
+        "displayName": "Darkroom Grey Dim",
+        "canonical": "oklch(60.5% 0.011 81.8)",
+        "tonalRamp": [
+          "oklch(15% 0.011 81.8)",
+          "oklch(26% 0.011 81.8)",
+          "oklch(38% 0.011 81.8)",
+          "oklch(50% 0.011 81.8)",
+          "oklch(62% 0.011 81.8)",
+          "oklch(74% 0.011 81.8)",
+          "oklch(85% 0.011 81.8)",
+          "oklch(95% 0.011 81.8)"
+        ],
+        "world": "contact"
+      },
+      "contact-line": {
+        "role": "neutral",
+        "displayName": "Rebate Hairline",
+        "canonical": "oklch(93.7% 0.010 87.5 / 0.14)",
+        "tonalRamp": [
+          "oklch(15% 0.010 87.5)",
+          "oklch(26% 0.010 87.5)",
+          "oklch(38% 0.010 87.5)",
+          "oklch(50% 0.010 87.5)",
+          "oklch(62% 0.010 87.5)",
+          "oklch(74% 0.010 87.5)",
+          "oklch(85% 0.010 87.5)",
+          "oklch(95% 0.010 87.5)"
+        ],
+        "world": "contact"
+      },
+      "contact-line-2": {
+        "role": "neutral",
+        "displayName": "Rebate Hairline Strong",
+        "canonical": "oklch(93.7% 0.010 87.5 / 0.26)",
+        "tonalRamp": [
+          "oklch(15% 0.010 87.5)",
+          "oklch(26% 0.010 87.5)",
+          "oklch(38% 0.010 87.5)",
+          "oklch(50% 0.010 87.5)",
+          "oklch(62% 0.010 87.5)",
+          "oklch(74% 0.010 87.5)",
+          "oklch(85% 0.010 87.5)",
+          "oklch(95% 0.010 87.5)"
+        ],
+        "world": "contact"
+      },
+      "contact-china-marker": {
+        "role": "primary",
+        "displayName": "China Marker Red",
+        "canonical": "oklch(60.0% 0.214 28.1)",
+        "tonalRamp": [
+          "oklch(15% 0.214 28.1)",
+          "oklch(26% 0.214 28.1)",
+          "oklch(38% 0.214 28.1)",
+          "oklch(50% 0.214 28.1)",
+          "oklch(62% 0.214 28.1)",
+          "oklch(74% 0.214 28.1)",
+          "oklch(85% 0.214 28.1)",
+          "oklch(95% 0.214 28.1)"
+        ],
+        "world": "contact"
+      },
+      "contact-marker-soft": {
+        "role": "primary",
+        "displayName": "China Marker Wash",
+        "canonical": "oklch(60.0% 0.214 28.1 / 0.14)",
+        "tonalRamp": [
+          "oklch(15% 0.214 28.1)",
+          "oklch(26% 0.214 28.1)",
+          "oklch(38% 0.214 28.1)",
+          "oklch(50% 0.214 28.1)",
+          "oklch(62% 0.214 28.1)",
+          "oklch(74% 0.214 28.1)",
+          "oklch(85% 0.214 28.1)",
+          "oklch(95% 0.214 28.1)"
+        ],
+        "world": "contact"
+      },
+      "contact-marker-blush": {
+        "role": "secondary",
+        "displayName": "Marker Blush",
+        "canonical": "oklch(89.9% 0.052 22.5)",
+        "tonalRamp": [
+          "oklch(15% 0.052 22.5)",
+          "oklch(26% 0.052 22.5)",
+          "oklch(38% 0.052 22.5)",
+          "oklch(50% 0.052 22.5)",
+          "oklch(62% 0.052 22.5)",
+          "oklch(74% 0.052 22.5)",
+          "oklch(85% 0.052 22.5)",
+          "oklch(95% 0.052 22.5)"
+        ],
+        "world": "contact"
+      },
+      "contact-edge-amber": {
+        "role": "secondary",
+        "displayName": "Edge-Code Amber",
+        "canonical": "oklch(81.0% 0.144 79.3)",
+        "tonalRamp": [
+          "oklch(15% 0.144 79.3)",
+          "oklch(26% 0.144 79.3)",
+          "oklch(38% 0.144 79.3)",
+          "oklch(50% 0.144 79.3)",
+          "oklch(62% 0.144 79.3)",
+          "oklch(74% 0.144 79.3)",
+          "oklch(85% 0.144 79.3)",
+          "oklch(95% 0.144 79.3)"
+        ],
+        "world": "contact"
+      },
+      "hud-ground": {
+        "role": "neutral",
+        "displayName": "Feed Black",
+        "canonical": "oklch(13.3% 0.013 255.5)",
+        "tonalRamp": [
+          "oklch(15% 0.013 255.5)",
+          "oklch(26% 0.013 255.5)",
+          "oklch(38% 0.013 255.5)",
+          "oklch(50% 0.013 255.5)",
+          "oklch(62% 0.013 255.5)",
+          "oklch(74% 0.013 255.5)",
+          "oklch(85% 0.013 255.5)",
+          "oklch(95% 0.013 255.5)"
+        ],
+        "world": "hud"
+      },
+      "hud-scrim": {
+        "role": "neutral",
+        "displayName": "HUD Scrim",
+        "canonical": "oklch(13.3% 0.013 255.5 / 0.55)",
+        "tonalRamp": [
+          "oklch(15% 0.013 255.5)",
+          "oklch(26% 0.013 255.5)",
+          "oklch(38% 0.013 255.5)",
+          "oklch(50% 0.013 255.5)",
+          "oklch(62% 0.013 255.5)",
+          "oklch(74% 0.013 255.5)",
+          "oklch(85% 0.013 255.5)",
+          "oklch(95% 0.013 255.5)"
+        ],
+        "world": "hud"
+      },
+      "hud-scrim-2": {
+        "role": "neutral",
+        "displayName": "HUD Scrim Dense",
+        "canonical": "oklch(13.3% 0.013 255.5 / 0.72)",
+        "tonalRamp": [
+          "oklch(15% 0.013 255.5)",
+          "oklch(26% 0.013 255.5)",
+          "oklch(38% 0.013 255.5)",
+          "oklch(50% 0.013 255.5)",
+          "oklch(62% 0.013 255.5)",
+          "oklch(74% 0.013 255.5)",
+          "oklch(85% 0.013 255.5)",
+          "oklch(95% 0.013 255.5)"
+        ],
+        "world": "hud"
+      },
+      "hud-stroke-white": {
+        "role": "primary",
+        "displayName": "HUD Stroke White",
+        "canonical": "oklch(97.5% 0.005 247.9)",
+        "tonalRamp": [
+          "oklch(15% 0.005 247.9)",
+          "oklch(26% 0.005 247.9)",
+          "oklch(38% 0.005 247.9)",
+          "oklch(50% 0.005 247.9)",
+          "oklch(62% 0.005 247.9)",
+          "oklch(74% 0.005 247.9)",
+          "oklch(85% 0.005 247.9)",
+          "oklch(95% 0.005 247.9)"
+        ],
+        "world": "hud"
+      },
+      "hud-ink-2": {
+        "role": "neutral",
+        "displayName": "HUD White 72",
+        "canonical": "oklch(97.5% 0.005 247.9 / 0.72)",
+        "tonalRamp": [
+          "oklch(15% 0.005 247.9)",
+          "oklch(26% 0.005 247.9)",
+          "oklch(38% 0.005 247.9)",
+          "oklch(50% 0.005 247.9)",
+          "oklch(62% 0.005 247.9)",
+          "oklch(74% 0.005 247.9)",
+          "oklch(85% 0.005 247.9)",
+          "oklch(95% 0.005 247.9)"
+        ],
+        "world": "hud"
+      },
+      "hud-ink-3": {
+        "role": "neutral",
+        "displayName": "HUD White 50",
+        "canonical": "oklch(97.5% 0.005 247.9 / 0.50)",
+        "tonalRamp": [
+          "oklch(15% 0.005 247.9)",
+          "oklch(26% 0.005 247.9)",
+          "oklch(38% 0.005 247.9)",
+          "oklch(50% 0.005 247.9)",
+          "oklch(62% 0.005 247.9)",
+          "oklch(74% 0.005 247.9)",
+          "oklch(85% 0.005 247.9)",
+          "oklch(95% 0.005 247.9)"
+        ],
+        "world": "hud"
+      },
+      "hud-edge": {
+        "role": "neutral",
+        "displayName": "HUD White 62",
+        "canonical": "oklch(97.5% 0.005 247.9 / 0.62)",
+        "tonalRamp": [
+          "oklch(15% 0.005 247.9)",
+          "oklch(26% 0.005 247.9)",
+          "oklch(38% 0.005 247.9)",
+          "oklch(50% 0.005 247.9)",
+          "oklch(62% 0.005 247.9)",
+          "oklch(74% 0.005 247.9)",
+          "oklch(85% 0.005 247.9)",
+          "oklch(95% 0.005 247.9)"
+        ],
+        "world": "hud"
+      },
+      "hud-line": {
+        "role": "neutral",
+        "displayName": "HUD Line 22",
+        "canonical": "oklch(97.5% 0.005 247.9 / 0.22)",
+        "tonalRamp": [
+          "oklch(15% 0.005 247.9)",
+          "oklch(26% 0.005 247.9)",
+          "oklch(38% 0.005 247.9)",
+          "oklch(50% 0.005 247.9)",
+          "oklch(62% 0.005 247.9)",
+          "oklch(74% 0.005 247.9)",
+          "oklch(85% 0.005 247.9)",
+          "oklch(95% 0.005 247.9)"
+        ],
+        "world": "hud"
+      },
+      "hud-line-2": {
+        "role": "neutral",
+        "displayName": "HUD Line 40",
+        "canonical": "oklch(97.5% 0.005 247.9 / 0.40)",
+        "tonalRamp": [
+          "oklch(15% 0.005 247.9)",
+          "oklch(26% 0.005 247.9)",
+          "oklch(38% 0.005 247.9)",
+          "oklch(50% 0.005 247.9)",
+          "oklch(62% 0.005 247.9)",
+          "oklch(74% 0.005 247.9)",
+          "oklch(85% 0.005 247.9)",
+          "oklch(95% 0.005 247.9)"
+        ],
+        "world": "hud"
+      },
+      "hud-nominal-green": {
+        "role": "tertiary",
+        "displayName": "Nominal Green",
+        "canonical": "oklch(78.8% 0.157 165.2)",
+        "tonalRamp": [
+          "oklch(15% 0.157 165.2)",
+          "oklch(26% 0.157 165.2)",
+          "oklch(38% 0.157 165.2)",
+          "oklch(50% 0.157 165.2)",
+          "oklch(62% 0.157 165.2)",
+          "oklch(74% 0.157 165.2)",
+          "oklch(85% 0.157 165.2)",
+          "oklch(95% 0.157 165.2)"
+        ],
+        "world": "hud"
+      },
+      "hud-caution-yellow": {
+        "role": "tertiary",
+        "displayName": "Caution Yellow",
+        "canonical": "oklch(88.5% 0.181 94.8)",
+        "tonalRamp": [
+          "oklch(15% 0.181 94.8)",
+          "oklch(26% 0.181 94.8)",
+          "oklch(38% 0.181 94.8)",
+          "oklch(50% 0.181 94.8)",
+          "oklch(62% 0.181 94.8)",
+          "oklch(74% 0.181 94.8)",
+          "oklch(85% 0.181 94.8)",
+          "oklch(95% 0.181 94.8)"
+        ],
+        "world": "hud"
+      },
+      "hud-alert-red": {
+        "role": "tertiary",
+        "displayName": "Alert Red",
+        "canonical": "oklch(66.3% 0.224 28.3)",
+        "tonalRamp": [
+          "oklch(15% 0.224 28.3)",
+          "oklch(26% 0.224 28.3)",
+          "oklch(38% 0.224 28.3)",
+          "oklch(50% 0.224 28.3)",
+          "oklch(62% 0.224 28.3)",
+          "oklch(74% 0.224 28.3)",
+          "oklch(85% 0.224 28.3)",
+          "oklch(95% 0.224 28.3)"
+        ],
+        "world": "hud"
+      },
+      "canon-ground": {
+        "role": "neutral",
+        "displayName": "Canon Ground",
+        "canonical": "oklch(97.6% 0.001 286.4)",
+        "tonalRamp": [
+          "oklch(15% 0.001 286.4)",
+          "oklch(26% 0.001 286.4)",
+          "oklch(38% 0.001 286.4)",
+          "oklch(50% 0.001 286.4)",
+          "oklch(62% 0.001 286.4)",
+          "oklch(74% 0.001 286.4)",
+          "oklch(85% 0.001 286.4)",
+          "oklch(95% 0.001 286.4)"
+        ],
+        "world": "canon"
+      },
+      "canon-surface": {
+        "role": "neutral",
+        "displayName": "Canon Surface",
+        "canonical": "oklch(100.0% 0.000 89.9)",
+        "tonalRamp": [
+          "oklch(15% 0.000 89.9)",
+          "oklch(26% 0.000 89.9)",
+          "oklch(38% 0.000 89.9)",
+          "oklch(50% 0.000 89.9)",
+          "oklch(62% 0.000 89.9)",
+          "oklch(74% 0.000 89.9)",
+          "oklch(85% 0.000 89.9)",
+          "oklch(95% 0.000 89.9)"
+        ],
+        "world": "canon"
+      },
+      "canon-surface-2": {
+        "role": "neutral",
+        "displayName": "Canon Surface 2",
+        "canonical": "oklch(98.5% 0.000 89.9)",
+        "tonalRamp": [
+          "oklch(15% 0.000 89.9)",
+          "oklch(26% 0.000 89.9)",
+          "oklch(38% 0.000 89.9)",
+          "oklch(50% 0.000 89.9)",
+          "oklch(62% 0.000 89.9)",
+          "oklch(74% 0.000 89.9)",
+          "oklch(85% 0.000 89.9)",
+          "oklch(95% 0.000 89.9)"
+        ],
+        "world": "canon"
+      },
+      "canon-ink": {
+        "role": "neutral",
+        "displayName": "Canon Ink",
+        "canonical": "oklch(14.5% 0.002 286.1)",
+        "tonalRamp": [
+          "oklch(15% 0.002 286.1)",
+          "oklch(26% 0.002 286.1)",
+          "oklch(38% 0.002 286.1)",
+          "oklch(50% 0.002 286.1)",
+          "oklch(62% 0.002 286.1)",
+          "oklch(74% 0.002 286.1)",
+          "oklch(85% 0.002 286.1)",
+          "oklch(95% 0.002 286.1)"
+        ],
+        "world": "canon"
+      },
+      "canon-ink-2": {
+        "role": "neutral",
+        "displayName": "Canon Ink 2",
+        "canonical": "oklch(44.2% 0.015 285.8)",
+        "tonalRamp": [
+          "oklch(15% 0.015 285.8)",
+          "oklch(26% 0.015 285.8)",
+          "oklch(38% 0.015 285.8)",
+          "oklch(50% 0.015 285.8)",
+          "oklch(62% 0.015 285.8)",
+          "oklch(74% 0.015 285.8)",
+          "oklch(85% 0.015 285.8)",
+          "oklch(95% 0.015 285.8)"
+        ],
+        "world": "canon"
+      },
+      "canon-ink-3": {
+        "role": "neutral",
+        "displayName": "Canon Ink 3",
+        "canonical": "oklch(55.2% 0.014 285.9)",
+        "tonalRamp": [
+          "oklch(15% 0.014 285.9)",
+          "oklch(26% 0.014 285.9)",
+          "oklch(38% 0.014 285.9)",
+          "oklch(50% 0.014 285.9)",
+          "oklch(62% 0.014 285.9)",
+          "oklch(74% 0.014 285.9)",
+          "oklch(85% 0.014 285.9)",
+          "oklch(95% 0.014 285.9)"
+        ],
+        "world": "canon"
+      },
+      "canon-line": {
+        "role": "neutral",
+        "displayName": "Canon Line",
+        "canonical": "oklch(92.0% 0.004 286.3)",
+        "tonalRamp": [
+          "oklch(15% 0.004 286.3)",
+          "oklch(26% 0.004 286.3)",
+          "oklch(38% 0.004 286.3)",
+          "oklch(50% 0.004 286.3)",
+          "oklch(62% 0.004 286.3)",
+          "oklch(74% 0.004 286.3)",
+          "oklch(85% 0.004 286.3)",
+          "oklch(95% 0.004 286.3)"
+        ],
+        "world": "canon"
+      },
+      "canon-line-2": {
+        "role": "neutral",
+        "displayName": "Canon Line 2",
+        "canonical": "oklch(87.1% 0.005 286.3)",
+        "tonalRamp": [
+          "oklch(15% 0.005 286.3)",
+          "oklch(26% 0.005 286.3)",
+          "oklch(38% 0.005 286.3)",
+          "oklch(50% 0.005 286.3)",
+          "oklch(62% 0.005 286.3)",
+          "oklch(74% 0.005 286.3)",
+          "oklch(85% 0.005 286.3)",
+          "oklch(95% 0.005 286.3)"
+        ],
+        "world": "canon"
+      },
+      "canon-indigo": {
+        "role": "primary",
+        "displayName": "Canon Indigo",
+        "canonical": "oklch(54.0% 0.184 278.3)",
+        "tonalRamp": [
+          "oklch(15% 0.184 278.3)",
+          "oklch(26% 0.184 278.3)",
+          "oklch(38% 0.184 278.3)",
+          "oklch(50% 0.184 278.3)",
+          "oklch(62% 0.184 278.3)",
+          "oklch(74% 0.184 278.3)",
+          "oklch(85% 0.184 278.3)",
+          "oklch(95% 0.184 278.3)"
+        ],
+        "world": "canon"
+      },
+      "canon-indigo-soft": {
+        "role": "primary",
+        "displayName": "Canon Indigo Soft",
+        "canonical": "oklch(54.0% 0.184 278.3 / 0.10)",
+        "tonalRamp": [
+          "oklch(15% 0.184 278.3)",
+          "oklch(26% 0.184 278.3)",
+          "oklch(38% 0.184 278.3)",
+          "oklch(50% 0.184 278.3)",
+          "oklch(62% 0.184 278.3)",
+          "oklch(74% 0.184 278.3)",
+          "oklch(85% 0.184 278.3)",
+          "oklch(95% 0.184 278.3)"
+        ],
+        "world": "canon"
+      },
+      "canon-pos": {
+        "role": "tertiary",
+        "displayName": "Canon Pos",
+        "canonical": "oklch(52.7% 0.137 150.1)",
+        "tonalRamp": [
+          "oklch(15% 0.137 150.1)",
+          "oklch(26% 0.137 150.1)",
+          "oklch(38% 0.137 150.1)",
+          "oklch(50% 0.137 150.1)",
+          "oklch(62% 0.137 150.1)",
+          "oklch(74% 0.137 150.1)",
+          "oklch(85% 0.137 150.1)",
+          "oklch(95% 0.137 150.1)"
+        ],
+        "world": "canon"
+      },
+      "canon-neg": {
+        "role": "tertiary",
+        "displayName": "Canon Neg",
+        "canonical": "oklch(57.7% 0.215 27.3)",
+        "tonalRamp": [
+          "oklch(15% 0.215 27.3)",
+          "oklch(26% 0.215 27.3)",
+          "oklch(38% 0.215 27.3)",
+          "oklch(50% 0.215 27.3)",
+          "oklch(62% 0.215 27.3)",
+          "oklch(74% 0.215 27.3)",
+          "oklch(85% 0.215 27.3)",
+          "oklch(95% 0.215 27.3)"
+        ],
+        "world": "canon"
+      },
+      "canon-dark-ground": {
+        "role": "neutral",
+        "displayName": "Canon Dark Ground",
+        "canonical": "oklch(14.5% 0.002 286.1)",
+        "tonalRamp": [
+          "oklch(15% 0.002 286.1)",
+          "oklch(26% 0.002 286.1)",
+          "oklch(38% 0.002 286.1)",
+          "oklch(50% 0.002 286.1)",
+          "oklch(62% 0.002 286.1)",
+          "oklch(74% 0.002 286.1)",
+          "oklch(85% 0.002 286.1)",
+          "oklch(95% 0.002 286.1)"
+        ],
+        "world": "canon (dark theme)"
+      },
+      "canon-dark-surface": {
+        "role": "neutral",
+        "displayName": "Canon Dark Surface",
+        "canonical": "oklch(17.9% 0.004 286.0)",
+        "tonalRamp": [
+          "oklch(15% 0.004 286.0)",
+          "oklch(26% 0.004 286.0)",
+          "oklch(38% 0.004 286.0)",
+          "oklch(50% 0.004 286.0)",
+          "oklch(62% 0.004 286.0)",
+          "oklch(74% 0.004 286.0)",
+          "oklch(85% 0.004 286.0)",
+          "oklch(95% 0.004 286.0)"
+        ],
+        "world": "canon (dark theme)"
+      },
+      "canon-dark-surface-2": {
+        "role": "neutral",
+        "displayName": "Canon Dark Surface 2",
+        "canonical": "oklch(21.0% 0.006 285.9)",
+        "tonalRamp": [
+          "oklch(15% 0.006 285.9)",
+          "oklch(26% 0.006 285.9)",
+          "oklch(38% 0.006 285.9)",
+          "oklch(50% 0.006 285.9)",
+          "oklch(62% 0.006 285.9)",
+          "oklch(74% 0.006 285.9)",
+          "oklch(85% 0.006 285.9)",
+          "oklch(95% 0.006 285.9)"
+        ],
+        "world": "canon (dark theme)"
+      },
+      "canon-dark-ink": {
+        "role": "neutral",
+        "displayName": "Canon Dark Ink",
+        "canonical": "oklch(98.5% 0.000 89.9)",
+        "tonalRamp": [
+          "oklch(15% 0.000 89.9)",
+          "oklch(26% 0.000 89.9)",
+          "oklch(38% 0.000 89.9)",
+          "oklch(50% 0.000 89.9)",
+          "oklch(62% 0.000 89.9)",
+          "oklch(74% 0.000 89.9)",
+          "oklch(85% 0.000 89.9)",
+          "oklch(95% 0.000 89.9)"
+        ],
+        "world": "canon (dark theme)"
+      },
+      "canon-dark-ink-2": {
+        "role": "neutral",
+        "displayName": "Canon Dark Ink 2",
+        "canonical": "oklch(71.2% 0.013 286.1)",
+        "tonalRamp": [
+          "oklch(15% 0.013 286.1)",
+          "oklch(26% 0.013 286.1)",
+          "oklch(38% 0.013 286.1)",
+          "oklch(50% 0.013 286.1)",
+          "oklch(62% 0.013 286.1)",
+          "oklch(74% 0.013 286.1)",
+          "oklch(85% 0.013 286.1)",
+          "oklch(95% 0.013 286.1)"
+        ],
+        "world": "canon (dark theme)"
+      },
+      "canon-dark-ink-3": {
+        "role": "neutral",
+        "displayName": "Canon Dark Ink 3",
+        "canonical": "oklch(64.0% 0.013 286.0)",
+        "tonalRamp": [
+          "oklch(15% 0.013 286.0)",
+          "oklch(26% 0.013 286.0)",
+          "oklch(38% 0.013 286.0)",
+          "oklch(50% 0.013 286.0)",
+          "oklch(62% 0.013 286.0)",
+          "oklch(74% 0.013 286.0)",
+          "oklch(85% 0.013 286.0)",
+          "oklch(95% 0.013 286.0)"
+        ],
+        "world": "canon (dark theme)"
+      },
+      "canon-dark-line": {
+        "role": "neutral",
+        "displayName": "Canon Dark Line",
+        "canonical": "oklch(27.4% 0.005 286.0)",
+        "tonalRamp": [
+          "oklch(15% 0.005 286.0)",
+          "oklch(26% 0.005 286.0)",
+          "oklch(38% 0.005 286.0)",
+          "oklch(50% 0.005 286.0)",
+          "oklch(62% 0.005 286.0)",
+          "oklch(74% 0.005 286.0)",
+          "oklch(85% 0.005 286.0)",
+          "oklch(95% 0.005 286.0)"
+        ],
+        "world": "canon (dark theme)"
+      },
+      "canon-dark-line-2": {
+        "role": "neutral",
+        "displayName": "Canon Dark Line 2",
+        "canonical": "oklch(37.0% 0.012 285.8)",
+        "tonalRamp": [
+          "oklch(15% 0.012 285.8)",
+          "oklch(26% 0.012 285.8)",
+          "oklch(38% 0.012 285.8)",
+          "oklch(50% 0.012 285.8)",
+          "oklch(62% 0.012 285.8)",
+          "oklch(74% 0.012 285.8)",
+          "oklch(85% 0.012 285.8)",
+          "oklch(95% 0.012 285.8)"
+        ],
+        "world": "canon (dark theme)"
+      },
+      "canon-dark-indigo": {
+        "role": "primary",
+        "displayName": "Canon Dark Indigo",
+        "canonical": "oklch(68.7% 0.155 281.1)",
+        "tonalRamp": [
+          "oklch(15% 0.155 281.1)",
+          "oklch(26% 0.155 281.1)",
+          "oklch(38% 0.155 281.1)",
+          "oklch(50% 0.155 281.1)",
+          "oklch(62% 0.155 281.1)",
+          "oklch(74% 0.155 281.1)",
+          "oklch(85% 0.155 281.1)",
+          "oklch(95% 0.155 281.1)"
+        ],
+        "world": "canon (dark theme)"
+      },
+      "canon-dark-indigo-soft": {
+        "role": "primary",
+        "displayName": "Canon Dark Indigo Soft",
+        "canonical": "oklch(68.7% 0.155 281.1 / 0.14)",
+        "tonalRamp": [
+          "oklch(15% 0.155 281.1)",
+          "oklch(26% 0.155 281.1)",
+          "oklch(38% 0.155 281.1)",
+          "oklch(50% 0.155 281.1)",
+          "oklch(62% 0.155 281.1)",
+          "oklch(74% 0.155 281.1)",
+          "oklch(85% 0.155 281.1)",
+          "oklch(95% 0.155 281.1)"
+        ],
+        "world": "canon (dark theme)"
+      },
+      "canon-dark-pos": {
+        "role": "tertiary",
+        "displayName": "Canon Dark Pos",
+        "canonical": "oklch(80.0% 0.182 151.7)",
+        "tonalRamp": [
+          "oklch(15% 0.182 151.7)",
+          "oklch(26% 0.182 151.7)",
+          "oklch(38% 0.182 151.7)",
+          "oklch(50% 0.182 151.7)",
+          "oklch(62% 0.182 151.7)",
+          "oklch(74% 0.182 151.7)",
+          "oklch(85% 0.182 151.7)",
+          "oklch(95% 0.182 151.7)"
+        ],
+        "world": "canon (dark theme)"
+      },
+      "canon-dark-neg": {
+        "role": "tertiary",
+        "displayName": "Canon Dark Neg",
+        "canonical": "oklch(71.1% 0.166 22.2)",
+        "tonalRamp": [
+          "oklch(15% 0.166 22.2)",
+          "oklch(26% 0.166 22.2)",
+          "oklch(38% 0.166 22.2)",
+          "oklch(50% 0.166 22.2)",
+          "oklch(62% 0.166 22.2)",
+          "oklch(74% 0.166 22.2)",
+          "oklch(85% 0.166 22.2)",
+          "oklch(95% 0.166 22.2)"
+        ],
+        "world": "canon (dark theme)"
+      }
+    },
+    "typographyMeta": {
+      "contact-figure": {
+        "displayName": "Grease-Pencil Figure",
+        "purpose": "Contact Sheet hero income written across the Merdeka print; also media-kit name and figures."
+      },
+      "contact-note": {
+        "displayName": "Grease-Pencil Note",
+        "purpose": "Handwritten questions and circled answers in china-marker red."
+      },
+      "contact-headline": {
+        "displayName": "Contact Page Title",
+        "purpose": "Page titles, uppercase."
+      },
+      "contact-title": {
+        "displayName": "Contact Panel Title",
+        "purpose": "Panel titles, uppercase."
+      },
+      "contact-body": {
+        "displayName": "Contact Body",
+        "purpose": "UI and body text; also the numeric face."
+      },
+      "contact-edge-code": {
+        "displayName": "Edge Code",
+        "purpose": "Invoice numbers printed in the film rebate, one line."
+      },
+      "hud-readout": {
+        "displayName": "Centre Readout",
+        "purpose": "Year-to-date income under the reticle."
+      },
+      "hud-headline": {
+        "displayName": "HUD Page Title",
+        "purpose": "Page titles, uppercase."
+      },
+      "hud-title": {
+        "displayName": "Instrument Label Title",
+        "purpose": "Panel titles as instrument labels, uppercase, ink-2."
+      },
+      "hud-label": {
+        "displayName": "Readout Label",
+        "purpose": "Gauge, tape and readout labels, uppercase, 10.5-11px."
+      },
+      "hud-body": {
+        "displayName": "HUD Body",
+        "purpose": "UI and body text."
+      },
+      "canon-headline": {
+        "displayName": "Standard Page Title",
+        "purpose": "Page titles."
+      },
+      "canon-title": {
+        "displayName": "Standard Panel Title",
+        "purpose": "Card titles."
+      },
+      "canon-kpi": {
+        "displayName": "KPI Value",
+        "purpose": "The four KPI figures, Geist Mono tabular."
+      },
+      "canon-body": {
+        "displayName": "Standard Body",
+        "purpose": "UI and body text."
+      },
+      "canon-label": {
+        "displayName": "Standard Label",
+        "purpose": "KPI labels, controls, secondary text."
+      }
+    },
+    "shadows": [
+      {
+        "name": "print-lift",
+        "value": "0 30px 60px -30px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(0, 0, 0, 0.6)",
+        "purpose": "Contact hero print lifted off the light table."
+      },
+      {
+        "name": "loupe-lift",
+        "value": "inset 0 0 0 3px var(--frame), 0 22px 40px -12px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(0, 0, 0, 0.8)",
+        "purpose": "Contact month frame under the loupe."
+      },
+      {
+        "name": "kit-print",
+        "value": "0 40px 80px -40px #000",
+        "purpose": "Contact media-kit hero print."
+      },
+      {
+        "name": "studio-card",
+        "value": "0 1px 2px rgba(10, 10, 11, 0.04), 0 4px 16px -8px rgba(10, 10, 11, 0.08)",
+        "purpose": "Every Studio Standard panel."
+      },
+      {
+        "name": "studio-seg-pressed",
+        "value": "0 1px 3px rgba(0, 0, 0, 0.08), 0 0 0 1px var(--line)",
+        "purpose": "Pressed segment in Studio Standard."
+      },
+      {
+        "name": "studio-portrait",
+        "value": "0 30px 60px -30px rgba(10, 10, 11, 0.35)",
+        "purpose": "Studio Standard media-kit portrait."
+      },
+      {
+        "name": "tooltip",
+        "value": "0 8px 24px -8px rgba(0, 0, 0, 0.5)",
+        "purpose": "Chart tooltip, all worlds."
+      },
+      {
+        "name": "post-hover",
+        "value": "0 18px 30px -16px rgba(0, 0, 0, 0.8)",
+        "purpose": "Instagram frame lifted on hover."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "The one easing curve for every transition and animation."
+      },
+      {
+        "name": "dur",
+        "value": "200ms",
+        "purpose": "Default state change: hover, colour, border, opacity."
+      },
+      {
+        "name": "tip-fade",
+        "value": "120ms",
+        "purpose": "Tooltip opacity."
+      },
+      {
+        "name": "player-fade",
+        "value": "180ms",
+        "purpose": "Instagram player overlay fade in."
+      },
+      {
+        "name": "lift",
+        "value": "260ms",
+        "purpose": "Month frames and Instagram frames lifting (the loupe)."
+      },
+      {
+        "name": "tape",
+        "value": "500ms",
+        "purpose": "HUD altitude pointer and ticks gliding to a chosen month."
+      },
+      {
+        "name": "rise",
+        "value": "520ms, translateY(8px) to 0",
+        "purpose": "Section entry."
+      },
+      {
+        "name": "circle-draw-hover",
+        "value": "520ms",
+        "purpose": "Grease-pencil circle drawing on under the loupe."
+      },
+      {
+        "name": "grow",
+        "value": "700ms, scaleX(0) to 1",
+        "purpose": "Share bars growing from zero."
+      },
+      {
+        "name": "circle-draw",
+        "value": "900ms, delay 200ms",
+        "purpose": "Keeper circles drawing on after load."
+      },
+      {
+        "name": "blink",
+        "value": "1.4s steps(2, end) infinite",
+        "purpose": "HUD LIVE and REC lights."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "all animations and transitions 1ms; circles fully drawn",
+        "purpose": "prefers-reduced-motion: reduce."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "phone",
+        "value": "720px"
+      },
+      {
+        "name": "kpi-two-up",
+        "value": "900px"
+      },
+      {
+        "name": "rail-to-bar",
+        "value": "960px"
+      },
+      {
+        "name": "grid-stack",
+        "value": "1100px"
+      }
+    ],
+    "worlds": {
+      "selector": ".v3[data-world]",
+      "contact": {
+        "name": "Contact Sheet",
+        "radius": "2px",
+        "backdrop": "Merdeka photo at 30% opacity, blur 3px, saturate 0.85",
+        "signature": "the loupe"
+      },
+      "hud": {
+        "name": "Flight HUD",
+        "radius": "0px",
+        "backdrop": "Merdeka photo at 62% opacity, saturate 1.05, contrast 1.05",
+        "signature": "the tape"
+      },
+      "canon": {
+        "name": "Studio Standard",
+        "radius": "10px",
+        "backdrop": "Merdeka photo at 8% opacity, grayscale 0.4",
+        "signature": "the crossfilter",
+        "theme": "light by default; dark via data-theme or prefers-color-scheme"
+      }
+    },
+    "classicMapping": {
+      "--bg": "--ground",
+      "--card": "--film",
+      "--surface": "--film",
+      "--surface2": "--film-2",
+      "--paper": "--film-2",
+      "--paper-2": "--film-2",
+      "--text": "--ink",
+      "--muted": "--ink-2",
+      "--ink-soft": "--ink-2",
+      "--dim": "--ink-3",
+      "--ink-faint": "--ink-3",
+      "--border": "--line",
+      "--clay": "--accent",
+      "--clay-deep": "--accent",
+      "--amber": "--accent",
+      "--clay-tint": "--mark-soft",
+      "--clay-tint-2": "--mark-soft"
+    },
+    "logoSizing": {
+      "formula": "h = round(44 * aspect^-0.4); w = min(170, round(h * aspect))",
+      "ink": "--ink-2 (Contact, HUD); --ink-3 (Standard); --ink on hover",
+      "method": "CSS mask of the official SVG"
+    }
+  },
+  "components": [
+    {
+      "name": "Primary Button (Contact Sheet)",
+      "kind": "button",
+      "refersTo": "button-primary-contact",
+      "description": "Print-white fill on film black; the main action in Contact Sheet.",
+      "html": "<button class=\"ds-btn-contact\">Open invoices</button>",
+      "css": ".ds-btn-contact{font-family:Barlow,system-ui,sans-serif;font-size:.8125rem;font-weight:500;background:#EDEAE3;color:#0D0D0D;border:1px solid #EDEAE3;border-radius:2px;padding:6px 11px;cursor:pointer;transition:background 200ms cubic-bezier(.16,1,.3,1)}.ds-btn-contact:hover{background:color-mix(in srgb,#EDEAE3 86%,#0D0D0D)}.ds-btn-contact:focus-visible{outline:2px solid #E4322B;outline-offset:2px}"
+    },
+    {
+      "name": "Primary Button (Studio Standard)",
+      "kind": "button",
+      "refersTo": "button-primary-canon",
+      "description": "The one indigo action.",
+      "html": "<button class=\"ds-btn-canon\">Book a collaboration</button>",
+      "css": ".ds-btn-canon{font-family:Geist,system-ui,sans-serif;font-size:.8125rem;font-weight:500;background:#5B5BD6;color:#fff;border:1px solid #5B5BD6;border-radius:10px;padding:6px 11px;cursor:pointer;transition:background 200ms cubic-bezier(.16,1,.3,1)}.ds-btn-canon:hover{background:color-mix(in srgb,#5B5BD6 86%,#F7F7F8)}.ds-btn-canon:focus-visible{outline:2px solid #5B5BD6;outline-offset:2px}"
+    },
+    {
+      "name": "Segmented Filter (Flight HUD)",
+      "kind": "chip",
+      "refersTo": "segment-pressed-hud",
+      "description": "Date-range segment; the pressed option is underlined in HUD white.",
+      "html": "<div class=\"ds-seg\"><button aria-pressed=\"false\">This year</button><button aria-pressed=\"true\">12 months</button><button aria-pressed=\"false\">All time</button></div>",
+      "css": ".ds-seg{display:inline-flex;gap:2px;padding:2px;background:#0D1117;font-family:'Chakra Petch',system-ui,sans-serif}.ds-seg button{font:inherit;font-size:.8125rem;font-weight:500;border:0;background:transparent;color:rgba(244,247,250,.72);padding:6px 11px;border-radius:0;cursor:pointer;transition:color 200ms,box-shadow 200ms}.ds-seg button:hover{color:#F4F7FA}.ds-seg button[aria-pressed=true]{color:#F4F7FA;box-shadow:inset 0 -2px 0 #F4F7FA}.ds-seg button:focus-visible{outline:2px solid #F4F7FA;outline-offset:2px}"
+    },
+    {
+      "name": "Film-Strip Panel (Contact Sheet)",
+      "kind": "card",
+      "refersTo": "panel-contact",
+      "description": "A panel as a strip of film: sprocket rebates top and bottom, edge code in the rebate.",
+      "html": "<section class=\"ds-film\"><span class=\"ds-edge\">INV-2026-041 · INV-2026-042</span><h3>Who owes me</h3><p>RM 12,400 across 3 invoices</p></section>",
+      "css": ".ds-film{position:relative;background:#161616;color:#EDEAE3;padding:38px 24px;border-radius:2px;font-family:Barlow,system-ui,sans-serif;font-size:.9375rem}.ds-film::before,.ds-film::after{content:'';position:absolute;left:10px;right:10px;height:7px;background:repeating-linear-gradient(90deg,rgba(13,13,13,.95) 0 9px,transparent 9px 17px);opacity:.9}.ds-film::before{top:6px}.ds-film::after{bottom:6px}.ds-film h3{margin:0 0 8px;font-family:'Barlow Condensed',Barlow,sans-serif;font-weight:700;font-size:1.125rem;text-transform:uppercase;letter-spacing:.03em}.ds-film p{margin:0;color:#B4B0A6;font-variant-numeric:tabular-nums}.ds-edge{position:absolute;right:18px;top:14px;font-family:'Share Tech Mono',monospace;font-size:10.5px;letter-spacing:.08em;color:#F2B544}"
+    },
+    {
+      "name": "Instrument Panel (Flight HUD)",
+      "kind": "card",
+      "refersTo": "panel-hud",
+      "description": "A scrim over the feed marked by two corner brackets.",
+      "html": "<section class=\"ds-inst\"><h3>Battery · owed</h3><div class=\"ds-val\">RM 12,400</div><div class=\"ds-batt\" data-level=\"warn\"><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i></i><i></i></div></section>",
+      "css": ".ds-inst{position:relative;background:rgba(5,8,13,.55);backdrop-filter:blur(6px);color:#F4F7FA;padding:24px;font-family:'Chakra Petch',system-ui,sans-serif}.ds-inst::before,.ds-inst::after{content:'';position:absolute;width:18px;height:18px;border:0 solid #F4F7FA}.ds-inst::before{top:0;left:0;border-top-width:2px;border-left-width:2px}.ds-inst::after{bottom:0;right:0;border-bottom-width:2px;border-right-width:2px}.ds-inst h3{margin:0 0 12px;font-size:.8125rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(244,247,250,.72)}.ds-val{font-weight:700;font-size:1.375rem;font-variant-numeric:tabular-nums;margin:4px 0}.ds-batt{display:flex;gap:3px;height:14px}.ds-batt i{flex:1;background:rgba(244,247,250,.22)}.ds-batt[data-level=warn] i.on{background:#FFD60A}"
+    },
+    {
+      "name": "KPI Card (Studio Standard)",
+      "kind": "card",
+      "refersTo": "kpi-canon",
+      "description": "One of four KPIs; value in Geist Mono with a delta pill.",
+      "html": "<a class=\"ds-kpi\" href=\"#\"><div class=\"ds-kl\">Income this year</div><div class=\"ds-kv\">RM 184,200 <span class=\"ds-delta\">+12%</span></div><div class=\"ds-kn\">vs same point last year</div></a>",
+      "css": ".ds-kpi{display:block;text-decoration:none;color:#0A0A0B;background:#fff;border:1px solid #E4E4E7;border-radius:10px;padding:16px 24px;font-family:Geist,system-ui,sans-serif;transition:border-color 200ms cubic-bezier(.16,1,.3,1)}.ds-kpi:hover{border-color:#D4D4D8}.ds-kpi:focus-visible{outline:2px solid #5B5BD6;outline-offset:2px}.ds-kl{font-size:.8125rem;color:#52525B}.ds-kv{font-family:'Geist Mono',ui-monospace,monospace;font-size:1.625rem;font-weight:600;letter-spacing:-.02em;margin:8px 0 4px;font-variant-numeric:tabular-nums;display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px}.ds-delta{font-size:.75rem;font-weight:600;padding:1px 6px;border-radius:99px;color:#15803D;background:color-mix(in srgb,#15803D 12%,transparent)}.ds-kn{font-size:.75rem;color:#71717A}"
+    },
+    {
+      "name": "Month Frame with Grease-Pencil Circle (Contact Sheet)",
+      "kind": "custom",
+      "refersTo": "month-frame-contact",
+      "description": "A month printed at one shared scale; density is value; the keeper is circled; the loupe lifts it on hover.",
+      "html": "<button class=\"ds-cell\"><svg class=\"ds-circle\" viewBox=\"0 0 120 100\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><path d=\"M62 6 C 26 4, 6 22, 7 50 C 8 80, 34 95, 64 94 C 96 93, 115 74, 113 47 C 111 21, 88 5, 58 8 C 45 9, 36 13, 30 18\"/></svg><span class=\"m\">AUG</span><span class=\"v\">RM 31.2k</span></button>",
+      "css": ".ds-cell{position:relative;width:96px;aspect-ratio:3/4;display:flex;flex-direction:column;justify-content:flex-end;gap:2px;padding:8px;border:0;cursor:pointer;text-align:left;font-family:Barlow,system-ui,sans-serif;background:rgba(237,234,227,.82);box-shadow:inset 0 0 0 3px #EDEAE3;color:#0D0D0D;transition:transform 260ms cubic-bezier(.16,1,.3,1),box-shadow 260ms cubic-bezier(.16,1,.3,1)}.ds-cell .m{font-size:.75rem;font-weight:600}.ds-cell .v{font-size:.8125rem;font-weight:700;font-variant-numeric:tabular-nums}.ds-cell:hover,.ds-cell:focus-visible{transform:scale(1.18) translateY(-6px);z-index:3;box-shadow:inset 0 0 0 3px #EDEAE3,0 22px 40px -12px rgba(0,0,0,.9),0 0 0 1px rgba(0,0,0,.8);outline:none}.ds-circle{position:absolute;left:10%;top:7%;width:80%;height:48%;overflow:visible;pointer-events:none}.ds-circle path{fill:none;stroke:#E4322B;stroke-width:3.2;stroke-linecap:round;stroke-dasharray:600;stroke-dashoffset:600;animation:ds-draw 900ms cubic-bezier(.16,1,.3,1) 200ms forwards}@keyframes ds-draw{to{stroke-dashoffset:0}}@media (prefers-reduced-motion:reduce){.ds-circle path{animation:none;stroke-dashoffset:0}.ds-cell{transition:none}}"
+    },
+    {
+      "name": "Rail Navigation (Studio Standard)",
+      "kind": "nav",
+      "refersTo": "nav-item-active-canon",
+      "description": "Grouped rail links with stroked icons; current item in indigo on soft indigo.",
+      "html": "<nav class=\"ds-nav\"><div class=\"t\">Money</div><a href=\"#\" aria-current=\"page\"><svg viewBox=\"0 0 24 24\"><path d=\"M3 13h4v8H3zM10 8h4v13h-4zM17 3h4v18h-4z\"/></svg>Dashboard</a><a href=\"#\"><svg viewBox=\"0 0 24 24\"><path d=\"M6 3h12v18l-3-2-3 2-3-2-3 2z\"/></svg>Invoices<span class=\"b\">3</span></a></nav>",
+      "css": ".ds-nav{display:flex;flex-direction:column;gap:2px;width:200px;font-family:Geist,system-ui,sans-serif}.ds-nav .t{font-size:.75rem;color:#71717A;font-weight:600;padding:0 12px 4px}.ds-nav a{display:flex;align-items:center;gap:12px;padding:6px 12px;text-decoration:none;color:#52525B;font-size:.8125rem;font-weight:500;border-radius:10px;transition:background 200ms cubic-bezier(.16,1,.3,1),color 200ms}.ds-nav a:hover{color:#0A0A0B;background:color-mix(in srgb,#0A0A0B 7%,transparent)}.ds-nav a[aria-current=page]{color:#5B5BD6;background:rgba(91,91,214,.10)}.ds-nav a:focus-visible{outline:2px solid #5B5BD6;outline-offset:2px}.ds-nav svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linejoin:round}.ds-nav .b{margin-left:auto;font-size:.75rem;padding:0 6px;border-radius:99px;background:#5B5BD6;color:#fff;font-weight:700}"
+    }
+  ],
+  "narrative": {
+    "northStar": "One Studio, Three Lenses",
+    "overview": "Built as contracted: pressing on the timeline captures the pointer and dragging scrubs month by month; a click or tap jumps to a month and the arrow keys step through it.",
+    "keyCharacteristics": [
+      "One shared structure; three token sets; the world switch changes material, never layout.",
+      "The Merdeka photograph as the backdrop in every world, at a strength set by the world.",
+      "Figures are always tabular; numbers are the protagonists.",
+      "One authored signature interaction per world (the loupe, the tape, the crossfilter); all other motion conveys a state change.",
+      "Private pages are dense; the public media kit is the only persuasive surface and shares the same tokens."
+    ],
+    "rules": [
+      {
+        "name": "The Film Black Rule",
+        "body": "Contact Sheet's ground is neutral film black (#0D0D0D), and every scrim and gradient over it is built from the same rgb(13, 13, 13). It carries no blue cast; the only warmth is the print white.",
+        "section": "colors"
+      },
+      {
+        "name": "The Status-Only Rule",
+        "body": "In Flight HUD, yellow, green and red mean status and nothing else: pace, battery, ageing, attention and the feed's live light. Everything that is not a status is HUD white at an opacity step.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Indigo Rule",
+        "body": "Studio Standard has one accent. Indigo marks selection, primary action and this year's data; there is no second decorative hue.",
+        "section": "colors"
+      },
+      {
+        "name": "The China Marker Rule",
+        "body": "In Contact Sheet, red is a pencil mark someone made on purpose: a circle round a keeper, a question, the Reel series. It is never a fill, a panel or a background.",
+        "section": "colors"
+      },
+      {
+        "name": "The Mapped Vocabulary Rule",
+        "body": "Classic v2 variable names are re-pointed at the active world inside `.v3`: `--bg` to the ground; `--card`, `--surface` to the film; `--surface2`, `--paper`, `--paper-2` to the lifted film; `--text` to the ink; `--muted`, `--ink-soft` to ink-2; `--dim`, `--ink-faint` to ink-3; `--border` to the line; `--clay`, `--clay-deep`, `--amber` to the accent; `--clay-tint`, `--clay-tint-2` to the soft mark. A reused v2 component takes the world's colours without being rewritten.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tabular Rule",
+        "body": "Every figure is set in the world's numeric face with tabular numerals, so columns align and readouts tick without jitter.",
+        "section": "typography"
+      },
+      {
+        "name": "The Handwriting Rule",
+        "body": "Caveat Brush is Contact Sheet's pencil: circled answers, the questions above them, the hero income, section heads on the media kit, the follower count. The other worlds map the note role to their UI face and never handwrite.",
+        "section": "typography"
+      },
+      {
+        "name": "The Scrim Not Fill Rule",
+        "body": "A HUD panel is a 55% feed-black scrim with a 6px blur; the photograph must read through it.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Explicit Circle Rule",
+        "body": "The circle is an absolutely positioned SVG, a replaced element: given both `top` and `bottom` it ignores `bottom` and takes its height from the viewBox. So every circle is sized explicitly, with left, top, width and height, either as insets from `--cx` and `--cy` (width 100% + 2·cx) around a figure, or as percentage boxes (80% × 48% on a month frame, 76% × 50% on an Instagram frame) when it marks an image.",
+        "section": "components"
+      },
+      {
+        "name": "The Optical Weight Rule",
+        "body": "Brand logos are official vector marks flattened to one ink with a CSS mask: ink-2 in Contact and HUD, ink-3 in Standard, rising to ink on hover. Each mark is sized by optical weight from its cropped aspect ratio: height = 44 × aspect^−0.4, width capped at 170px. A square symbol stands 44px tall; a long wordmark is shorter and wider, so twelve brands read as one line-up.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "**Do** change a world only through its tokens and `[data-world]` overrides under `.v3`; keep structure, data, filters and copy shared across all three.",
+      "**Do** keep Contact's ground at film black (#0D0D0D) and build its scrims from rgb(13, 13, 13).",
+      "**Do** set every figure in the world's numeric face with tabular numerals.",
+      "**Do** size every grease-pencil circle explicitly with left, top, width and height.",
+      "**Do** read classic v2 components through the mapped variable names so they take the active world.",
+      "**Do** flatten brand logos to the world's ink and size them by optical weight (44 × aspect^−0.4, max 170px wide).",
+      "**Do** give each world exactly one authored signature interaction; every other motion reports a state change, and all of it collapses under reduced motion.",
+      "**Do** keep HUD panels as translucent scrims so the feed reads through."
+    ],
+    "donts": [
+      "**Don't** use caution yellow, nominal green or alert red in Flight HUD for anything but status.",
+      "**Don't** add a second accent hue to Studio Standard; indigo is the only one.",
+      "**Don't** use china-marker red in Contact as a fill or surface; it is a pencil stroke or pencil text.",
+      "**Don't** give a positioned SVG circle both `top` and `bottom` and expect it to stretch.",
+      "**Don't** use Caveat Brush outside Contact Sheet.",
+      "**Don't** round HUD panels, frames, tags or brackets, or add drop shadows to HUD surfaces.",
+      "**Don't** show brand logos in their own colours, or size them by hand.",
+      "**Don't** let v3 tokens or fonts leak outside `.v3`; v1 and v2 keep the classic look in `app/globals.css`."
+    ]
+  }
+}

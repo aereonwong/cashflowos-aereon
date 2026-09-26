@@ -11,8 +11,8 @@ import { saveSite, type Landing } from '@/lib/v3/site'
 const setCookie = (k: string, v: string) => (document.cookie = `${k}=${v}; path=/; max-age=31536000; samesite=lax`)
 
 const PREVIEW: Record<World, { bg: string; ink: string; mark: string; font: string; frame?: string }> = {
-  contact: { bg: '#0B0D12', ink: '#EDEAE3', mark: '#E4322B', font: 'var(--f-marker)', frame: '#EDEAE3' },
-  hud: { bg: '#05080D', ink: '#F4F7FA', mark: '#FFD60A', font: 'var(--f-chakra)' },
+  contact: { bg: '#0D0D0D', ink: '#EDEAE3', mark: '#E4322B', font: 'var(--f-marker)', frame: '#EDEAE3' },
+  hud: { bg: '#05080D', ink: '#F4F7FA', mark: '#2BD9A1', font: 'var(--f-chakra)' },
   canon: { bg: '#FFFFFF', ink: '#0A0A0B', mark: '#5B5BD6', font: 'var(--f-geist)' },
 }
 
