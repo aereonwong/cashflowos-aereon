@@ -5,6 +5,12 @@
 import { latestSnapshot } from '@/lib/instagram'
 import { getRecords } from '@/lib/records'
 import { toInvoices } from '@/lib/invoices'
+import type { Metadata } from 'next'
+import { readSite } from '@/lib/v3/site'
+import { readAudience } from '@/lib/v3/audience'
+import MediaKit from '@/app/_v3/pages/MediaKit'
+import { cookies } from 'next/headers'
+import type { World } from '@/lib/v3/catalog'
 
 export const dynamic = 'force-dynamic'
 
@@ -19,7 +25,48 @@ const BRAND_WORDS = [
   'Merdeka 118', 'PlayStation', 'MOVA', 'Kaadas', 'Etiqa', 'Tetra Pak',
 ]
 
-export default async function Landing() {
+// When the media kit is on, links shared with brands preview as a creator page.
+export async function generateMetadata(): Promise<Metadata> {
+  const site = await readSite()
+  return site.landing === 'kit'
+    ? {
+        title: 'Aereon Wong — tech & travel, shot from the sky',
+        description:
+          'Kuala Lumpur travel and tech content creator and CAAM-licensed drone pilot. Aerial films, launch campaigns, hotels and tourism.',
+      }
+    : {}
+}
+
+export default async function Landing({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>
+}) {
+  const [site, sp, jar] = await Promise.all([readSite(), searchParams, cookies()])
+  // A private preview, so the kit can be checked before it goes public. Only
+  // honoured for someone signed in; everyone else sees the saved setting.
+  const signedIn = !!jar.get('cfo_session')?.value
+  const previewWorld = String(sp.world ?? '')
+  const preview = signedIn && sp.preview === 'kit'
+  const world: World =
+    preview && (previewWorld === 'contact' || previewWorld === 'hud' || previewWorld === 'canon') ? previewWorld : site.world
+  if (site.landing === 'kit' || preview) {
+    const [audience, recs] = await Promise.all([readAudience(), getRecords()])
+    const inv = toInvoices(recs)
+    const text = inv.map(i => `${i.project} ${i.client}`).join(' ').toLowerCase()
+    const kinds = [...new Set(inv.map(i => i.kind))]
+    const since = inv.map(i => i.date).sort()[0]?.slice(0, 4) ?? '2021'
+    return (
+      <MediaKit
+        world={world}
+        audience={audience}
+        brands={BRAND_WORDS.filter(b => text.includes(b.toLowerCase())).slice(0, 16)}
+        kinds={kinds}
+        since={since}
+      />
+    )
+  }
+
   const [snap, rows] = await Promise.all([latestSnapshot(), getRecords()])
   const followers = snap?.profile.followers_count ?? 0
   const posts = snap?.posts ?? []

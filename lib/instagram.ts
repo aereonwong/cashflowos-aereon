@@ -93,11 +93,52 @@ export async function buildSnapshot(exec: Exec, limit = MAX_POSTS): Promise<IgSn
     posts.push(post)
   }
 
+  await attachCovers(exec, igUserId, posts)
+
   return {
     captured_at: new Date().toISOString(),
     username: String((profile as any).username ?? ''),
     profile,
     posts,
+  }
+}
+
+// Cover images, fetched in their own small pages. Instagram's CDN URLs run to
+// 800+ characters each, and asking for them alongside the main field set pushes
+// the response past the size at which Instagram silently returns ZERO posts —
+// tested on 26 Sep 2026: 40, 25 and 20 per page all came back empty. Ten per
+// page with only the image fields works, following the `after` cursor.
+//
+// A reel's `media_url` is the whole .mp4, which is useless as a picture; its
+// cover is `thumbnail_url`. A photo or carousel has no thumbnail; its cover is
+// `media_url`. These URLs expire, so they are refreshed with every snapshot.
+const COVER_PAGE = 10
+async function attachCovers(exec: Exec, igUserId: string, posts: IgPost[]): Promise<void> {
+  const want = new Map(posts.map(p => [p.id, p]))
+  let after: string | undefined
+  for (let page = 0; page < Math.ceil(MAX_POSTS / COVER_PAGE) + 1 && want.size; page++) {
+    let res: any
+    try {
+      res = await exec('INSTAGRAM_GET_IG_USER_MEDIA', {
+        ig_user_id: igUserId,
+        limit: COVER_PAGE,
+        fields: 'id,media_type,media_url,thumbnail_url',
+        ...(after ? { after } : {}),
+      })
+    } catch {
+      return // covers are a nicety; a failure here never costs the snapshot
+    }
+    const body = res?.data ?? res
+    const items: any[] = body?.data ?? []
+    for (const m of items) {
+      const post = want.get(String(m.id))
+      if (!post) continue
+      const cover = /VIDEO/i.test(String(m.media_type)) ? m.thumbnail_url : m.media_url ?? m.thumbnail_url
+      if (cover) post.thumb = String(cover)
+      want.delete(post.id)
+    }
+    after = body?.paging?.cursors?.after
+    if (!items.length || !after) return
   }
 }
 

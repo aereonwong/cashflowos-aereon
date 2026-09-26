@@ -9,6 +9,10 @@ import Donut from '@/app/_components/Donut'
 import Icon from '@/app/_components/Icon'
 import RefreshButton from '@/app/_components/RefreshButton'
 
+import V3Instagram from '@/app/_v3/pages/Instagram'
+import { readVersion } from '@/lib/v3/version'
+import { readAudience } from '@/lib/v3/audience'
+
 export const dynamic = 'force-dynamic'
 
 const n = (v: number | undefined) => (v === undefined ? '—' : Math.round(v).toLocaleString('en-MY'))
@@ -18,7 +22,16 @@ const ago = (iso: string) => {
   return days === 0 ? 'today' : days === 1 ? 'yesterday' : `${days} days ago`
 }
 
-export default async function Instagram() {
+export default async function Instagram({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>
+}) {
+  const { version } = await readVersion()
+  if (version === 'v3') {
+    const [audience, sp] = await Promise.all([readAudience(), searchParams])
+    return <V3Instagram audience={audience} sp={sp} />
+  }
   const snap = await latestSnapshot()
 
   if (!snap) {

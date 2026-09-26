@@ -1,6 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { sendMessage } from '@/lib/telegram'
 import { logRun } from '@/lib/runs'
+import { parseDigest, saveNews } from '@/lib/news'
 
 // 👉 The daily tech + travel news digest (the 2nd Vercel Hobby cron slot).
 // Every morning at 9:00 Malaysia time Claude searches the web for the last 24 hours
@@ -47,14 +48,26 @@ export async function GET(req: Request) {
     return Response.json({ ok: false }, { status: 500 })
   }
 
+  // Keep the stories for the News page. The Telegram send below never depends on
+  // this: a missing table or a parse miss is logged, and the digest still goes out.
+  const digestDate = new Date(now.getTime() + 8 * 3600 * 1000).toISOString().slice(0, 10) // Malaysia date
+  let saved = 0
+  try {
+    const res = await saveNews(parseDigest(digest, digestDate))
+    saved = res.count
+    if (!res.ok) console.warn('[CFO] news not saved:', res.error)
+  } catch (e) {
+    console.warn('[CFO] news save threw:', e)
+  }
+
   const parts = chunk(`📰 <b>Tech &amp; Travel — last 24h</b>\n<i>${windowText}</i>\n\n${digest}`)
   let sent = 0
   for (const p of parts) {
     // If Telegram rejects the HTML, resend the same text as plain (escaped) text.
     if ((await sendMessage(owner, p)) || (await sendMessage(owner, toPlain(p)))) sent++
   }
-  await logRun('news-digest', sent === parts.length ? 'ok' : 'failed', { parts: parts.length, sent })
-  return Response.json({ ok: sent === parts.length, parts: parts.length, sent })
+  await logRun('news-digest', sent === parts.length ? 'ok' : 'failed', { parts: parts.length, sent, saved })
+  return Response.json({ ok: sent === parts.length, parts: parts.length, sent, saved })
 }
 
 // One Claude call with the web search server tool. Server tools can pause a long
