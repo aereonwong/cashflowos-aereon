@@ -114,6 +114,12 @@ that file before touching it; it explains the token arithmetic.
 - Verify before claiming: build locally (`npm run build`), and check a page actually renders.
 - The Telegram bot in group chats only answers when @mentioned, replied to, or sent a /command.
 
+## Reading documents
+
+`markitdown <file>` converts PDF, Word, Excel, PowerPoint, CSV, HTML and images into Markdown.
+Use it when Aereon hands over a brief, contract, rate card or invoice file, instead of guessing at
+the contents. Cloud sessions install it at startup (`.claude/hooks/session-start.sh`).
+
 ## graphify
 
 This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
