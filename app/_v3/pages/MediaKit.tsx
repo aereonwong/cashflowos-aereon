@@ -7,7 +7,7 @@ import PostGrid from '../PostGrid'
 import Circle from '../Circle'
 import Icon from '@/app/_components/Icon'
 import { compact, num } from '../fmt'
-import { KIT_BRANDS } from '@/lib/v3/brands'
+import { KIT_BRANDS, logoSize } from '@/lib/v3/brands'
 
 // 👉 The public creator media kit — the one page brands see. Persuade mode: its
 // job is to make a brand want to book Aereon, and make booking one tap away.
@@ -221,7 +221,11 @@ export default function MediaKit({
                   role="img"
                   aria-label={b.name}
                   title={b.name}
-                  style={{ ['--logo' as string]: `url(/img/brands/${b.slug}.svg)`, ['--s' as string]: String(b.scale) }}
+                  style={{
+                    ['--logo' as string]: `url(/img/brands/${b.slug}.svg)`,
+                    width: logoSize(b.aspect).w,
+                    height: logoSize(b.aspect).h,
+                  }}
                 />
               </li>
             ))}
