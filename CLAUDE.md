@@ -2,8 +2,12 @@
 
 Personal business HQ for **Aereon Wong** — tech & travel content creator, drone pilot and
 photographer in Kuala Lumpur (@aereonwong, ~53k followers; company SY Creative Production Sdn. Bhd.).
-**AereonDashboard.** It began as the CashFlowOS AI Agents course template and has been heavily
+**Aereon Dashboard.** It began as the CashFlowOS AI Agents course template and has been heavily
 customised since; older docs may still mention the template by its original name.
+
+**Naming:** `AereonDashboard` (no space) is the system name — repo, config and identifiers. Where a
+platform requires lowercase it is `aereondashboard` (the Vercel project, the npm package).
+**Aereon Dashboard** (with a space) is the display name, for anything a person reads.
 
 **Aereon is not a developer.** Explain in plain words, avoid jargon, do the work rather than
 handing over instructions — except for passwords and secret keys, which are always theirs to type.

@@ -1,4 +1,4 @@
-# The 5-Finger Rule (LATAR) — how every robot in AereonDashboard thinks 🤚
+# The 5-Finger Rule (LATAR) — how every robot in Aereon Dashboard thinks 🤚
 
 > **The one big idea:** your robot is an employee, not a magic button.
 > A good employee *watches* your business, *notices* when something needs doing,

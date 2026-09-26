@@ -1,6 +1,6 @@
 # The AI C-Suite Blueprint — your one-page take-home
 
-> The webinar bonus, made real. This is the org chart for the version of your business where **you're the CEO and AI runs the departments** — but every head **recommends, you decide**. It's the same rule your AereonDashboard robots already follow (🟢 auto only for small/reversible, 🟡 ask-first for anything that costs money or touches a customer, 🔴 never move money or delete). Fill the canvas at the bottom and you have your operating structure on one page.
+> The webinar bonus, made real. This is the org chart for the version of your business where **you're the CEO and AI runs the departments** — but every head **recommends, you decide**. It's the same rule your Aereon Dashboard robots already follow (🟢 auto only for small/reversible, 🟡 ask-first for anything that costs money or touches a customer, 🔴 never move money or delete). Fill the canvas at the bottom and you have your operating structure on one page.
 
 ---
 
@@ -37,7 +37,7 @@ This is **graduated autonomy** applied to your org, not just to one receipt:
    follow-ups         calendar · reach     receipts · owes   receipts · SOPs
 ```
 
-Each head reads the **same `records` spine** your AereonDashboard app already keeps. They don't need new data — they need a lens on the data you're already capturing.
+Each head reads the **same `records` spine** your Aereon Dashboard app already keeps. They don't need new data — they need a lens on the data you're already capturing.
 
 ---
 
@@ -94,7 +94,7 @@ Write it by hand, or paste it into Claude Code and let it interview you.
 
 ---
 
-## From canvas to code (how this maps onto your AereonDashboard repo)
+## From canvas to code (how this maps onto your Aereon Dashboard repo)
 
 Each head is just an **agent** in `agents/`:
 

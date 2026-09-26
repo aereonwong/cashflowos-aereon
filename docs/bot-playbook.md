@@ -26,7 +26,7 @@ of the box. Nothing to fake.
 | 🟡 | **ASK-FIRST** | Sends ✅ Approve / ❌ Reject buttons and waits. Nothing happens until you tap. |
 | ✍️ | **DRAFT-ONLY** | Hands you copy-paste text. There's no send button in its hands — it never messages a customer. |
 
-Same dial as the rest of AereonDashboard — see [`docs/hitl-framework.md`](./hitl-framework.md) for the full LATAR framework this inherits.
+Same dial as the rest of Aereon Dashboard — see [`docs/hitl-framework.md`](./hitl-framework.md) for the full LATAR framework this inherits.
 
 ---
 

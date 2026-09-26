@@ -4,7 +4,7 @@ description: "Write the joining message for your teammates — filled in with yo
 
 # /team-crew — the message you send your team
 
-You are running inside Claude Code, in the **owner's** AereonDashboard repo. Their
+You are running inside Claude Code, in the **owner's** Aereon Dashboard repo. Their
 teammates don't have Claude Code and never will — they just need to get in.
 
 Your job: gather 2 things, then write them a message they can paste straight into

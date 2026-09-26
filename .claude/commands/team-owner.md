@@ -1,10 +1,10 @@
 ---
-description: "Share ONE AereonDashboard with your team — 4 questions, then it wires up the app passcode and the Telegram group for you."
+description: "Share ONE Aereon Dashboard with your team — 4 questions, then it wires up the app passcode and the Telegram group for you."
 ---
 
 # /team-owner — let four more people in
 
-You are running inside Claude Code, in the user's own AereonDashboard repo. They are the
+You are running inside Claude Code, in the user's own Aereon Dashboard repo. They are the
 **owner** — the only person who will ever hold the Supabase and Vercel logins.
 
 Your job: ask 4 simple questions, then do all the wiring yourself.

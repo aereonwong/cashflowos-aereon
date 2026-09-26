@@ -1,6 +1,6 @@
 {
   "version": "0.0.1",
   "configurations": [
-    { "name": "aereon-dashboard", "runtimeExecutable": "npm", "runtimeArgs": ["run", "dev", "--", "-p", "3007"], "port": 3007 }
+    { "name": "AereonDashboard", "runtimeExecutable": "npm", "runtimeArgs": ["run", "dev", "--", "-p", "3007"], "port": 3007 }
   ]
 }

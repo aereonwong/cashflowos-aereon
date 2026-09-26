@@ -1,4 +1,4 @@
-# 👥 One AereonDashboard, five people
+# 👥 One Aereon Dashboard, five people
 
 > One business. One database. One app. Five phones.
 > **Nobody shares a Supabase login. Nobody pays for Vercel.**

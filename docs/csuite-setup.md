@@ -1,5 +1,5 @@
 # 🏛️ YOUR AI C-SUITE — set up your first head
-### Paste the prompt at the bottom into Claude Code, inside your AereonDashboard folder.
+### Paste the prompt at the bottom into Claude Code, inside your Aereon Dashboard folder.
 
 > By the end you'll have **one department head live** — reading your business every
 > morning and bringing you one recommendation, before you've opened your laptop.

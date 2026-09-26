@@ -1,7 +1,7 @@
 # Robot Safety School 🔒
 
 > *"A strong robot with no rules is dangerous."*
-> Your AereonDashboard robot is powerful — it reads your money, files your paperwork, buzzes your
+> Your Aereon Dashboard robot is powerful — it reads your money, files your paperwork, buzzes your
 > phone. This page is the 5 rules that keep it safe, plus the locks on the doors.
 > **Good news: all of this is already built.** This checklist is so you can *see* it and
 > *trust* it — not homework you have to wire yourself.

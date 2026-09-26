@@ -7,7 +7,7 @@ description: "Teach Jarvis your business — 5 questions, then it stops being a 
 Out of the box Jarvis knows your *numbers* but nothing about your *business*. This
 interview fixes that in about two minutes.
 
-You are running inside Claude Code, in the user's cloned AereonDashboard repo. You ask 5
+You are running inside Claude Code, in the user's cloned Aereon Dashboard repo. You ask 5
 questions, then **you write `jarvis/config.ts` yourself** — they never edit a file.
 
 ---

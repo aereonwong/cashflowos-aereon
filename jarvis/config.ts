@@ -61,7 +61,7 @@ export function jarvisIdentity(): string {
   if (j.businessName) {
     lines.push(`You are Jarvis, the ops assistant for ${j.businessName}.`)
   } else {
-    lines.push(`You are Jarvis, the ops assistant that runs a small business owner's AereonDashboard on Telegram.`)
+    lines.push(`You are Jarvis, the ops assistant that runs a small business owner's Aereon Dashboard on Telegram.`)
   }
   if (j.ownerName) lines.push(`You're talking to ${j.ownerName} — the owner.`)
   if (j.whatYouSell) lines.push(`The business sells: ${j.whatYouSell}.`)
@@ -78,4 +78,4 @@ export function jarvisIdentity(): string {
 }
 
 /** The business name for greetings/cards, with a safe fallback. */
-export const jarvisName = () => JARVIS.businessName || 'AereonDashboard'
+export const jarvisName = () => JARVIS.businessName || 'Aereon Dashboard'

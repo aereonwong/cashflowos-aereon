@@ -1,4 +1,4 @@
--- AereonDashboard — Instagram snapshots.
+-- Aereon Dashboard — Instagram snapshots.
 -- One row per refresh: the profile counters + the posts (with their insights)
 -- exactly as Instagram returned them. The app reads the newest row, so the tab
 -- loads instantly and never depends on a live API call.

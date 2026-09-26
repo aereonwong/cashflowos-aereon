@@ -9,7 +9,7 @@ import { deflateSync } from 'node:zlib'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-const AMBER = [245, 158, 11] // #f59e0b — the AereonDashboard brand amber
+const AMBER = [245, 158, 11] // #f59e0b — the Aereon Dashboard brand amber
 
 function crc32(buf) {
   let c = ~0 >>> 0
