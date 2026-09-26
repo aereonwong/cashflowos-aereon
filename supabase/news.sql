@@ -1,4 +1,4 @@
--- CashFlowOS — the daily tech & travel news digest, kept.
+-- AereonDashboard — the daily tech & travel news digest, kept.
 -- The 9am cron still texts the digest to Telegram exactly as before; it now also
 -- saves each story here, one row per story, so the News page can show history
 -- and filter it. Re-running a day never duplicates: (digest_date, headline) is unique.

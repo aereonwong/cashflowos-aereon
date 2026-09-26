@@ -1,4 +1,4 @@
-# CashFlowOS AI Agents — your Money Robot 🤖💰
+# AereonDashboard — your Money Robot 🤖💰
 
 > **You're not learning AI. You're hiring a robot employee.**
 > It watches your business river, files your paperwork, and asks before it touches money.
@@ -40,7 +40,7 @@ Four letters, in order. By **lunch on Day 1** you're through O, E and N.
 Paste this into Claude, turn the Chrome extension ON, and it walks you through every click:
 
 ```
-You're my hands-on setup co-pilot for CashFlowOS AI Agents — my "Money Robot" web app.
+You're my hands-on setup co-pilot for AereonDashboard — my "Money Robot" web app.
 I've never coded. Use the Chrome extension to open pages and do the clicks WITH me,
 ONE step at a time. Never type my passwords or secret keys — stop and let me do those.
 Start by opening https://github.com/claude-malaysia-glcc/cashflowos-ai-agents and

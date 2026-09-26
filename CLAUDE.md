@@ -2,7 +2,8 @@
 
 Personal business HQ for **Aereon Wong** — tech & travel content creator, drone pilot and
 photographer in Kuala Lumpur (@aereonwong, ~53k followers; company SY Creative Production Sdn. Bhd.).
-Built on the CashFlowOS AI Agents template, then heavily customised.
+**AereonDashboard.** It began as the CashFlowOS AI Agents course template and has been heavily
+customised since; older docs may still mention the template by its original name.
 
 **Aereon is not a developer.** Explain in plain words, avoid jargon, do the work rather than
 handing over instructions — except for passwords and secret keys, which are always theirs to type.

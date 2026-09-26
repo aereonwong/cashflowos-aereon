@@ -1,4 +1,4 @@
-# Sell It — packaging CashFlowOS as a RM5k–50k offer
+# Sell It — packaging AereonDashboard as a RM5k–50k offer
 
 > You just built a Money Robot. Other business owners will pay you to build theirs. This is the one-pager for turning "I made a thing" into "I sell this for RM5k–50k." Keep it simple: you're not selling software — you're selling **a business that runs itself while the owner sleeps**.
 
@@ -17,7 +17,7 @@ You are NOT selling: "an app," "automation," "AI." Owners don't buy those. You'r
 | | **Starter — RM5k** | **Operator — RM15k–25k** ⭐ | **Enterprise — RM50k** |
 |---|---|---|---|
 | **Who** | Solo / small biz, RM300k–1M/yr | Real SME, RM1–5M/yr, has staff | Multi-branch / team, RM5M+ |
-| **What they get** | CashFlowOS installed + their data imported + Vault (photo→filed) + 1 agent live + daily brief | Everything in Starter + 3–4 agents (their real workflows) + team access + custom tabs for their business + 2 training sessions | Everything + full department build (the 4-head AI C-Suite) + integrations (their CRM/accounting) + monthly optimisation + priority support |
+| **What they get** | AereonDashboard installed + their data imported + Vault (photo→filed) + 1 agent live + daily brief | Everything in Starter + 3–4 agents (their real workflows) + team access + custom tabs for their business + 2 training sessions | Everything + full department build (the 4-head AI C-Suite) + integrations (their CRM/accounting) + monthly optimisation + priority support |
 | **Timeline** | 1 week | 2–3 weeks | 4–6 weeks |
 | **Ongoing (optional)** | RM300/mo care | RM800–1,500/mo retainer | RM3k–5k/mo retainer |
 
@@ -41,7 +41,7 @@ Owners don't buy on price, they buy on **return**. Make it their arithmetic, out
 
 Stack value, then name the price last:
 
-1. **The install** — CashFlowOS built + their real data imported (the thing).
+1. **The install** — AereonDashboard built + their real data imported (the thing).
 2. **The agents** — 3–4 of their actual painful workflows, automated with the ask-first safety.
 3. **The Vault** — snap any receipt/invoice → filed automatically. (The "wow" in every demo.)
 4. **Team access + custom tabs** — built for how THEIR business works, not generic.

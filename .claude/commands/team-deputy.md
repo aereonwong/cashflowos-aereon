@@ -1,5 +1,5 @@
 ---
-description: "Join someone else's CashFlowOS as the builder — clone, set up, and learn what you can and can't touch. You never hold their keys."
+description: "Join someone else's AereonDashboard as the builder — clone, set up, and learn what you can and can't touch. You never hold their keys."
 ---
 
 # /team-deputy — get build access without the keys

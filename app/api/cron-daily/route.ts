@@ -183,7 +183,7 @@ function buildBrief(
   }
 
   return (
-    `☀️ <b>CashFlowOS — morning brief</b>\n\n` +
+    `☀️ <b>AereonDashboard — morning brief</b>\n\n` +
     `<b>The river</b>\n${funnelLine}\n\n` +
     `<b>The money</b>\n${moneyLine}\n\n` +
     `<b>Needs you</b>\n${ask}`

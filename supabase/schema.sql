@@ -1,5 +1,5 @@
 -- ============================================================
--- CASHFLOWOS AI AGENTS — your Money Robot's database.
+-- AEREONDASHBOARD — your Money Robot's database.
 -- Paste this WHOLE block into the Supabase SQL Editor (your own free project)
 -- and click Run once. Safe to re-run: it never duplicates or deletes your rows
 -- (create-if-not-exists · add-column-if-not-exists · seeds guarded by NOT EXISTS).

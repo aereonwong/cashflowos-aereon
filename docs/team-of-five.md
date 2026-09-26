@@ -1,4 +1,4 @@
-# 👥 One CashFlowOS, five people
+# 👥 One AereonDashboard, five people
 
 > One business. One database. One app. Five phones.
 > **Nobody shares a Supabase login. Nobody pays for Vercel.**

@@ -1,11 +1,11 @@
 # Add Your Own Tab — the copy-paste prompt
 
 > Used **twice** in class (Day 1 to add a tab to the ship, Day 2 to add YOUR business's tab).
-> You paste ONE prompt into **Claude Code** inside your CashFlowOS repo. Claude interviews you, then builds it — the page, BOTH navs, and (optional) an automation.
+> You paste ONE prompt into **Claude Code** inside your AereonDashboard repo. Claude interviews you, then builds it — the page, BOTH navs, and (optional) an automation.
 
 ---
 
-## Why this is easy in CashFlowOS (the one-table pattern)
+## Why this is easy in AereonDashboard (the one-table pattern)
 
 Your whole app is **one Supabase table: `records`**. Every tab is just a filtered view of it.
 
@@ -15,16 +15,16 @@ Your whole app is **one Supabase table: `records`**. Every tab is just a filtere
 - **Two navs, always kept in sync:**
   - `app/_components/Nav.tsx` — the **desktop sidebar** (the `TABS` array).
   - `app/_components/BottomNav.tsx` — the **phone bottom bar**: 4 `PRIMARY` thumb tabs + a `MORE` sheet for the rest.
-  - **A tab added to only one nav is a bug** — it would show on desktop but vanish on phones (or the reverse), and CashFlowOS is a mobile-first app. The prompt below updates BOTH.
+  - **A tab added to only one nav is a bug** — it would show on desktop but vanish on phones (or the reverse), and AereonDashboard is a mobile-first app. The prompt below updates BOTH.
 
 So "a new tab" = **filter `records` by a category + a page + two nav lines + (optional) a reminder.** Beginners do it in one prompt.
 
 ---
 
-## ▶️ THE PROMPT — copy everything in the box into Claude Code (inside your CashFlowOS repo)
+## ▶️ THE PROMPT — copy everything in the box into Claude Code (inside your AereonDashboard repo)
 
 ```
-You're helping me add a NEW tab to my CashFlowOS app. FIRST read these files so you copy the
+You're helping me add a NEW tab to my AereonDashboard app. FIRST read these files so you copy the
 EXACT pattern already in the repo — do not invent your own:
   app/page.tsx                     (a real tab: reads getRecords(), filters, renders Stat cards)
   app/cash-in/page.tsx             (a simple tab shell)
@@ -99,7 +99,7 @@ Ask me question 1 now.
 | **Suppliers** 🚚 | `supplier` | terms, next_order | "supplier orders due this week" |
 | **Projects** 🗂️ | `project` | client, phase, deadline | "projects past deadline" |
 
-> **Inspiration tip:** screenshot a tool you already use (or the Dashboard tab), paste it into Claude Code, and say *"build me a CashFlowOS tab like this for my business, same one-table pattern."*
+> **Inspiration tip:** screenshot a tool you already use (or the Dashboard tab), paste it into Claude Code, and say *"build me a AereonDashboard tab like this for my business, same one-table pattern."*
 
 ---
 
