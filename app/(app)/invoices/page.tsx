@@ -9,11 +9,24 @@ import RowBars from '@/app/_components/RowBars'
 import Donut from '@/app/_components/Donut'
 import Icon from '@/app/_components/Icon'
 
+import V3Invoices from '@/app/_v3/pages/Invoices'
+import { readVersion } from '@/lib/v3/version'
+import { parseFilters } from '@/lib/v3/filters'
+
 export const dynamic = 'force-dynamic'
 
 const pct = (n: number) => `${n.toFixed(0)}%`
 
-export default async function InvoiceSummary() {
+export default async function InvoiceSummary({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>
+}) {
+  const { version } = await readVersion()
+  if (version === 'v3') {
+    const [rows, sp] = await Promise.all([getRecords(), searchParams])
+    return <V3Invoices rows={rows} filters={parseFilters(sp, undefined, 'ytd')} sp={sp} />
+  }
   const rows = await getRecords()
   const s = summarize(rows)
 

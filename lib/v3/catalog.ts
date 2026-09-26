@@ -45,3 +45,6 @@ export const WORLDS: { id: World; name: string; note: string }[] = [
 
 /** How many days of unconfirmed invoices count as "probably still owed". */
 export const OWED_WINDOW_DAYS = 120
+
+/** Quiet for this many months counts as "gone quiet" on the relationship map. */
+export const QUIET_MONTHS = 6

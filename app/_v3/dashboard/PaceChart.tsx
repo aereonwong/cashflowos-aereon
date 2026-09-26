@@ -54,7 +54,7 @@ export default function PaceChart({ pace, year }: { pace: PacePoint[]; year: num
         onPointerMove={onMove}
         onPointerLeave={() => setHover(null)}
       >
-        <g className="grid">
+        <g className="v3-gridlines">
           {ticks.map(t => (
             <line key={t} x1={PAD.l} x2={W - PAD.r} y1={y(t)} y2={y(t)} />
           ))}

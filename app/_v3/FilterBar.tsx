@@ -12,10 +12,15 @@ export default function FilterBar({
   filters,
   clients,
   kinds = true,
+  clientPicker = true,
+  fallback = 'ytd',
 }: {
   filters: Filters
   clients: string[]
   kinds?: boolean
+  clientPicker?: boolean
+  /** The range an empty URL means on this page. */
+  fallback?: Filters['range']
 }) {
   const router = useRouter()
   const path = usePathname()
@@ -28,7 +33,7 @@ export default function FilterBar({
       if (v === undefined || v === '') p.delete(k)
       else p.set(k, v)
     }
-    if (p.get('range') === 'ytd') p.delete('range')
+    if (p.get('range') === fallback) p.delete('range')
     if (p.get('range') !== 'custom') {
       p.delete('from')
       p.delete('to')
@@ -37,7 +42,7 @@ export default function FilterBar({
     start(() => router.replace(q ? `${path}?${q}` : path, { scroll: false }))
   }
 
-  const active = filters.range !== 'ytd' || !!filters.client || !!filters.kind
+  const active = filters.range !== fallback || !!filters.client || !!filters.kind
 
   return (
     <div className="v3-filters" data-pending={pending} role="group" aria-label="Filters">
@@ -83,8 +88,9 @@ export default function FilterBar({
         </>
       ) : null}
 
-      <span className="v3-divider" aria-hidden="true" />
+      {clientPicker ? <span className="v3-divider" aria-hidden="true" /> : null}
 
+      {clientPicker ? (
       <select
         className="v3-select"
         value={filters.client ?? ''}
@@ -98,6 +104,7 @@ export default function FilterBar({
           </option>
         ))}
       </select>
+      ) : null}
 
       {kinds ? (
         <>

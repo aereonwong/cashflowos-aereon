@@ -5,12 +5,25 @@ import { summarize } from '@/lib/invoices'
 import Stat from '@/app/_components/Stat'
 import Empty from '@/app/_components/Empty'
 
+import V3Clients from '@/app/_v3/pages/Clients'
+import { readVersion } from '@/lib/v3/version'
+import { parseFilters } from '@/lib/v3/filters'
+
 export const dynamic = 'force-dynamic'
 
 const monthsBetween = (iso: string) =>
   Math.floor((Date.now() - Date.parse(`${iso}T00:00:00Z`)) / (1000 * 60 * 60 * 24 * 30.4))
 
-export default async function Clients() {
+export default async function Clients({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>
+}) {
+  const { version } = await readVersion()
+  if (version === 'v3') {
+    const [rows, sp] = await Promise.all([getRecords(), searchParams])
+    return <V3Clients rows={rows} filters={parseFilters(sp, undefined, 'all')} sp={sp} />
+  }
   const rows = await getRecords()
   const s = summarize(rows)
 

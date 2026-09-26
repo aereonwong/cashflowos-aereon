@@ -30,10 +30,15 @@ type Params = Record<string, string | string[] | undefined>
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v)
 const iso = (s: string | undefined) => (s && /^\d{4}-\d{2}-\d{2}$/.test(s) ? s : undefined)
 
-export function parseFilters(sp: Params, today = new Date().toISOString().slice(0, 10)): Filters {
+export function parseFilters(
+  sp: Params,
+  today = new Date().toISOString().slice(0, 10),
+  /** What an empty URL means. Clients reads a relationship, so it defaults to all time. */
+  fallback: Range = 'ytd',
+): Filters {
   const y = Number(today.slice(0, 4))
   const raw = one(sp.range)
-  const range: Range = RANGES.some(r => r.id === raw) ? (raw as Range) : 'ytd'
+  const range: Range = RANGES.some(r => r.id === raw) ? (raw as Range) : fallback
 
   let from = `${y}-01-01`
   let to = today
