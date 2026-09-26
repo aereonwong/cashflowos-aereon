@@ -17,8 +17,10 @@ handing over instructions — except for passwords and secret keys, which are al
 - App: https://aereonwong.vercel.app (public landing at `/`, everything else behind a passcode).
   The original https://cashflowos-aereon.vercel.app still points at the same project and is kept on
   purpose: the Telegram webhook is registered against it. Remove it only after re-pointing the webhook.
-- Repo: https://github.com/aereonwong/cashflowos-aereon (public, owner-only access)
-- Hosting: Vercel project `cashflowos-aereon` (Hobby) · Supabase project `cashflowos-aereon` (free, Singapore)
+- Repo: https://github.com/aereonwong/AereonDashboard (public, owner-only access; renamed from
+  cashflowos-aereon on 26 Sep 2026 — GitHub redirects the old URL)
+- Hosting: Vercel project `aereondashboard` (Hobby; renamed from cashflowos-aereon, same project ID)
+  · Supabase project `cashflowos-aereon` (free, Singapore — its URL/ref never changes)
 - Telegram bot: @aereon_cashflow_bot — answers only Aereon (owner id in env)
 
 ## Shape of the code
