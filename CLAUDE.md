@@ -113,6 +113,11 @@ that file before touching it; it explains the token arithmetic.
 - `.env` is gitignored and holds the real secrets; the repo is public, so nothing secret goes in it.
 - Verify before claiming: build locally (`npm run build`), and check a page actually renders.
 - The Telegram bot in group chats only answers when @mentioned, replied to, or sent a /command.
+- **Merge without asking** (Aereon's standing instruction, 26 Sep 2026): once a change is done,
+  open the pull request and merge it into `main` yourself — don't hand Aereon a merge button.
+  Merging deploys the live app, so only merge after `npm run build` passes (for app code) and the
+  pull request's checks are green. If a check fails, fix it first; if it can't be fixed, stop and
+  explain instead of merging.
 
 ## Reading documents
 
